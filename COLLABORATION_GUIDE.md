@@ -6,8 +6,8 @@
 git add .
 git commit -m "feat: add complete team collaboration setup"
 
-# 2. Update remote with your GitHub username
-git remote set-url origin https://github.com/YOUR_GITHUB_USERNAME/smart-attendance-system.git
+# 2. Update remote with your GitHub username  
+git remote set-url origin https://github.com/Jether34/smart-attendance-system.git
 
 # 3. Push to GitHub
 git push -u origin master
@@ -19,7 +19,7 @@ git push -u origin develop
 ## For Team Members:
 ```bash
 # 1. Clone repository
-git clone https://github.com/OWNER_USERNAME/smart-attendance-system.git
+git clone https://github.com/Jether34/smart-attendance-system.git
 cd smart-attendance-system
 
 # 2. Automated setup
