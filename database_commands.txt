@@ -1,0 +1,69 @@
+==========================================================
+ATTENDANCE QR SYSTEM - DATABASE CREATION COMMANDS
+==========================================================
+
+STEP 1: START XAMPP
+-------------------
+1. Open XAMPP Control Panel: c:\xampp\xampp-control.exe
+2. Click "Start" on Apache
+3. Click "Start" on MySQL
+4. Wait until both services show "Running"
+
+STEP 2: CREATE DATABASE (Method 1 - Single Command)
+--------------------------------------------------
+# Open PowerShell in project directory
+cd "c:\xampp\htdocs\puta"
+
+# Create database and import schema in one command
+c:\xampp\mysql\bin\mysql.exe -u root -e "CREATE DATABASE IF NOT EXISTS attendance_qr_system CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; USE attendance_qr_system; SOURCE complete_database_setup.sql;"
+
+STEP 3: ALTERNATIVE - MySQL Console (Method 2)
+----------------------------------------------
+# Connect to MySQL
+c:\xampp\mysql\bin\mysql.exe -u root
+
+# Then run these SQL commands:
+CREATE DATABASE IF NOT EXISTS attendance_qr_system CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE attendance_qr_system;
+SOURCE complete_database_setup.sql;
+EXIT;
+
+STEP 4: VERIFY DATABASE CREATION
+-------------------------------
+# Check if database was created
+c:\xampp\mysql\bin\mysql.exe -u root -e "SHOW DATABASES;"
+
+# Check if tables were created
+c:\xampp\mysql\bin\mysql.exe -u root -e "USE attendance_qr_system; SHOW TABLES;"
+
+# Check table structure
+c:\xampp\mysql\bin\mysql.exe -u root -e "USE attendance_qr_system; DESCRIBE teachers;"
+
+STEP 5: IMPORT SAMPLE DATA (Optional)
+------------------------------------
+# If you want sample users, run:
+c:\xampp\mysql\bin\mysql.exe -u root attendance_qr_system -e "
+INSERT IGNORE INTO teachers (full_name, email, password, gender, grade_level, strand, section_block, faculty) VALUES
+('Mr. John Santos', 'teacher@test.com', '$2y$10\$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Male', '11', 'STEM', '1', 'STEM');
+
+INSERT IGNORE INTO students (student_id, full_name, email, password, gender, grade_level, strand, section_block) VALUES
+('STU001', 'Juan Test', 'student@test.com', '$2y$10\$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Male', '11', 'STEM', '1');
+"
+
+TROUBLESHOOTING
+--------------
+If MySQL won't start:
+1. Check if port 3306 is in use: netstat -an | findstr :3306
+2. Stop any existing MySQL: taskkill /F /IM mysqld.exe
+3. Delete MySQL log files: del c:\xampp\mysql\data\*.err
+4. Restart XAMPP as Administrator
+
+If import fails:
+1. Check file exists: dir complete_database_setup.sql
+2. Verify MySQL is running: c:\xampp\mysql\bin\mysql.exe -u root -e "SELECT VERSION();"
+3. Try importing table by table using individual SQL files
+
+SAMPLE LOGIN CREDENTIALS
+-----------------------
+Teacher: teacher@test.com / password123
+Student: student@test.com / password123

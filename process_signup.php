@@ -1,0 +1,64 @@
+<?php
+require_once __DIR__ . '/db.php';
+
+$role = $_POST['role'] ?? '';
+$full_name = trim($_POST['full_name'] ?? '');
+$grade = $_POST['grade'] ?? null;
+$strand = isset($_POST['strand']) && trim($_POST['strand']) !== '' ? trim($_POST['strand']) : 'N/A';
+$block = $_POST['block_section'] ?? null;
+$lrn = $_POST['lrn'] ?? null;
+$email = $_POST['email'] ?? null;
+$faculty = $_POST['faculty'] ?? null;
+$password = $_POST['password'] ?? null;
+$gender = $_POST['gender'] ?? null;
+
+if(!$role || !$full_name || !$email || !$password || !$gender){
+    die('Missing required fields');
+}
+
+$hash = password_hash($password, PASSWORD_DEFAULT);
+$code = uniqid('u', true); // unique code used in QR/barcode
+
+
+$pdo = get_db();
+if ($role === 'teacher') {
+    $stmt = $pdo->prepare('INSERT INTO teachers (full_name, email, password, gender, grade_level, strand, section_block, faculty) VALUES (:full_name, :email, :password, :gender, :grade_level, :strand, :section_block, :faculty)');
+    $stmt->execute([
+        ':full_name' => $full_name,
+        ':email' => $email,
+        ':password' => $hash,
+        ':gender' => $gender,
+        ':grade_level' => $grade,
+        ':strand' => $strand,
+        ':section_block' => $block,
+        ':faculty' => $faculty
+    ]);
+} else {
+    // Generate random alphanumeric student_id
+    function generateStudentId($length = 10) {
+        $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $id = '';
+        for ($i = 0; $i < $length; $i++) {
+            $id .= $chars[random_int(0, strlen($chars) - 1)];
+        }
+        return $id;
+    }
+    $student_id = generateStudentId();
+    $stmt = $pdo->prepare('INSERT INTO students (student_id, full_name, email, password, gender, grade_level, strand, section_block) VALUES (:student_id, :full_name, :email, :password, :gender, :grade_level, :strand, :section_block)');
+    $stmt->execute([
+        ':student_id' => $student_id,
+        ':full_name' => $full_name,
+        ':email' => $email,
+        ':password' => $hash,
+        ':gender' => $gender,
+        ':grade_level' => $grade,
+        ':strand' => $strand,
+        ':section_block' => $block
+    ]);
+}
+
+$id = $pdo->lastInsertId();
+
+// Redirect to login page after signup
+header('Location: login.php?signup=1');
+exit;

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Content Preview - Embedded Student Information</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f8fff8;
+            line-height: 1.6;
+        }
+        
+        .preview-section {
+            background: white;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .qr-content {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            border-left: 4px solid #f0ad4e;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        h1 {
+            color: #218c21;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            color: #176617;
+            border-bottom: 2px solid #d4edda;
+            padding-bottom: 10px;
+        }
+        
+        .btn {
+            background: #218c21;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #176617;
+            transform: translateY(-2px);
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .comparison-item {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .old-method {
+            background: #fff3cd;
+            border: 2px solid #f0ad4e;
+        }
+        
+        .new-method {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>📱 QR Code Content Preview - Embedded Student Information</h1>
+    
+    <div class="preview-section">
+        <h2>🆕 New QR Code Format</h2>
+        <p>This is exactly what gets embedded inside each student's QR code:</p>
+        
+        <div class="qr-content">=== STUDENT INFORMATION ===
+Student ID: STUDENT123
+Name: Juan Dela Cruz
+Email: juan.delacruz@email.com
+Grade: Grade 12
+Strand: STEM
+Section: Einstein
+Gender: Male
+LRN: 123456789012
+Enrolled: 11/8/2025
+QR Generated: 11/8/2025, 10:30:45 AM
+========================
+School Attendance System
+Scan this code for attendance</div>
+    </div>
+    
+    <div class="preview-section">
+        <h2>📊 Method Comparison</h2>
+        <div class="comparison">
+            <div class="comparison-item old-method">
+                <h3>📡 Old Method (URL-based)</h3>
+                <p><strong>Required:</strong> Internet connection</p>
+                <p><strong>Content:</strong> Link to web page</p>
+                <p><strong>Dependency:</strong> Server must be online</p>
+                <p><strong>Speed:</strong> Slower (network request)</p>
+            </div>
+            <div class="comparison-item new-method">
+                <h3>📱 New Method (Embedded)</h3>
+                <p><strong>Required:</strong> No internet needed</p>
+                <p><strong>Content:</strong> Complete information</p>
+                <p><strong>Dependency:</strong> Works offline</p>
+                <p><strong>Speed:</strong> Instant display</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="success">
+        <h3>✅ Benefits of Embedded QR Codes</h3>
+        <ul>
+            <li><strong>🔌 Offline Capability:</strong> Works without internet or network connection</li>
+            <li><strong>⚡ Instant Display:</strong> No loading time - information appears immediately</li>
+            <li><strong>🔒 Self-Contained:</strong> All data is in the QR code itself</li>
+            <li><strong>📱 Universal Compatibility:</strong> Works with any QR scanner app</li>
+            <li><strong>🎯 Perfect for Events:</strong> Great for outdoor activities or areas with poor network</li>
+        </ul>
+    </div>
+    
+    <div class="highlight">
+        <h3>🎯 How It Works in the Scanner</h3>
+        <ol>
+            <li><strong>QR Code Scanned:</strong> Camera detects the QR code</li>
+            <li><strong>Text Extracted:</strong> System reads the embedded text format</li>
+            <li><strong>Information Parsed:</strong> Data is extracted from the structured text</li>
+            <li><strong>Beautiful Display:</strong> Information shown in formatted interface</li>
+            <li><strong>Attendance Option:</strong> Teacher can record attendance with one click</li>
+        </ol>
+    </div>
+    
+    <div class="preview-section">
+        <h2>🧪 Test the System</h2>
+        <p>Ready to test the new embedded QR code system?</p>
+        
+        <a href="card.php?id=1" class="btn">📄 Generate Student QR Code</a>
+        <a href="teacher_dashboard.php?section=scanner" class="btn">📷 Open Scanner</a>
+        <a href="test_qr_extraction.html" class="btn">🧪 Test Extraction Logic</a>
+    </div>
+    
+    <div class="preview-section">
+        <h2>📋 Implementation Status</h2>
+        <p><strong>✅ Completed Features:</strong></p>
+        <ul>
+            <li>✅ Embed complete student information in QR codes</li>
+            <li>✅ Parse embedded data from scanned QR codes</li>
+            <li>✅ Display beautiful formatted student information</li>
+            <li>✅ One-click attendance recording from QR data</li>
+            <li>✅ Backward compatibility with URL and legacy QR codes</li>
+            <li>✅ Offline functionality - no internet required</li>
+            <li>✅ Enhanced scanner interface with multiple format support</li>
+        </ul>
+    </div>
+</body>
+</html>
