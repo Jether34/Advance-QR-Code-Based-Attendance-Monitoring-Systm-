@@ -1,0 +1,71 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "php.validate.executablePath": "c:\\xampp\\php\\php.exe",
+    "intelephense.environment.phpVersion": "8.0.0",
+    "files.defaultLanguage": "php"
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-vscode.live-share",
+      "bmewburn.vscode-intelephense-client",
+      "eamodio.gitlens",
+      "mtxr.sqltools",
+      "github.copilot"
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Start XAMPP Apache",
+        "type": "shell",
+        "command": "c:\\xampp\\apache_start.bat",
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "Setup Database",
+        "type": "shell", 
+        "command": "powershell",
+        "args": ["-File", ".\\setup_project.ps1", "-SkipGitInit"],
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        }
+      },
+      {
+        "label": "Open in Browser",
+        "type": "shell",
+        "command": "start",
+        "args": ["http://localhost/puta"],
+        "group": "test"
+      }
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Launch in Browser",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/index.php",
+        "runtimeExecutable": "start",
+        "args": ["http://localhost/puta"]
+      }
+    ]
+  }
+}
