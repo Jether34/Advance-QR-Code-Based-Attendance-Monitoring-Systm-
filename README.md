@@ -1,23 +1,43 @@
-# QR & Barcode Attendance System
+# 🎓 Smart Attendance System
 
-This is a comprehensive attendance monitoring system using QR codes and barcodes built with PHP and MySQL. It's designed to run on XAMPP (Windows) and requires no composer packages.
+A modern, QR code-based attendance tracking system built with PHP, MySQL, and JavaScript. This system provides contactless attendance recording with embedded student information and real-time validation.
 
-## Database Setup
+## 🚀 Features
 
-### Quick Setup (Recommended):
-1. Copy this folder into your XAMPP `htdocs` (it is already in `c:\xampp\htdocs\puta`).
-2. Start XAMPP (Apache + MySQL).
-3. Double-click `setup_database.bat` to automatically create the database and tables.
+- **QR Code Generation**: Embedded student information directly in QR codes for offline access
+- **Automatic Attendance Recording**: Real-time scanning with instant database validation
+- **Multi-Format QR Support**: Compatible with embedded text, URL-based, and legacy QR formats
+- **Role-Based Access**: Separate dashboards for teachers and students
+- **Mobile-Optimized**: Responsive design works on all devices
+- **Network Flexibility**: IP-based URLs for cross-device compatibility
+- **Intelligent Status Calculation**: Automatic determination of present/absent/late status
 
-### Manual Setup:
-1. Start XAMPP MySQL service.
-2. Run these commands in PowerShell:
+## 📋 System Requirements
+
+- **Web Server**: XAMPP, WAMP, or LAMP stack
+- **PHP**: Version 7.4 or higher
+- **MySQL**: Version 5.7 or higher
+- **Browser**: Modern browser with camera access for QR scanning
+- **Network**: Local network access for mobile devices
+
+## 🛠️ Quick Setup for Teams
+
+### 1. Clone the Repository
 ```bash
-# Create database
-c:\xampp\mysql\bin\mysql.exe -u root -e "CREATE DATABASE attendance_qr_system CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+git clone https://github.com/yourusername/smart-attendance-system.git
+cd smart-attendance-system
+```
 
-# Import complete schema
-c:\xampp\mysql\bin\mysql.exe -u root attendance_qr_system < complete_database_setup.sql
+### 2. Environment Setup
+```bash
+# Copy environment template
+copy .env.example .env
+
+# Edit .env with your database credentials
+notepad .env
+```
+
+### 3. Database Setup
 ```
 
 ### Alternative Manual Setup (MySQL Console):

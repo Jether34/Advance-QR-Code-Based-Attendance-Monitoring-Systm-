@@ -1,0 +1,22 @@
+{
+  "recommendations": [
+    "ms-vscode.live-share",
+    "ms-vscode.live-share-audio",
+    "bmewburn.vscode-intelephense-client",
+    "eamodio.gitlens",
+    "ms-vscode.vscode-json",
+    "formulahendry.auto-rename-tag",
+    "christian-kohler.path-intellisense",
+    "ms-vscode.powershell",
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-mysql",
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-typescript-next",
+    "ritwickdey.liveserver",
+    "ms-vscode.hexeditor",
+    "github.vscode-pull-request-github",
+    "ms-vscode.remote-repositories",
+    "github.copilot",
+    "github.copilot-chat"
+  ]
+}

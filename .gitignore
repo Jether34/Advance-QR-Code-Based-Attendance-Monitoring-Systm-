@@ -1,1 +1,81 @@
+# Smart Attendance System - Git Ignore File
+
+# Environment and Configuration Files
+.env
+config.php.local
+db_config.php
+*.local.php
+
+# Database Files and Backups
 /data/attendance.db
+*.sql.bak
+*.db
+*.sqlite
+database_dumps/
+backups/
+
+# XAMPP and Server Files
+.htaccess.local
+php_errors.log
+error_log
+access.log
+
+# IDE and Editor Files
+.vscode/settings.json
+.vscode/launch.json
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Temporary and Cache Files
+tmp/
+temp/
+cache/
+*.tmp
+*.temp
+*.log
+*.cache
+
+# User Uploads and Generated Files
+uploads/*
+!uploads/.gitkeep
+data/user_uploads/
+generated/
+qr_codes/
+
+# Dependencies and Packages
+node_modules/
+vendor/
+composer.lock
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# PHP Specific
+*.php.bak
+.php_cs.cache
+.phpunit.result.cache
+
+# Security and Sensitive Files
+*.pem
+*.key
+*.crt
+passwords.txt
+secrets.txt
+api_keys.txt
+
+# Development and Testing
+phpunit.xml
+.phpunit.cache
+coverage/
+test_results/
+debug.log
