@@ -1,6 +1,6 @@
-# 🎓 Smart Attendance System
+# 🎓 Palawan National School - QR Code Attendance Monitoring System
 
-A modern, QR code-based attendance tracking system built with PHP, MySQL, and JavaScript. This system provides contactless attendance recording with embedded student information and real-time validation.
+A modern, QR code-based attendance tracking system built with PHP, MySQL, and JavaScript specifically for Palawan National School. This system provides contactless attendance recording with embedded student information and real-time validation.
 
 ## 🚀 Features
 
@@ -24,8 +24,8 @@ A modern, QR code-based attendance tracking system built with PHP, MySQL, and Ja
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/smart-attendance-system.git
-cd smart-attendance-system
+git clone https://github.com/Jether34/Palawan-National-School-QR-Code-Attendance-Monitoring-System.git
+cd Palawan-National-School-QR-Code-Attendance-Monitoring-System
 ```
 
 ### 2. Environment Setup

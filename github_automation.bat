@@ -12,8 +12,8 @@ echo.
 echo Please follow these steps to create your GitHub repository:
 echo.
 echo 1. Open your browser and go to: https://github.com/new
-echo 2. Repository name: smart-attendance-system
-echo 3. Description: Modern QR code-based attendance tracking system
+echo 2. Repository name: Palawan National School QR Code Attendance Monitoring System
+echo 3. Description: Modern QR code-based attendance tracking system for Palawan National School
 echo 4. Set to PUBLIC (so team members can access)
 echo 5. DON'T check "Add a README file" (we already have one)
 echo 6. DON'T check "Add .gitignore" (we already have one)  
@@ -38,7 +38,7 @@ if %errorlevel% equ 0 (
     echo ✓ Master branch pushed successfully!
 ) else (
     echo ! Error pushing master branch. Make sure the repository is created.
-    echo   Repository URL: https://github.com/Jether34/smart-attendance-system
+    echo   Repository URL: https://github.com/Jether34/Palawan-National-School-QR-Code-Attendance-Monitoring-System
     pause
     exit /b 1
 )
@@ -62,20 +62,20 @@ echo                   SUCCESS!
 echo ========================================================
 echo.
 echo Your repository is now live at:
-echo https://github.com/Jether34/smart-attendance-system
+echo https://github.com/Jether34/Palawan-National-School-QR-Code-Attendance-Monitoring-System
 echo.
 echo NEXT STEPS FOR TEAM COLLABORATION:
 echo.
 echo 1. ADD TEAM MEMBERS:
-echo    - Go to: https://github.com/Jether34/smart-attendance-system/settings/access
+echo    - Go to: https://github.com/Jether34/Palawan-National-School-QR-Code-Attendance-Monitoring-System/settings/access
 echo    - Click "Add people" 
 echo    - Enter their GitHub usernames or email addresses
 echo    - Give them "Write" permission for full collaboration
 echo.
 echo 2. TEAM MEMBERS SETUP:
 echo    Send them this command to get started:
-echo    git clone https://github.com/Jether34/smart-attendance-system.git
-echo    cd smart-attendance-system
+echo    git clone https://github.com/Jether34/Palawan-National-School-QR-Code-Attendance-Monitoring-System.git
+echo    cd Palawan-National-School-QR-Code-Attendance-Monitoring-System
 echo    .\team_setup.bat
 echo.
 echo 3. START VS CODE LIVE SHARE:
@@ -100,7 +100,7 @@ echo Press any key to open the repository in your browser...
 pause >nul
 
 REM Open repository in browser
-start https://github.com/Jether34/smart-attendance-system
+start https://github.com/Jether34/Palawan-National-School-QR-Code-Attendance-Monitoring-System
 
 echo.
 echo Repository opened in browser. Happy coding with your team! 🚀

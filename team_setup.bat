@@ -28,7 +28,7 @@ if not exist ".git" (
     git checkout master >nul 2>&1
     echo ✓ Created develop branch
     
-    git remote add origin https://github.com/Jether34/smart-attendance-system.git >nul 2>&1
+    git remote add origin https://github.com/Jether34/Palawan-National-School-QR-Code-Attendance-Monitoring-System.git >nul 2>&1
     echo ✓ Added GitHub remote
 ) else (
     echo ✓ Git already initialized
@@ -84,6 +84,6 @@ echo   • Feature branches for development
 echo   • Pull requests for code review
 echo   • Shared development environment
 echo.
-echo Repository: https://github.com/Jether34/smart-attendance-system
+echo Repository: https://github.com/Jether34/Palawan-National-School-QR-Code-Attendance-Monitoring-System
 echo.
 pause
