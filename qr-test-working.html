@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Test - Working Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .qr-display {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        
+        canvas {
+            border: 2px solid #333;
+            border-radius: 5px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 QR Code Generator Test</h1>
+        <p>Testing scannable QR code generation with embedded student data</p>
+        
+        <div class="qr-display">
+            <h3>Generated QR Code</h3>
+            <canvas id="testCanvas" width="300" height="300"></canvas>
+            <div id="status" class="status info">Click "Generate QR" to create a test QR code</div>
+        </div>
+        
+        <div>
+            <button class="btn btn-primary" onclick="testQRGeneration()">🔄 Generate QR</button>
+            <button class="btn btn-success" onclick="testWithLibrary()">📚 Test with Library</button>
+            <button class="btn btn-info" onclick="testWithAPI()">🌐 Test with API</button>
+            <button class="btn btn-success" onclick="downloadPNG()">📥 Download PNG</button>
+            <button class="btn btn-info" onclick="downloadPDF()">📄 Download PDF</button>
+        </div>
+        
+        <div style="margin-top: 20px; text-align: left; background: #f8f9fa; padding: 15px; border-radius: 5px;">
+            <h4>Test Data (will be embedded in QR):</h4>
+            <pre id="testData"></pre>
+        </div>
+        
+        <div style="margin-top: 15px; text-align: left; font-size: 12px; color: #666;">
+            <p><strong>How to test:</strong></p>
+            <ul>
+                <li>Generate a QR code above</li>
+                <li>Use your smartphone camera or QR scanner app</li>
+                <li>Point at the QR code</li>
+                <li>Verify the embedded student data appears</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/working-qr-generator.js"></script>
+    <script src="js/pdf-generator.js"></script>
+
+    <script>
+        // Sample student data for testing
+        const sampleStudent = {
+            id: 12345,
+            student_id: 'PNS-2024-TEST',
+            full_name: 'Juan Dela Cruz',
+            lrn: '123456789012',
+            email: 'juan.delacruz@test.edu',
+            grade_level: '12',
+            strand: 'STEM',
+            section_block: 'Einstein',
+            gender: 'Male',
+            created_at: '2024-08-15',
+            updated_at: '2024-11-10'
+        };
+
+        // Display test data
+        document.getElementById('testData').textContent = formatStudentDataForQR(sampleStudent);
+
+        async function testQRGeneration() {
+            updateStatus('info', '⏳ Generating QR code with Working QR Generator...');
+            
+            try {
+                const result = await generateWorkingQR(sampleStudent, 'testCanvas');
+                
+                if (result && result.success) {
+                    updateStatus('success', `✅ QR Generated successfully! Method: ${result.method}`);
+                } else {
+                    updateStatus('error', '❌ QR generation failed');
+                }
+            } catch (error) {
+                updateStatus('error', '❌ Error: ' + error.message);
+            }
+        }
+
+        async function testWithLibrary() {
+            updateStatus('info', '⏳ Testing with QRCode.js library...');
+            
+            try {
+                const canvas = document.getElementById('testCanvas');
+                const qrData = formatStudentDataForQR(sampleStudent);
+                
+                await QRCode.toCanvas(canvas, qrData, {
+                    width: 300,
+                    margin: 2,
+                    color: {
+                        dark: '#000000',
+                        light: '#FFFFFF'
+                    }
+                });
+                
+                updateStatus('success', '✅ QR Generated with QRCode.js library!');
+            } catch (error) {
+                updateStatus('error', '❌ Library test failed: ' + error.message);
+            }
+        }
+
+        function testWithAPI() {
+            updateStatus('info', '⏳ Testing with online API...');
+            
+            const canvas = document.getElementById('testCanvas');
+            const ctx = canvas.getContext('2d');
+            const qrData = formatStudentDataForQR(sampleStudent);
+            const encodedData = encodeURIComponent(qrData);
+            
+            const img = new Image();
+            img.onload = function() {
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                updateStatus('success', '✅ QR Generated with API!');
+            };
+            
+            img.onerror = function() {
+                updateStatus('error', '❌ API test failed');
+            };
+            
+            img.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodedData}`;
+        }
+
+        function downloadPNG() {
+            const canvas = document.getElementById('testCanvas');
+            const link = document.createElement('a');
+            link.download = `test-qr-${new Date().toISOString().split('T')[0]}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            updateStatus('success', '📥 PNG downloaded!');
+        }
+
+        async function downloadPDF() {
+            try {
+                updateStatus('info', '📄 Generating PDF...');
+                
+                const canvas = document.getElementById('testCanvas');
+                const pdfGenerator = new StudentCardPDFGenerator();
+                await pdfGenerator.downloadPDF(sampleStudent, canvas);
+                
+                updateStatus('success', '📄 PDF downloaded successfully!');
+            } catch (error) {
+                updateStatus('error', '❌ PDF generation failed: ' + error.message);
+            }
+        }
+
+        function updateStatus(type, message) {
+            const status = document.getElementById('status');
+            status.className = `status ${type}`;
+            status.textContent = message;
+        }
+
+        // Auto-test on load
+        window.addEventListener('load', function() {
+            console.log('QR Test Page Loaded');
+            console.log('Libraries available:');
+            console.log('- QRCode.js:', typeof QRCode !== 'undefined');
+            console.log('- jsPDF:', typeof window.jsPDF !== 'undefined');
+            console.log('- Working QR Generator:', typeof window.WorkingQRGenerator !== 'undefined');
+            
+            // Auto-generate test QR
+            setTimeout(testQRGeneration, 1000);
+        });
+    </script>
+</body>
+</html>

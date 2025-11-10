@@ -196,7 +196,8 @@ $code = $user['student_id'];
         
         <div class="action-buttons">
             <button onclick="regenerateQR()" class="btn btn-primary">🔄 Regenerate QR</button>
-            <button onclick="downloadQRCard()" class="btn btn-primary">📥 Download QR Card</button>
+            <button onclick="downloadQRCard()" class="btn btn-primary">📥 Download PNG</button>
+            <button onclick="downloadPDFCard()" class="btn btn-secondary">📄 Download PDF</button>
         </div>
         
         <div class="instructions">
@@ -224,8 +225,11 @@ $code = $user['student_id'];
         </div>
     </div>
 
-    <!-- Binary QR Generator -->
-    <script src="js/binary-qr-generator.js"></script>
+    <!-- QR and PDF Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="js/working-qr-generator.js"></script>
+    <script src="js/pdf-generator.js"></script>
     
     <script>
         // Complete student data from database
@@ -244,21 +248,23 @@ $code = $user['student_id'];
         };
 
         // QR Generation Functions
-        function generateStudentQRCode() {
+        async function generateStudentQRCode() {
             const statusDiv = document.getElementById('qrStatus');
-            statusDiv.innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">⏳ Generating binary QR with complete student data...</span>';
+            statusDiv.innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">⏳ Generating scannable QR with complete student data...</span>';
             
             try {
-                // Use the binary QR generator with all student database information
-                const result = generateStudentQR(studentCardData, 'studentQRCanvas');
+                // Use the working QR generator with all student database information
+                const result = await generateWorkingQR(studentCardData, 'studentQRCanvas');
                 
-                if (result.success) {
-                    statusDiv.innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">✅ Binary QR Generated! All database info embedded.</span>';
-                    console.log('QR Data Embedded:', result.data);
-                } else if (result.fallback) {
-                    statusDiv.innerHTML = '<span style="color: #ff8c00; background: #fff3cd; padding: 8px; border-radius: 5px;">⚠️ Fallback QR (Student data still embedded)</span>';
+                if (result && result.success) {
+                    const methodText = result.method === 'library' ? 'QRCode.js Library' : 
+                                     result.method === 'api' ? 'Online API' : 'Custom Pattern';
+                    statusDiv.innerHTML = `<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">✅ Scannable QR Generated! Method: ${methodText}</span>`;
+                    console.log('QR Data Embedded:', result.data || formatStudentDataForQR(studentCardData));
                 } else {
-                    statusDiv.innerHTML = '<span style="color: #dc3545; background: #f8d7da; padding: 8px; border-radius: 5px;">❌ Failed: ' + (result.error || 'Unknown error') + '</span>';
+                    statusDiv.innerHTML = '<span style="color: #dc3545; background: #f8d7da; padding: 8px; border-radius: 5px;">❌ QR generation failed</span>';
+                    // Try fallback
+                    generateFallbackQR();
                 }
             } catch (error) {
                 console.error('QR Generation Error:', error);
@@ -358,26 +364,77 @@ $code = $user['student_id'];
                 return;
             }
             
-            // Download the QR code
+            // Download the QR code as PNG
             const timestamp = new Date().toISOString().split('T')[0];
-            const filename = `${studentCardData.student_id}-binary-qr-${timestamp}.png`;
+            const filename = `${studentCardData.student_id}-qr-${timestamp}.png`;
             const link = document.createElement('a');
             link.download = filename;
             link.href = canvas.toDataURL('image/png');
             link.click();
             
-            document.getElementById('qrStatus').innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">📥 Downloaded: ' + filename + '</span>';
+            document.getElementById('qrStatus').innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">📥 PNG Downloaded: ' + filename + '</span>';
+        }
+
+        async function downloadPDFCard() {
+            const canvas = document.getElementById('studentQRCanvas');
+            const statusDiv = document.getElementById('qrStatus');
+            
+            if (!canvas) {
+                alert('Please generate QR code first!');
+                return;
+            }
+            
+            // Check if canvas has content
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            let hasContent = false;
+            
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                if (imageData.data[i] !== 255 || imageData.data[i + 1] !== 255 || imageData.data[i + 2] !== 255) {
+                    hasContent = true;
+                    break;
+                }
+            }
+            
+            if (!hasContent) {
+                alert('Please generate QR code first!');
+                return;
+            }
+            
+            try {
+                statusDiv.innerHTML = '<span style="color: #0c5460; background: #cce7ff; padding: 8px; border-radius: 5px;">📄 Generating PDF...</span>';
+                
+                const pdfGenerator = new StudentCardPDFGenerator();
+                const filename = await pdfGenerator.downloadPDF(studentCardData, canvas);
+                
+                statusDiv.innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">📄 PDF Downloaded: ' + filename + '</span>';
+            } catch (error) {
+                console.error('PDF generation error:', error);
+                statusDiv.innerHTML = '<span style="color: #dc3545; background: #f8d7da; padding: 8px; border-radius: 5px;">❌ PDF generation failed: ' + error.message + '</span>';
+                
+                // Fallback: open print dialog
+                alert('PDF generation failed. Opening print dialog as fallback.');
+                window.print();
+            }
         }
 
         // Auto-generate QR when page loads
         window.addEventListener('load', function() {
             console.log('Student QR Card Page Loaded');
-            console.log('Binary QR Generator Available:', typeof window.BinaryQRGenerator !== 'undefined');
+            console.log('Libraries Available:');
+            console.log('- QRCode.js:', typeof QRCode !== 'undefined');
+            console.log('- jsPDF:', typeof window.jsPDF !== 'undefined');
+            console.log('- Working QR Generator:', typeof window.WorkingQRGenerator !== 'undefined');
+            console.log('- PDF Generator:', typeof window.StudentCardPDFGenerator !== 'undefined');
             console.log('Complete Student Database Information:');
             console.table(studentCardData);
             
+            // Show student data that will be embedded in QR
+            const qrData = formatStudentDataForQR(studentCardData);
+            console.log('QR Data to embed:', qrData);
+            
             // Auto-generate QR code after short delay
-            setTimeout(generateStudentQRCode, 1000);
+            setTimeout(generateStudentQRCode, 1200);
         });
     </script>
 </body>
