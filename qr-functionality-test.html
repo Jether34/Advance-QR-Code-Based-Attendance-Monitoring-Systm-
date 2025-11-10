@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Functionality Test - Complete Feature Demo</title>
     <style>
         body {
@@ -186,6 +187,10 @@
             color: #218c21;
             margin-top: 0;
         }
+        
+        .center-text {
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -204,7 +209,7 @@
                 <div id="qrStatus" class="status info">Ready to generate QR code...</div>
             </div>
         </div>
-
+            <div class="center-text">
         <!-- Action Buttons -->
         <div class="feature-section">
             <h2>⚡ Action Controls</h2>
@@ -305,7 +310,7 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="js/working-qr-generator.js"></script>
-    <script src="js/pdf-generator.js"></script>
+    <script src="js/enhanced-pdf-generator.js"></script>
     
     <script>
         // Test statistics
@@ -447,7 +452,7 @@
                 
                 await new Promise(resolve => setTimeout(resolve, 300));
                 
-                const pdfGenerator = new StudentCardPDFGenerator();
+                const pdfGenerator = new EnhancedStudentCardPDFGenerator();
                 const filename = await pdfGenerator.downloadPDF(testStudentData, canvas);
                 
                 stats.pdfDownloads++;

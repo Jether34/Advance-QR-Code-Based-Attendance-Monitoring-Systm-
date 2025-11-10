@@ -246,7 +246,7 @@ $code = $user['student_id'];
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="js/working-qr-generator.js"></script>
-    <script src="js/pdf-generator.js"></script>
+    <script src="js/enhanced-pdf-generator.js"></script>
     
     <script>
         // Complete student data from database
@@ -416,13 +416,17 @@ $code = $user['student_id'];
             const btn = document.getElementById('downloadPngBtn');
             const statusDiv = document.getElementById('qrStatus');
             
+            console.log('PNG Download - Starting process...');
+            
             if (!canvas) {
-                alert('❌ No QR code found! Please generate QR code first.');
+                console.error('Canvas element not found');
+                alert('❌ No QR code canvas found! Please generate QR code first.');
                 return;
             }
             
             // Check if canvas has content
             if (!canvasHasContent(canvas)) {
+                console.error('Canvas has no content');
                 alert('❌ QR code is empty! Please generate QR code first.');
                 return;
             }
@@ -433,39 +437,60 @@ $code = $user['student_id'];
                 btn.innerHTML = '⏳ Preparing PNG...';
                 statusDiv.innerHTML = '<span style="color: #0c5460; background: #cce7ff; padding: 8px; border-radius: 5px;">📸 Preparing high-quality PNG download...</span>';
                 
+                console.log('Canvas dimensions:', canvas.width, 'x', canvas.height);
+                
+                // Wait a moment for UI update
+                await new Promise(resolve => setTimeout(resolve, 200));
+                
                 // Generate high-quality PNG
                 const timestamp = new Date().toISOString().split('T')[0];
                 const timeOnly = new Date().toTimeString().split(' ')[0].replace(/:/g, '-');
                 const filename = `${studentCardData.student_id}-QR-${timestamp}-${timeOnly}.png`;
                 
-                // Create download link with high quality
+                // Create high-quality data URL
+                const dataURL = canvas.toDataURL('image/png', 1.0);
+                console.log('Data URL generated, length:', dataURL.length);
+                
+                // Create download link with proper attributes
                 const link = document.createElement('a');
+                link.href = dataURL;
                 link.download = filename;
-                link.href = canvas.toDataURL('image/png', 1.0); // Maximum quality
+                link.style.display = 'none';
+                
+                // Add to body, click, and remove
+                document.body.appendChild(link);
+                console.log('Download link created and added to DOM');
                 
                 // Trigger download
-                document.body.appendChild(link);
                 link.click();
-                document.body.removeChild(link);
+                console.log('Download triggered');
+                
+                // Clean up
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                }, 100);
                 
                 // Success feedback
-                statusDiv.innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">📥 PNG Downloaded: ' + filename + '</span>';
+                statusDiv.innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">📥 PNG Downloaded Successfully: ' + filename + '</span>';
                 
-                // Analytics (optional)
-                console.log('PNG Download:', {
+                // Analytics
+                console.log('PNG Download Successful:', {
                     student: studentCardData.student_id,
                     filename: filename,
+                    size: dataURL.length,
                     timestamp: new Date().toISOString()
                 });
                 
             } catch (error) {
                 console.error('PNG download error:', error);
                 statusDiv.innerHTML = '<span style="color: #dc3545; background: #f8d7da; padding: 8px; border-radius: 5px;">❌ PNG download failed: ' + error.message + '</span>';
-                alert('❌ Failed to download PNG. Please try again.');
+                alert('❌ Failed to download PNG: ' + error.message + '\n\nPlease try regenerating the QR code first.');
             } finally {
-                // Reset button
-                btn.disabled = false;
-                btn.innerHTML = '🖼️ Download PNG Image';
+                // Reset button state
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '🖼️ Download PNG Image';
+                }, 500);
             }
         }
 
@@ -474,20 +499,32 @@ $code = $user['student_id'];
             const btn = document.getElementById('downloadPdfBtn');
             const statusDiv = document.getElementById('qrStatus');
             
+            console.log('PDF Download - Starting process...');
+            
             if (!canvas) {
-                alert('❌ No QR code found! Please generate QR code first.');
+                console.error('Canvas element not found');
+                alert('❌ No QR code canvas found! Please generate QR code first.');
                 return;
             }
             
             // Check if canvas has content
             if (!canvasHasContent(canvas)) {
+                console.error('Canvas has no content');
                 alert('❌ QR code is empty! Please generate QR code first.');
                 return;
             }
             
             // Check if PDF library is available
             if (typeof window.jsPDF === 'undefined') {
-                alert('❌ PDF library not loaded! Please refresh the page.');
+                console.error('jsPDF library not available');
+                alert('❌ PDF library not loaded! Please refresh the page and try again.');
+                return;
+            }
+            
+            // Check if enhanced PDF generator is available
+            if (typeof window.EnhancedStudentCardPDFGenerator === 'undefined') {
+                console.error('Enhanced PDF generator not available');
+                alert('❌ Enhanced PDF generator not loaded! Please refresh the page.');
                 return;
             }
             
@@ -495,41 +532,52 @@ $code = $user['student_id'];
                 // Show loading state
                 btn.disabled = true;
                 btn.innerHTML = '⏳ Creating PDF...';
-                statusDiv.innerHTML = '<span style="color: #0c5460; background: #cce7ff; padding: 8px; border-radius: 5px;">📄 Generating professional student ID card PDF...</span>';
+                statusDiv.innerHTML = '<span style="color: #0c5460; background: #cce7ff; padding: 8px; border-radius: 5px;">📄 Generating comprehensive student ID card with privacy terms...</span>';
+                
+                console.log('Creating enhanced PDF generator...');
                 
                 // Wait a moment for visual feedback
-                await new Promise(resolve => setTimeout(resolve, 300));
+                await new Promise(resolve => setTimeout(resolve, 500));
                 
-                const pdfGenerator = new StudentCardPDFGenerator();
+                // Use the enhanced PDF generator
+                const pdfGenerator = new EnhancedStudentCardPDFGenerator();
+                console.log('PDF generator created, generating PDF...');
+                
                 const filename = await pdfGenerator.downloadPDF(studentCardData, canvas);
+                console.log('PDF generated successfully:', filename);
                 
-                statusDiv.innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">📄 PDF Downloaded: ' + filename + '</span>';
+                statusDiv.innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">📄 Enhanced PDF Downloaded Successfully: ' + filename + '</span>';
                 
-                // Analytics (optional)
-                console.log('PDF Download:', {
+                // Analytics
+                console.log('Enhanced PDF Download Successful:', {
                     student: studentCardData.student_id,
                     filename: filename,
+                    features: ['logos', 'privacy_terms', 'usage_policy', 'multi_page'],
                     timestamp: new Date().toISOString()
                 });
                 
             } catch (error) {
-                console.error('PDF generation error:', error);
+                console.error('Enhanced PDF generation error:', error);
                 statusDiv.innerHTML = '<span style="color: #dc3545; background: #f8d7da; padding: 8px; border-radius: 5px;">❌ PDF generation failed: ' + error.message + '</span>';
                 
-                // Enhanced fallback options
-                const retry = confirm('❌ PDF generation failed. Would you like to try again or open print dialog as fallback?');
+                // Enhanced fallback options with more details
+                const errorMsg = `PDF Generation Failed: ${error.message}\n\nPossible causes:\n- Browser compatibility issue\n- PDF library loading error\n- Canvas content issue\n\nWould you like to try again?`;
+                
+                const retry = confirm(errorMsg);
                 if (retry) {
-                    // Retry PDF generation
+                    console.log('User chose to retry PDF generation');
                     setTimeout(() => downloadPDFCard(), 1000);
                 } else {
-                    // Fallback: open print dialog
-                    alert('📄 Opening print dialog. You can print to PDF from there.');
+                    console.log('User chose print dialog fallback');
+                    alert('📄 Opening print dialog as fallback. You can print to PDF from there.');
                     window.print();
                 }
             } finally {
-                // Reset button
-                btn.disabled = false;
-                btn.innerHTML = '📄 Download PDF Card';
+                // Reset button state
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = '📄 Download PDF Card';
+                }, 500);
             }
         }
 
