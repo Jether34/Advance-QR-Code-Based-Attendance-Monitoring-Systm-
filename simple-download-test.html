@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Download Diagnostic</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+        }
+        canvas {
+            border: 2px solid #007bff;
+            display: block;
+            margin: 20px auto;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+        .btn:hover { background: #0056b3; }
+        .btn:disabled { background: #6c757d; cursor: not-allowed; }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .debug {
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Download Diagnostic Tool</h1>
+        <p>Let's diagnose why downloads aren't working...</p>
+        
+        <canvas id="testCanvas" width="200" height="200"></canvas>
+        
+        <div style="text-align: center;">
+            <button onclick="createTestQR()" class="btn" id="qrBtn">1️⃣ Create Test QR</button>
+            <button onclick="testBasicPNG()" class="btn" id="pngBtn">2️⃣ Test PNG Download</button>
+            <button onclick="testBasicPDF()" class="btn" id="pdfBtn">3️⃣ Test PDF Download</button>
+        </div>
+        
+        <div id="status" class="status info">Ready for diagnostics...</div>
+        
+        <h3>🐛 Debug Information:</h3>
+        <div id="debug" class="debug">Waiting for tests...</div>
+    </div>
+
+    <!-- Minimal library loading -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <script>
+        let debugLog = '';
+        
+        function debug(msg) {
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog += `[${timestamp}] ${msg}\n`;
+            document.getElementById('debug').textContent = debugLog;
+            console.log(msg);
+        }
+        
+        function setStatus(msg, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.className = `status ${type}`;
+            statusEl.textContent = msg;
+        }
+        
+        // Test 1: Create a simple QR code
+        async function createTestQR() {
+            const btn = document.getElementById('qrBtn');
+            
+            try {
+                btn.disabled = true;
+                setStatus('Creating test QR code...', 'info');
+                debug('=== QR CREATION TEST ===');
+                
+                debug(`QRCode library available: ${typeof QRCode !== 'undefined'}`);
+                
+                if (typeof QRCode === 'undefined') {
+                    throw new Error('QRCode library not loaded');
+                }
+                
+                const canvas = document.getElementById('testCanvas');
+                debug(`Canvas element found: ${!!canvas}`);
+                
+                const testText = 'Simple test QR code - ' + new Date().toISOString();
+                debug(`Test text: ${testText}`);
+                
+                await new Promise((resolve, reject) => {
+                    QRCode.toCanvas(canvas, testText, {
+                        width: 200,
+                        margin: 2
+                    }, function(error) {
+                        if (error) {
+                            debug(`QR creation error: ${error.message}`);
+                            reject(error);
+                        } else {
+                            debug('QR code created successfully');
+                            resolve();
+                        }
+                    });
+                });
+                
+                setStatus('✅ Test QR created successfully!', 'success');
+                
+            } catch (error) {
+                debug(`QR creation failed: ${error.message}`);
+                setStatus(`❌ QR creation failed: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+        
+        // Test 2: Basic PNG download
+        async function testBasicPNG() {
+            const btn = document.getElementById('pngBtn');
+            
+            try {
+                btn.disabled = true;
+                setStatus('Testing PNG download...', 'info');
+                debug('=== PNG DOWNLOAD TEST ===');
+                
+                const canvas = document.getElementById('testCanvas');
+                if (!canvas) {
+                    throw new Error('Canvas not found');
+                }
+                
+                // Check if canvas has content
+                const ctx = canvas.getContext('2d');
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                let hasContent = false;
+                
+                for (let i = 0; i < imageData.data.length; i += 4) {
+                    if (imageData.data[i] !== 255 || imageData.data[i + 1] !== 255 || imageData.data[i + 2] !== 255) {
+                        hasContent = true;
+                        break;
+                    }
+                }
+                
+                debug(`Canvas has content: ${hasContent}`);
+                
+                if (!hasContent) {
+                    throw new Error('Canvas is empty - create QR first');
+                }
+                
+                // Test different download methods
+                debug('Testing Method 1: Direct canvas.toDataURL()');
+                
+                try {
+                    const dataURL = canvas.toDataURL('image/png');
+                    debug(`Data URL generated: ${dataURL.substring(0, 50)}... (length: ${dataURL.length})`);
+                    
+                    // Method 1: Direct link click
+                    const link = document.createElement('a');
+                    link.href = dataURL;
+                    link.download = 'test-qr-method1.png';
+                    
+                    document.body.appendChild(link);
+                    debug('Download link added to DOM');
+                    
+                    link.click();
+                    debug('Download link clicked');
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(link);
+                        debug('Download link removed from DOM');
+                    }, 100);
+                    
+                    setStatus('✅ PNG download test completed!', 'success');
+                    
+                } catch (downloadError) {
+                    debug(`PNG download error: ${downloadError.message}`);
+                    
+                    // Method 2: Try blob method
+                    debug('Trying Method 2: Blob conversion');
+                    
+                    canvas.toBlob(function(blob) {
+                        if (blob) {
+                            const url = URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = 'test-qr-method2.png';
+                            
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            
+                            setTimeout(() => URL.revokeObjectURL(url), 100);
+                            debug('Blob method download triggered');
+                            setStatus('✅ PNG download (blob method) completed!', 'success');
+                        } else {
+                            debug('Blob creation failed');
+                            throw new Error('Blob creation failed');
+                        }
+                    }, 'image/png');
+                }
+                
+            } catch (error) {
+                debug(`PNG test failed: ${error.message}`);
+                setStatus(`❌ PNG test failed: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+        
+        // Test 3: Basic PDF download
+        async function testBasicPDF() {
+            const btn = document.getElementById('pdfBtn');
+            
+            try {
+                btn.disabled = true;
+                setStatus('Testing PDF download...', 'info');
+                debug('=== PDF DOWNLOAD TEST ===');
+                
+                debug(`jsPDF available: ${typeof window.jsPDF !== 'undefined'}`);
+                
+                if (typeof window.jsPDF === 'undefined') {
+                    throw new Error('jsPDF library not loaded');
+                }
+                
+                const canvas = document.getElementById('testCanvas');
+                if (!canvas) {
+                    throw new Error('Canvas not found');
+                }
+                
+                debug('Creating simple PDF...');
+                
+                const { jsPDF } = window.jsPDF;
+                const pdf = new jsPDF();
+                
+                debug('PDF instance created');
+                
+                // Add simple content
+                pdf.setFontSize(20);
+                pdf.text('Test PDF Download', 20, 30);
+                
+                pdf.setFontSize(12);
+                pdf.text('This is a test PDF to verify download functionality.', 20, 50);
+                pdf.text('Generated: ' + new Date().toString(), 20, 70);
+                
+                debug('PDF content added');
+                
+                // Try to add canvas if it has content
+                try {
+                    const dataURL = canvas.toDataURL('image/png');
+                    pdf.addImage(dataURL, 'PNG', 20, 90, 50, 50);
+                    debug('Canvas image added to PDF');
+                } catch (imgError) {
+                    debug(`Canvas image addition failed: ${imgError.message}`);
+                }
+                
+                // Download PDF
+                const filename = 'test-download-' + Date.now() + '.pdf';
+                debug(`Attempting to save PDF as: ${filename}`);
+                
+                pdf.save(filename);
+                debug('PDF save() method called');
+                
+                setStatus('✅ PDF download test completed!', 'success');
+                
+            } catch (error) {
+                debug(`PDF test failed: ${error.message}`);
+                setStatus(`❌ PDF test failed: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+        
+        // Initialize
+        window.addEventListener('load', function() {
+            debug('=== DIAGNOSTIC TOOL LOADED ===');
+            debug(`Browser: ${navigator.userAgent}`);
+            debug(`Platform: ${navigator.platform}`);
+            debug(`URL: ${window.location.href}`);
+            
+            // Auto-create QR for immediate testing
+            setTimeout(createTestQR, 1000);
+        });
+    </script>
+</body>
+</html>

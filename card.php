@@ -199,10 +199,20 @@ $code = $user['student_id'];
                 🔄 Regenerate QR Code
             </button>
             <button onclick="downloadQRCard()" class="btn btn-primary" id="downloadPngBtn">
-                �️ Download PNG Image
+                🖼️ Download PNG Image
             </button>
             <button onclick="downloadPDFCard()" class="btn btn-secondary" id="downloadPdfBtn">
                 📄 Download PDF Card
+            </button>
+        </div>
+        
+        <div style="margin: 10px 0; text-align: center;">
+            <small style="color: #6c757d;">If downloads don't work, try these alternatives:</small><br>
+            <button onclick="fallbackPNG()" class="btn" style="background: #6c757d; font-size: 12px; padding: 8px 15px;">
+                📁 Simple PNG Download
+            </button>
+            <button onclick="fallbackPDF()" class="btn" style="background: #6c757d; font-size: 12px; padding: 8px 15px;">
+                📑 Simple PDF Download
             </button>
         </div>
         
@@ -247,6 +257,7 @@ $code = $user['student_id'];
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="js/working-qr-generator.js"></script>
     <script src="js/enhanced-pdf-generator.js"></script>
+    <script src="js/simple-download.js"></script>
     
     <script>
         // Complete student data from database
@@ -581,6 +592,47 @@ $code = $user['student_id'];
             }
         }
 
+        // Fallback download functions
+        async function fallbackPNG() {
+            const statusDiv = document.getElementById('qrStatus');
+            statusDiv.innerHTML = '<span style="color: #0c5460; background: #cce7ff; padding: 8px; border-radius: 5px;">📁 Using simple PNG download method...</span>';
+            
+            try {
+                const timestamp = new Date().toISOString().split('T')[0];
+                const filename = `${studentCardData.student_id}-QR-Simple-${timestamp}.png`;
+                
+                const result = await simpleDownloadPNG('studentQRCanvas', filename);
+                
+                if (result) {
+                    statusDiv.innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">📁 Simple PNG download completed!</span>';
+                } else {
+                    throw new Error('Simple PNG download failed');
+                }
+            } catch (error) {
+                statusDiv.innerHTML = '<span style="color: #dc3545; background: #f8d7da; padding: 8px; border-radius: 5px;">❌ Simple PNG failed: ' + error.message + '</span>';
+            }
+        }
+        
+        async function fallbackPDF() {
+            const statusDiv = document.getElementById('qrStatus');
+            statusDiv.innerHTML = '<span style="color: #0c5460; background: #cce7ff; padding: 8px; border-radius: 5px;">📑 Using simple PDF download method...</span>';
+            
+            try {
+                const timestamp = new Date().toISOString().split('T')[0];
+                const filename = `${studentCardData.student_id}-QR-Simple-${timestamp}.pdf`;
+                
+                const result = simpleDownloadPDF(studentCardData, 'studentQRCanvas', filename);
+                
+                if (result) {
+                    statusDiv.innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">📑 Simple PDF download completed!</span>';
+                } else {
+                    throw new Error('Simple PDF download failed');
+                }
+            } catch (error) {
+                statusDiv.innerHTML = '<span style="color: #dc3545; background: #f8d7da; padding: 8px; border-radius: 5px;">❌ Simple PDF failed: ' + error.message + '</span>';
+            }
+        }
+
         // Auto-generate QR when page loads
         window.addEventListener('load', function() {
             console.log('Student QR Card Page Loaded');
@@ -589,6 +641,7 @@ $code = $user['student_id'];
             console.log('- jsPDF:', typeof window.jsPDF !== 'undefined');
             console.log('- Working QR Generator:', typeof window.WorkingQRGenerator !== 'undefined');
             console.log('- PDF Generator:', typeof window.StudentCardPDFGenerator !== 'undefined');
+            console.log('- Simple Download Functions:', typeof window.simpleDownloadPNG !== 'undefined');
             console.log('Complete Student Database Information:');
             console.table(studentCardData);
             
