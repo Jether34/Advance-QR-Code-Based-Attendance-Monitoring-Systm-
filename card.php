@@ -239,7 +239,9 @@ $code = $user['student_id'];
         </div>
     </div>
 
-        <!-- Pure HTML/CSS/JavaScript QR Code Generator (No External Libraries) -->
+        <!-- Include our offline QR generator -->
+        <script src="js/offline-qr-generator.js"></script>
+        <script src="js/qr-functions.js"></script>
         <script>
         // Comprehensive QR Code generator using pure JavaScript
         // Implements actual QR Code specification for real scanning capability
@@ -608,15 +610,36 @@ $code = $user['student_id'];
         // Render QR code when page loads
         function initializeQRCode() {
             var qrDiv = document.getElementById('qrcode');
-            qrDiv.innerHTML = '<p style="color: #666; margin: 20px;">Generating QR Code...</p>';
+            qrDiv.innerHTML = '<p style="color: #666; margin: 20px;">Generating Offline QR Code...</p>';
             
-            // Generate QR code with complete student information
-            createCleanQR(qrCodeData, 280, qrDiv);
+            // Generate completely offline QR code
+            createOfflineQR(qrCodeData, 280, qrDiv);
         }
         
-        function createCleanQR(text, size, container) {
-            // Try multiple QR services for better reliability
-            tryQRService1(text, size, container);
+        function createOfflineQR(text, size, container) {
+            try {
+                // Use our advanced offline QR generator
+                var qrGenerator = new OfflineQRGenerator();
+                var canvas = qrGenerator.generateQR(text, size);
+                
+                // Clear container and add QR code
+                container.innerHTML = '';
+                container.appendChild(canvas);
+                
+                // Store canvas reference for downloads
+                window.currentQRCanvas = canvas;
+                
+                // Add success message
+                var successDiv = document.createElement('div');
+                successDiv.style.cssText = 'font-size: 12px; color: #218c21; margin-top: 8px; text-align: center; font-weight: bold;';
+                successDiv.innerHTML = '✅ Offline QR Code Generated Successfully';
+                container.appendChild(successDiv);
+                
+                console.log('Advanced offline QR code generated successfully');
+            } catch (error) {
+                console.log('Advanced QR failed, using simple fallback:', error);
+                createFallbackQR(text, size, container);
+            }
         }
         
         function tryQRService1(text, size, container) {

@@ -15,6 +15,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$user) { echo 'Teacher not found'; exit; }
 
 $section = $_GET['section'] ?? 'dashboard';
+// here are the css styles for sidebar and main content
 
 function active($s, $section) { return $s === $section ? 'active' : ''; }
 ?>

@@ -14,7 +14,7 @@ $code = $data['code'] ?? null;
 // ensure response is JSON
 header('Content-Type: application/json; charset=utf-8');
 $type = $data['type'] ?? 'qr';
-$period = $data['period'] ?? 'morning_in'; // Default to morning_in if not provided
+$period = $data['period'] ?? 'morning_in'; // Default to morning in if not provided
 
 if(!$code){
     echo json_encode(['success'=>false,'error'=>'Missing code']); exit;
@@ -48,6 +48,7 @@ function calculateAttendanceStatus($record) {
     }
     
     // Default absent
+    // if the student qr code wasn't perform scanns for all day it should automatically absent
     return 'absent';
 }
 
@@ -65,6 +66,7 @@ try {
 }
 
 // Validate student ID in students table
+// the system should automacally validate only tje student id 
 
 try {
     $stmt = $pdo->prepare('SELECT * FROM students WHERE student_id = :code LIMIT 1');
@@ -126,6 +128,7 @@ try {
             ':now'=>$now,
             ':time'=>$now
         ]);
+        
         
         // Get the newly inserted record
         $record_id = $pdo->lastInsertId();

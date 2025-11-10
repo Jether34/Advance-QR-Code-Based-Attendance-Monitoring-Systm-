@@ -76,34 +76,34 @@ require_once __DIR__ . '/db.php';
     </style>
 </head>
 <body>
-    <h1>🤖 Automatic Attendance Scanner</h1>
+    <h1> Automatic Attendance Scanner</h1>
     
     <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #218c21;">
-        <strong>⚡ Auto-Record Mode Active:</strong> This scanner automatically records attendance when QR codes are scanned! 
+        <strong> Auto-Record Mode Active:</strong> This scanner automatically records attendance when QR codes are scanned! 
         The system extracts the student ID from any QR code format, validates it against the database, and records attendance 
         using the exact scan timestamp. No manual buttons needed - just scan and go!
     </div>
     
     <div style="background: #fff3cd; padding: 12px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #f0ad4e;">
-        <strong>📋 Automatic Process:</strong> 
+        <strong> Automatic Process:</strong> 
         QR Code Scanned → Student ID Extracted → Database Validated → Attendance Recorded → Confirmation Displayed
     </div>
     
     <div class="scanner-container">
         <div class="scanner-section">
-            <h3>📷 QR Code Scanner</h3>
+            <h3> QR Code Scanner</h3>
             <div id="reader" style="width:400px"></div>
             <div style="margin-top: 15px; padding: 10px; background: #fff3cd; border-radius: 6px; font-size: 0.9em; color: #856404;">
-                <strong>🎯 Auto-Record Mode:</strong> Point camera at student's QR code. The system will automatically extract the student ID, 
+                <strong> Auto-Record Mode:</strong> Point camera at student's QR code. The system will automatically extract the student ID, 
                 validate it in the database, and record attendance immediately using the scan timestamp.
             </div>
         </div>
         <div class="scanner-section">
-            <h3>⌨️ Manual Barcode Input</h3>
+            <h3>⌨ Manual Barcode Input</h3>
             <p>If you have a hardware barcode scanner, focus the input below and scan — it will auto-submit.</p>
             <input id="barcodeInput" placeholder="Scan or type student ID / barcode" />
             <div style="margin-top: 10px; padding: 10px; background: #e3f2fd; border-radius: 6px; font-size: 0.9em; color: #1976d2;">
-                <strong>⚡ Quick Entry:</strong> Enter student ID directly or use barcode scanner. System will automatically validate 
+                <strong> Quick Entry:</strong> Enter student ID directly or use barcode scanner. System will automatically validate 
                 and record attendance for valid student IDs.
             </div>
         </div>
@@ -154,7 +154,7 @@ require_once __DIR__ . '/db.php';
             }
             
             // Show processing feedback with extracted student ID
-            last.innerHTML = '<div style="color: #218c21; font-weight: bold;">🔍 Validating Student ID: ' + studentId + '</div>' +
+            last.innerHTML = '<div style="color: #218c21; font-weight: bold;"> Validating Student ID: ' + studentId + '</div>' +
                             '<div style="color: #666; font-size: 0.9em; margin-top: 5px;">Checking database and recording attendance...</div>';
             last.style.display = 'block';
             
@@ -328,7 +328,7 @@ require_once __DIR__ . '/db.php';
                         margin: 15px 0;
                         backdrop-filter: blur(10px);
                     ">
-                        <h4 style="margin: 0 0 10px 0; color: #ecf0f1;">⏰ Attendance Recorded</h4>
+                        <h4 style="margin: 0 0 10px 0; color: #ecf0f1;"> Attendance Recorded</h4>
                         <div style="text-align: left; font-size: 0.95em; line-height: 1.6;">
                             <div><strong>Status:</strong> <span style="color: #f1c40f; font-weight: bold;">${attendance.status}</span></div>
                             <div><strong>Time Recorded:</strong> ${new Date(attendance.timestamp).toLocaleTimeString()}</div>
@@ -345,7 +345,7 @@ require_once __DIR__ . '/db.php';
                         margin: 15px 0;
                         font-size: 0.9em;
                     ">
-                        <div style="color: #ecf0f1;"><strong>🤖 Auto-Processing Complete</strong></div>
+                        <div style="color: #ecf0f1;"><strong> Auto-Processing Complete</strong></div>
                         <div style="color: #d5f4e6; margin-top: 5px;">
                             ✓ Student ID validated in database<br>
                             ✓ Attendance recorded automatically<br>
@@ -457,7 +457,7 @@ require_once __DIR__ . '/db.php';
                     margin: 0 auto;
                     animation: slideIn 0.5s ease-out;
                 ">
-                    <div style="font-size: 2em; margin-bottom: 15px;">📱</div>
+                    <div style="font-size: 2em; margin-bottom: 15px;"> </div>
                     <h3 style="margin: 0 0 15px 0; font-size: 1.4em; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
                         Student Information from QR Code
                     </h3>
@@ -535,7 +535,7 @@ require_once __DIR__ . '/db.php';
 
         function recordAttendanceFromQR(studentId) {
             // Record attendance using the student ID from QR
-            last.innerHTML = '<div style="color: #218c21; font-weight: bold;">🔍 Recording attendance for: ' + studentId + '</div>';
+            last.innerHTML = '<div style="color: #218c21; font-weight: bold;"> Recording attendance for: ' + studentId + '</div>';
             
             fetch('record_attendance.php', {
                 method: 'POST', 

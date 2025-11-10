@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Offline QR Code Generator Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #d6f5d6 0%, #eaffea 100%);
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(33, 140, 33, 0.2);
+            margin: 20px 0;
+        }
+        
+        .qr-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8fff8;
+            border-radius: 10px;
+            border: 2px solid #d4edda;
+        }
+        
+        .test-button {
+            background: #218c21;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .test-button:hover {
+            background: #176617;
+        }
+        
+        .success {
+            color: #218c21;
+            font-weight: bold;
+        }
+        
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 2px solid #d4edda;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+        
+        .feature-list {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Offline QR Code Generator Test</h1>
+        <p>This page tests our completely offline QR code generation system. <strong>No internet required!</strong></p>
+        
+        <div class="feature-list">
+            <h3>✅ Features:</h3>
+            <ul>
+                <li><strong>100% Offline:</strong> Works without internet connection</li>
+                <li><strong>No External APIs:</strong> No dependency on Google Charts or other services</li>
+                <li><strong>Pure JavaScript:</strong> Complete QR code implementation in client-side JS</li>
+                <li><strong>Mobile Compatible:</strong> Generated QR codes scan with any smartphone</li>
+                <li><strong>Embedded Data:</strong> Student information embedded directly in QR code</li>
+                <li><strong>Fallback System:</strong> Multiple generation methods for maximum reliability</li>
+            </ul>
+        </div>
+
+        <h3>📝 Test Data Input</h3>
+        <textarea id="testData" placeholder="Enter test data for QR code generation...">
+=== STUDENT INFORMATION ===
+Student ID: STU001
+Name: Alice Johnson
+Email: alice@palawan-school.edu
+Grade: 11
+Strand: STEM
+Section: A
+Gender: Female
+LRN: LRN001
+Enrolled: 2025-01-15
+QR Generated: 2025-11-10 10:30:00
+========================
+Palawan National School
+Attendance Monitoring System
+        </textarea>
+
+        <div>
+            <button class="test-button" onclick="testAdvancedQR()">🚀 Test Advanced QR Generator</button>
+            <button class="test-button" onclick="testSimpleQR()">⚡ Test Simple QR Generator</button>
+            <button class="test-button" onclick="testBothMethods()">🔄 Test Both Methods</button>
+            <button class="test-button" onclick="clearResults()">🗑️ Clear Results</button>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <!-- Include our offline QR generators -->
+    <script src="js/offline-qr-generator.js"></script>
+
+    <script>
+        function testAdvancedQR() {
+            const data = document.getElementById('testData').value;
+            const resultsDiv = document.getElementById('results');
+            
+            const container = document.createElement('div');
+            container.className = 'qr-container';
+            container.innerHTML = '<h3>🚀 Advanced Offline QR Generator</h3><p>Generating...</p>';
+            
+            try {
+                const qrGenerator = new OfflineQRGenerator();
+                const canvas = qrGenerator.generateQR(data, 300);
+                
+                container.innerHTML = '<h3>🚀 Advanced Offline QR Generator</h3>';
+                container.appendChild(canvas);
+                
+                const successMsg = document.createElement('div');
+                successMsg.className = 'success';
+                successMsg.innerHTML = '✅ Advanced QR generated successfully! This should scan on most devices.';
+                container.appendChild(successMsg);
+                
+                // Add download button
+                const downloadBtn = document.createElement('button');
+                downloadBtn.className = 'test-button';
+                downloadBtn.textContent = '📥 Download';
+                downloadBtn.onclick = () => downloadCanvas(canvas, 'advanced-qr-test.png');
+                container.appendChild(downloadBtn);
+                
+            } catch (error) {
+                container.innerHTML = '<h3>🚀 Advanced Offline QR Generator</h3>';
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'error';
+                errorMsg.innerHTML = '❌ Advanced QR failed: ' + error.message;
+                container.appendChild(errorMsg);
+            }
+            
+            resultsDiv.appendChild(container);
+        }
+
+        function testSimpleQR() {
+            const data = document.getElementById('testData').value;
+            const resultsDiv = document.getElementById('results');
+            
+            const container = document.createElement('div');
+            container.className = 'qr-container';
+            container.innerHTML = '<h3>⚡ Simple Offline QR Generator</h3><p>Generating...</p>';
+            
+            try {
+                const canvas = SimpleQRGenerator.generate(data, 300);
+                
+                container.innerHTML = '<h3>⚡ Simple Offline QR Generator</h3>';
+                container.appendChild(canvas);
+                
+                const successMsg = document.createElement('div');
+                successMsg.className = 'success';
+                successMsg.innerHTML = '✅ Simple QR generated successfully! Optimized for reliability.';
+                container.appendChild(successMsg);
+                
+                // Add download button
+                const downloadBtn = document.createElement('button');
+                downloadBtn.className = 'test-button';
+                downloadBtn.textContent = '📥 Download';
+                downloadBtn.onclick = () => downloadCanvas(canvas, 'simple-qr-test.png');
+                container.appendChild(downloadBtn);
+                
+            } catch (error) {
+                container.innerHTML = '<h3>⚡ Simple Offline QR Generator</h3>';
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'error';
+                errorMsg.innerHTML = '❌ Simple QR failed: ' + error.message;
+                container.appendChild(errorMsg);
+            }
+            
+            resultsDiv.appendChild(container);
+        }
+
+        function testBothMethods() {
+            testAdvancedQR();
+            setTimeout(() => testSimpleQR(), 100);
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        function downloadCanvas(canvas, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // Auto-test when page loads
+        window.onload = function() {
+            console.log('🔧 Offline QR Generator Test Page Loaded');
+            
+            // Add instruction
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="qr-container">
+                    <h3>📱 Instructions</h3>
+                    <p><strong>How to test the QR codes:</strong></p>
+                    <ol>
+                        <li>Generate QR codes using the buttons above</li>
+                        <li>Open your phone's camera or QR scanner app</li>
+                        <li>Point the camera at the generated QR code</li>
+                        <li>The embedded student information should display</li>
+                        <li>Test works completely offline - disconnect internet and try!</li>
+                    </ol>
+                    <p class="success"><strong>✅ Both methods work without internet connection!</strong></p>
+                </div>
+            `;
+        };
+    </script>
+</body>
+</html>
