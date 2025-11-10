@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary QR Generator Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #d6f5d6 0%, #eaffea 100%);
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            color: #218c21;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #218c21;
+        }
+        
+        .qr-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        canvas {
+            border: 3px solid #218c21;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .btn {
+            background: #218c21;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: #176617;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .info {
+            background: #cce7ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+        
+        .data-display {
+            background: #f1f3f4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔲 Binary QR Code Generator Test</h1>
+            <p>100% Offline QR Generation Using Binary Manipulation</p>
+        </div>
+
+        <!-- Test 1: Basic Student QR -->
+        <div class="test-section">
+            <h3>📱 Student QR Code Test</h3>
+            <div class="qr-display">
+                <canvas id="testCanvas1" width="250" height="250"></canvas>
+            </div>
+            <div class="controls">
+                <button class="btn" onclick="testStudentQR()">Generate Student QR</button>
+                <button class="btn btn-secondary" onclick="downloadQR('testCanvas1', 'student-test.png')">Download</button>
+                <button class="btn btn-secondary" onclick="clearCanvas('testCanvas1')">Clear</button>
+            </div>
+            <div id="status1" class="status info">Ready to generate QR code</div>
+            <div class="data-display" id="data1">No data generated yet</div>
+        </div>
+
+        <!-- Test 2: Custom Data QR -->
+        <div class="test-section">
+            <h3>⚙️ Custom Data QR Test</h3>
+            <div>
+                <label for="customData"><strong>Enter Custom Data:</strong></label><br>
+                <textarea id="customData" rows="3" style="width: 100%; margin: 10px 0; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">ID:12345|NAME:Test Student|LRN:123456789012|GRADE:12|STRAND:STEM</textarea>
+            </div>
+            <div class="qr-display">
+                <canvas id="testCanvas2" width="250" height="250"></canvas>
+            </div>
+            <div class="controls">
+                <button class="btn" onclick="testCustomQR()">Generate Custom QR</button>
+                <button class="btn btn-secondary" onclick="downloadQR('testCanvas2', 'custom-test.png')">Download</button>
+                <button class="btn btn-secondary" onclick="clearCanvas('testCanvas2')">Clear</button>
+            </div>
+            <div id="status2" class="status info">Ready to generate custom QR code</div>
+            <div class="data-display" id="data2">No data generated yet</div>
+        </div>
+
+        <!-- Test 3: Performance Test -->
+        <div class="test-section">
+            <h3>⚡ Performance & Reliability Test</h3>
+            <div class="qr-display">
+                <canvas id="testCanvas3" width="200" height="200"></canvas>
+            </div>
+            <div class="controls">
+                <button class="btn" onclick="performanceTest()">Run Performance Test</button>
+                <button class="btn btn-secondary" onclick="clearCanvas('testCanvas3')">Clear</button>
+            </div>
+            <div id="status3" class="status info">Ready to run performance test</div>
+            <div class="data-display" id="perfResults">Performance results will appear here</div>
+        </div>
+
+        <!-- QR Scanning Instructions -->
+        <div class="test-section">
+            <h3>📲 How to Test QR Codes</h3>
+            <ol>
+                <li><strong>Generate a QR code</strong> using any test above</li>
+                <li><strong>Use your smartphone camera</strong> or QR scanner app</li>
+                <li><strong>Point camera at QR code</strong> - it should automatically detect and show the data</li>
+                <li><strong>Verify the data</strong> matches what was encoded</li>
+            </ol>
+            <p><strong>Expected Data Format:</strong> <code>ID:xxx|NAME:xxx|LRN:xxx|GRADE:xxx|STRAND:xxx|SECTION:xxx|TIME:xxx</code></p>
+        </div>
+    </div>
+
+    <!-- Binary QR Generator -->
+    <script src="js/binary-qr-generator.js"></script>
+    
+    <script>
+        // Test sample student data
+        const sampleStudent = {
+            id: 123,
+            full_name: "Juan Dela Cruz",
+            lrn: "123456789012",
+            student_id: "2024-001",
+            grade_level: "12",
+            strand: "STEM",
+            section_block: "Einstein",
+            email: "juan.delacruz@pns.edu.ph",
+            gender: "Male"
+        };
+
+        // Test Functions
+        function testStudentQR() {
+            updateStatus('status1', 'info', '⏳ Generating student QR code...');
+            
+            try {
+                const generator = new BinaryQRGenerator();
+                const result = generator.generateStudentQR(sampleStudent, 'testCanvas1');
+                
+                if (result.success) {
+                    updateStatus('status1', 'success', '✅ Student QR generated successfully!');
+                    document.getElementById('data1').textContent = result.data;
+                } else if (result.fallback) {
+                    updateStatus('status1', 'warning', '⚠️ Using fallback pattern (data embedded)');
+                    document.getElementById('data1').textContent = 'Fallback pattern with student ID: ' + sampleStudent.id;
+                } else {
+                    updateStatus('status1', 'error', '❌ Generation failed: ' + result.error);
+                    document.getElementById('data1').textContent = 'Error: ' + result.error;
+                }
+            } catch (error) {
+                updateStatus('status1', 'error', '❌ Exception: ' + error.message);
+                document.getElementById('data1').textContent = 'Exception: ' + error.message;
+                console.error('QR Generation Error:', error);
+            }
+        }
+
+        function testCustomQR() {
+            const customData = document.getElementById('customData').value.trim();
+            
+            if (!customData) {
+                updateStatus('status2', 'error', '❌ Please enter some data first');
+                return;
+            }
+            
+            updateStatus('status2', 'info', '⏳ Generating custom QR code...');
+            
+            try {
+                const generator = new BinaryQRGenerator();
+                
+                // Create fake student object with custom data
+                const fakeStudent = {
+                    id: 999,
+                    full_name: "Custom Data",
+                    lrn: "000000000000",
+                    student_id: "CUSTOM",
+                    grade_level: "N/A",
+                    strand: "N/A",
+                    section_block: "N/A"
+                };
+                
+                // Override the formatStudentData method temporarily
+                const originalFormat = generator.formatStudentData;
+                generator.formatStudentData = function() { return customData; };
+                
+                const result = generator.generateStudentQR(fakeStudent, 'testCanvas2');
+                
+                // Restore original method
+                generator.formatStudentData = originalFormat;
+                
+                if (result.success) {
+                    updateStatus('status2', 'success', '✅ Custom QR generated successfully!');
+                    document.getElementById('data2').textContent = customData;
+                } else if (result.fallback) {
+                    updateStatus('status2', 'warning', '⚠️ Using fallback pattern');
+                    document.getElementById('data2').textContent = 'Fallback: ' + customData;
+                } else {
+                    updateStatus('status2', 'error', '❌ Generation failed: ' + result.error);
+                    document.getElementById('data2').textContent = 'Error: ' + result.error;
+                }
+            } catch (error) {
+                updateStatus('status2', 'error', '❌ Exception: ' + error.message);
+                document.getElementById('data2').textContent = 'Exception: ' + error.message;
+                console.error('Custom QR Generation Error:', error);
+            }
+        }
+
+        function performanceTest() {
+            updateStatus('status3', 'info', '⏳ Running performance test...');
+            
+            const results = [];
+            const iterations = 5;
+            
+            try {
+                for (let i = 0; i < iterations; i++) {
+                    const startTime = performance.now();
+                    
+                    const testStudent = {
+                        ...sampleStudent,
+                        id: i + 1,
+                        full_name: `Test Student ${i + 1}`
+                    };
+                    
+                    const generator = new BinaryQRGenerator();
+                    const result = generator.generateStudentQR(testStudent, 'testCanvas3');
+                    
+                    const endTime = performance.now();
+                    const duration = endTime - startTime;
+                    
+                    results.push({
+                        iteration: i + 1,
+                        success: result.success,
+                        fallback: result.fallback,
+                        duration: duration.toFixed(2)
+                    });
+                }
+                
+                const avgTime = (results.reduce((sum, r) => sum + parseFloat(r.duration), 0) / iterations).toFixed(2);
+                const successCount = results.filter(r => r.success).length;
+                const fallbackCount = results.filter(r => r.fallback).length;
+                
+                updateStatus('status3', 'success', `✅ Performance test completed! Avg: ${avgTime}ms`);
+                
+                let perfText = `Performance Test Results (${iterations} iterations):\n`;
+                perfText += `Average Time: ${avgTime}ms\n`;
+                perfText += `Successful Generations: ${successCount}/${iterations}\n`;
+                perfText += `Fallback Patterns: ${fallbackCount}/${iterations}\n\n`;
+                perfText += `Detailed Results:\n`;
+                results.forEach(r => {
+                    perfText += `${r.iteration}: ${r.duration}ms - ${r.success ? 'Success' : (r.fallback ? 'Fallback' : 'Failed')}\n`;
+                });
+                
+                document.getElementById('perfResults').textContent = perfText;
+                
+            } catch (error) {
+                updateStatus('status3', 'error', '❌ Performance test failed: ' + error.message);
+                document.getElementById('perfResults').textContent = 'Performance test error: ' + error.message;
+                console.error('Performance Test Error:', error);
+            }
+        }
+
+        function clearCanvas(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const statusId = canvasId.replace('testCanvas', 'status');
+            updateStatus(statusId, 'info', 'Canvas cleared');
+            
+            const dataId = canvasId.replace('testCanvas', canvasId === 'testCanvas3' ? 'perfResults' : 'data');
+            document.getElementById(dataId).textContent = 'Canvas cleared';
+        }
+
+        function updateStatus(elementId, type, message) {
+            const element = document.getElementById(elementId);
+            element.className = `status ${type}`;
+            element.textContent = message;
+        }
+
+        // Auto-run basic test on page load
+        window.addEventListener('load', function() {
+            console.log('Binary QR Generator Test Page Loaded');
+            console.log('Available functions:', {
+                BinaryQRGenerator: typeof window.BinaryQRGenerator,
+                generateStudentQR: typeof window.generateStudentQR,
+                downloadQR: typeof window.downloadQR
+            });
+            
+            // Auto-generate a test QR after a short delay
+            setTimeout(testStudentQR, 1000);
+        });
+    </script>
+</body>
+</html>

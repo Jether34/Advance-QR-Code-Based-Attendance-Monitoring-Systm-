@@ -175,12 +175,59 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
             border-radius: 8px;
             border-left: 4px solid #218c21;
         }
+        
+        /* QR Code Styling */
+        .qr-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0 5px;
+            transition: all 0.3s;
+        }
+        
+        .qr-btn-primary {
+            background: #218c21;
+            color: white;
+        }
+        
+        .qr-btn-primary:hover {
+            background: #176617;
+            transform: translateY(-2px);
+        }
+        
+        .qr-btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .qr-btn-secondary:hover {
+            background: #545b62;
+            transform: translateY(-2px);
+        }
+        
+        .qr-btn-refresh {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .qr-btn-refresh:hover {
+            background: #117a8b;
+            transform: translateY(-2px);
+        }
+        
+        #studentQRCanvas {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
     <div class="navbar">
         <a href="student_dashboard.php">Dashboard</a>
-        <a href="card.php?id=<?php echo $user['id']; ?>">QR Code</a>
+        <a href="card.php?id=<?php echo $user['id']; ?>">QR Card</a>
+        <a href="#qr-section" onclick="document.getElementById('studentQRCanvas').scrollIntoView({behavior: 'smooth'})">📱 Offline QR</a>
         <a href="logout.php">Logout</a>
     </div>
     <div class="container">
@@ -213,6 +260,28 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
                 <strong>Section</strong>
                 <?php echo htmlspecialchars($user['section_block']); ?>
             </div>
+        </div>
+    </div>
+
+    <!-- QR Code Generation Section -->
+    <div class="info-section" id="qr-section">
+        <h3>📱 My QR Code (100% Offline)</h3>
+        <div style="text-align: center; margin: 20px 0;">
+            <canvas id="studentQRCanvas" width="200" height="200" style="border: 2px solid #218c21; border-radius: 8px; background: white;"></canvas>
+        </div>
+        <div style="text-align: center; margin-top: 15px;">
+            <button onclick="generateMyQR()" class="qr-btn qr-btn-primary">Generate QR Code</button>
+            <button onclick="downloadMyQR()" class="qr-btn qr-btn-secondary">Download QR</button>
+            <button onclick="refreshQR()" class="qr-btn qr-btn-refresh">Refresh</button>
+        </div>
+        <div id="qrStatus" style="text-align: center; margin-top: 10px; font-size: 0.9em; color: #666;"></div>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px;">
+            <strong>QR Code Information:</strong><br>
+            <small style="font-family: monospace; color: #666;">
+                Student ID: <?php echo htmlspecialchars($user['student_id']); ?><br>
+                LRN: <?php echo htmlspecialchars($user['lrn']); ?><br>
+                Name: <?php echo htmlspecialchars($user['full_name']); ?>
+            </small>
         </div>
     </div>
     
@@ -297,5 +366,99 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
         <?php endif; ?>
     </div>
     </div>
+
+    <!-- Binary QR Generator Script -->
+    <script src="js/binary-qr-generator.js"></script>
+    <script>
+        // Student data from PHP
+        const studentData = {
+            id: <?php echo json_encode($user['id']); ?>,
+            full_name: <?php echo json_encode($user['full_name']); ?>,
+            lrn: <?php echo json_encode($user['lrn']); ?>,
+            student_id: <?php echo json_encode($user['student_id']); ?>,
+            grade_level: <?php echo json_encode($user['grade_level']); ?>,
+            strand: <?php echo json_encode($user['strand']); ?>,
+            section_block: <?php echo json_encode($user['section_block']); ?>,
+            email: <?php echo json_encode($user['email']); ?>,
+            gender: <?php echo json_encode($user['gender']); ?>
+        };
+
+        // QR Generation Functions
+        function generateMyQR() {
+            const statusDiv = document.getElementById('qrStatus');
+            statusDiv.innerHTML = '<span style="color: #218c21;">⏳ Generating QR Code...</span>';
+            
+            try {
+                // Use the binary QR generator
+                const result = generateStudentQR(studentData, 'studentQRCanvas');
+                
+                if (result.success) {
+                    statusDiv.innerHTML = '<span style="color: #218c21;">✅ QR Code Generated Successfully!</span>';
+                    console.log('QR Data:', result.data);
+                } else if (result.fallback) {
+                    statusDiv.innerHTML = '<span style="color: #ff8c00;">⚠️ Using Fallback Pattern (Data Embedded)</span>';
+                } else {
+                    statusDiv.innerHTML = '<span style="color: #dc3545;">❌ Generation Failed</span>';
+                }
+            } catch (error) {
+                console.error('QR Generation Error:', error);
+                statusDiv.innerHTML = '<span style="color: #dc3545;">❌ Error: ' + error.message + '</span>';
+            }
+        }
+
+        function downloadMyQR() {
+            const canvas = document.getElementById('studentQRCanvas');
+            if (!canvas) {
+                alert('Please generate QR code first!');
+                return;
+            }
+            
+            // Check if canvas has content
+            const ctx = canvas.getContext('2d');
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            let hasContent = false;
+            
+            for (let i = 0; i < imageData.data.length; i += 4) {
+                if (imageData.data[i] !== 255 || imageData.data[i + 1] !== 255 || imageData.data[i + 2] !== 255) {
+                    hasContent = true;
+                    break;
+                }
+            }
+            
+            if (!hasContent) {
+                alert('Please generate QR code first!');
+                return;
+            }
+            
+            // Download QR code
+            const filename = `qr-${studentData.student_id}-${new Date().toISOString().split('T')[0]}.png`;
+            downloadQR('studentQRCanvas', filename);
+            
+            document.getElementById('qrStatus').innerHTML = '<span style="color: #218c21;">📥 QR Code Downloaded!</span>';
+        }
+
+        function refreshQR() {
+            // Clear canvas and regenerate
+            const canvas = document.getElementById('studentQRCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            document.getElementById('qrStatus').innerHTML = '<span style="color: #666;">Canvas cleared. Click "Generate QR Code" to create new QR.</span>';
+        }
+
+        // Auto-generate QR on page load
+        window.addEventListener('load', function() {
+            setTimeout(generateMyQR, 500); // Small delay to ensure canvas is ready
+        });
+
+        // Test QR generation capability on load
+        window.addEventListener('load', function() {
+            console.log('Binary QR Generator Status:');
+            console.log('- BinaryQRGenerator available:', typeof window.BinaryQRGenerator !== 'undefined');
+            console.log('- generateStudentQR available:', typeof window.generateStudentQR !== 'undefined');
+            console.log('- Student Data:', studentData);
+        });
+    </script>
 </body>
 </html>
