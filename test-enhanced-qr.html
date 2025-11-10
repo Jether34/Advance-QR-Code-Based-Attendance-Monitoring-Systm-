@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Offline QR Generator - Palawan National School</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #d6f5d6 0%, #eaffea 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(33, 140, 33, 0.2);
+            margin: 20px 0;
+        }
+        
+        .header {
+            text-align: center;
+            color: #218c21;
+            margin-bottom: 30px;
+        }
+        
+        .qr-test-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .qr-section {
+            background: #f8fff8;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #d4edda;
+            text-align: center;
+        }
+        
+        .qr-container {
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .test-button {
+            background: #218c21;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .test-button:hover {
+            background: #176617;
+        }
+        
+        .test-button.secondary {
+            background: #6c757d;
+        }
+        
+        .test-button.secondary:hover {
+            background: #545b62;
+        }
+        
+        .success {
+            color: #218c21;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .info {
+            color: #0c5460;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .student-data {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+            font-family: monospace;
+            font-size: 12px;
+            border-left: 4px solid #218c21;
+        }
+        
+        .instructions {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #f0ad4e;
+            margin: 20px 0;
+        }
+        
+        .feature-badge {
+            display: inline-block;
+            background: #218c21;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 5px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .qr-test-area {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Enhanced Offline QR Generator</h1>
+            <h2>Palawan National School Attendance System</h2>
+            <div>
+                <span class="feature-badge">✅ 100% Offline</span>
+                <span class="feature-badge">📱 Mobile Ready</span>
+                <span class="feature-badge">🔒 No External APIs</span>
+                <span class="feature-badge">⚡ Instant Generation</span>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📱 How to Test QR Codes:</h3>
+            <ol>
+                <li><strong>Generate:</strong> Click the buttons below to create QR codes</li>
+                <li><strong>Scan:</strong> Use your phone's camera or any QR scanner app</li>
+                <li><strong>Verify:</strong> Check if the student data displays correctly</li>
+                <li><strong>Offline Test:</strong> Disconnect internet and try again!</li>
+            </ol>
+            <p class="success"><strong>✅ Both methods work completely offline - no internet required!</strong></p>
+        </div>
+
+        <div class="student-data">
+            <strong>📋 Student Data Being Encoded:</strong><br><br>
+            === STUDENT INFORMATION ===<br>
+            Student ID: 5A9HCDTN5O<br>
+            Name: Jether Garcia<br>
+            Email: jether@palawan-school.edu<br>
+            Grade: 12<br>
+            Strand: ICT<br>
+            Section: 3<br>
+            Gender: Male<br>
+            LRN: LRN202501<br>
+            Enrolled: 2025-01-15<br>
+            QR Generated: 2025-11-10 17:30<br>
+            ========================<br>
+            Palawan National School<br>
+            Attendance Monitoring System
+        </div>
+
+        <div class="qr-test-area">
+            <div class="qr-section">
+                <h3>🚀 Advanced QR Generator</h3>
+                <p>Full QR Code specification with proper data encoding</p>
+                <div class="qr-container" id="advanced-qr">
+                    <p>Click button to generate</p>
+                </div>
+                <button class="test-button" onclick="testAdvancedQR()">Generate Advanced QR</button>
+                <button class="test-button secondary" onclick="downloadQR('advanced-qr', 'advanced-qr.png')">📥 Download</button>
+            </div>
+
+            <div class="qr-section">
+                <h3>⚡ Simple Pattern Generator</h3>
+                <p>Simplified pattern optimized for reliability</p>
+                <div class="qr-container" id="simple-qr">
+                    <p>Click button to generate</p>
+                </div>
+                <button class="test-button" onclick="testSimpleQR()">Generate Simple QR</button>
+                <button class="test-button secondary" onclick="downloadQR('simple-qr', 'simple-qr.png')">📥 Download</button>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <button class="test-button" onclick="testBothMethods()" style="font-size: 16px; padding: 15px 30px;">
+                🔄 Test Both Methods
+            </button>
+            <button class="test-button secondary" onclick="clearAll()">🗑️ Clear All</button>
+        </div>
+
+        <div class="container" style="background: #e8f5e8;">
+            <h3>🔧 Technical Details:</h3>
+            <ul>
+                <li><strong>Advanced Generator:</strong> Full QR Code specification with proper finder patterns, timing patterns, and data encoding</li>
+                <li><strong>Simple Generator:</strong> Simplified but robust pattern that focuses on scannability</li>
+                <li><strong>Data Encoding:</strong> Student information embedded directly in the QR pattern</li>
+                <li><strong>Error Correction:</strong> Built-in patterns to improve scan reliability</li>
+                <li><strong>Mobile Compatibility:</strong> Optimized for smartphone cameras and QR scanner apps</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Include our enhanced QR generators -->
+    <script src="js/robust-qr-generator.js"></script>
+
+    <script>
+        // Sample student data for testing
+        const studentData = `=== STUDENT INFORMATION ===
+Student ID: 5A9HCDTN5O
+Name: Jether Garcia
+Email: jether@palawan-school.edu
+Grade: 12
+Strand: ICT
+Section: 3
+Gender: Male
+LRN: LRN202501
+Enrolled: 2025-01-15
+QR Generated: ${new Date().toLocaleString()}
+========================
+Palawan National School
+Attendance Monitoring System`;
+
+        function testAdvancedQR() {
+            const container = document.getElementById('advanced-qr');
+            container.innerHTML = '<p style="color: #666;">Generating advanced QR code...</p>';
+            
+            try {
+                const canvas = RobustQRGenerator.generateQR(studentData, 280);
+                container.innerHTML = '';
+                container.appendChild(canvas);
+                
+                const successMsg = document.createElement('div');
+                successMsg.className = 'success';
+                successMsg.innerHTML = '✅ Advanced QR Generated!<br><small>Full QR specification with data encoding</small>';
+                container.appendChild(successMsg);
+                
+            } catch (error) {
+                container.innerHTML = '<div class="error">❌ Generation failed: ' + error.message + '</div>';
+            }
+        }
+
+        function testSimpleQR() {
+            const container = document.getElementById('simple-qr');
+            container.innerHTML = '<p style="color: #666;">Generating simple pattern...</p>';
+            
+            try {
+                const canvas = SimplePatternGenerator.generate(studentData, 280);
+                container.innerHTML = '';
+                container.appendChild(canvas);
+                
+                const successMsg = document.createElement('div');
+                successMsg.className = 'info';
+                successMsg.innerHTML = '✅ Simple Pattern Generated!<br><small>Optimized for scan reliability</small>';
+                container.appendChild(successMsg);
+                
+            } catch (error) {
+                container.innerHTML = '<div class="error">❌ Generation failed: ' + error.message + '</div>';
+            }
+        }
+
+        function testBothMethods() {
+            testAdvancedQR();
+            setTimeout(() => testSimpleQR(), 100);
+        }
+
+        function clearAll() {
+            document.getElementById('advanced-qr').innerHTML = '<p>Click button to generate</p>';
+            document.getElementById('simple-qr').innerHTML = '<p>Click button to generate</p>';
+        }
+
+        function downloadQR(containerId, filename) {
+            const container = document.getElementById(containerId);
+            const canvas = container.querySelector('canvas');
+            
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = canvas.toDataURL();
+                link.click();
+            } else {
+                alert('Please generate a QR code first!');
+            }
+        }
+
+        // Auto-generate on page load for demonstration
+        window.onload = function() {
+            console.log('🎓 Enhanced QR Generator loaded successfully');
+            
+            // Show loading message
+            setTimeout(() => {
+                testBothMethods();
+            }, 500);
+        };
+    </script>
+</body>
+</html>

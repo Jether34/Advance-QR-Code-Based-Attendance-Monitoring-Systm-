@@ -2,7 +2,7 @@
 function createFallbackQR(text, size, container) {
     // Use the simple QR generator as fallback
     try {
-        var canvas = SimpleQRGenerator.generate(text, size);
+        var canvas = SimplePatternGenerator.generate(text, size);
         
         // Clear container and add QR code
         container.innerHTML = '';

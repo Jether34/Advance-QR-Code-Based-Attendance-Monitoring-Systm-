@@ -239,8 +239,8 @@ $code = $user['student_id'];
         </div>
     </div>
 
-        <!-- Include our offline QR generator -->
-        <script src="js/offline-qr-generator.js"></script>
+        <!-- Include our enhanced offline QR generator -->
+        <script src="js/robust-qr-generator.js"></script>
         <script src="js/qr-functions.js"></script>
         <script>
         // Comprehensive QR Code generator using pure JavaScript
@@ -618,9 +618,8 @@ $code = $user['student_id'];
         
         function createOfflineQR(text, size, container) {
             try {
-                // Use our advanced offline QR generator
-                var qrGenerator = new OfflineQRGenerator();
-                var canvas = qrGenerator.generateQR(text, size);
+                // Use our enhanced robust QR generator
+                var canvas = RobustQRGenerator.generateQR(text, size);
                 
                 // Clear container and add QR code
                 container.innerHTML = '';
@@ -632,12 +631,12 @@ $code = $user['student_id'];
                 // Add success message
                 var successDiv = document.createElement('div');
                 successDiv.style.cssText = 'font-size: 12px; color: #218c21; margin-top: 8px; text-align: center; font-weight: bold;';
-                successDiv.innerHTML = '✅ Offline QR Code Generated Successfully';
+                successDiv.innerHTML = '✅ Enhanced Offline QR Code - Ready to Scan!';
                 container.appendChild(successDiv);
                 
-                console.log('Advanced offline QR code generated successfully');
+                console.log('Enhanced robust QR code generated successfully');
             } catch (error) {
-                console.log('Advanced QR failed, using simple fallback:', error);
+                console.log('Robust QR failed, using simple fallback:', error);
                 createFallbackQR(text, size, container);
             }
         }
