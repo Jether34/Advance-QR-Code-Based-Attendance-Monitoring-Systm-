@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>QR Code Test - Scannable Student Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        
+        .qr-display {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+        }
+        
+        canvas {
+            border: 1px solid #ddd;
+            max-width: 300px;
+            max-height: 300px;
+        }
+        
+        .test-data {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+        }
+        
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background: #0056b3;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔍 QR Code Scanning Test</h1>
+        <p>This page tests if our QR codes can be properly scanned by mobile devices.</p>
+        
+        <div class="qr-display">
+            <h3>Generated QR Code</h3>
+            <canvas id="testQRCanvas" width="300" height="300"></canvas>
+            <div id="qrStatus" class="status info">Ready to generate QR code...</div>
+        </div>
+        
+        <div>
+            <button onclick="testSimpleText()" class="btn">📝 Test Simple Text</button>
+            <button onclick="testStudentData()" class="btn">👨‍🎓 Test Student Data</button>
+            <button onclick="testJSON()" class="btn">📋 Test JSON Format</button>
+            <button onclick="testURL()" class="btn">🌐 Test URL Format</button>
+        </div>
+        
+        <div class="test-data">
+            <strong>Current QR Data:</strong>
+            <div id="currentData">No data generated yet</div>
+        </div>
+        
+        <div class="test-container">
+            <h3>📱 Scanning Instructions</h3>
+            <ol>
+                <li>Open your smartphone's camera app or QR scanner</li>
+                <li>Point the camera at the QR code above</li>
+                <li>The scanner should detect and read the embedded data</li>
+                <li>If it shows "no usable data found", the QR format needs adjustment</li>
+            </ol>
+            
+            <div class="status info">
+                <strong>Expected Results:</strong><br>
+                ✅ Simple Text: Should display the text directly<br>
+                ✅ Student Data: Should show formatted student information<br>
+                ✅ JSON Format: Should display structured data<br>
+                ✅ URL Format: Should open a webpage or show URL
+            </div>
+        </div>
+    </div>
+
+    <!-- Load QR Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="js/working-qr-generator.js"></script>
+    
+    <script>
+        // Test sample student data
+        const sampleStudent = {
+            id: 1,
+            student_id: 'PNS-2024-001',
+            full_name: 'Juan Dela Cruz',
+            lrn: '123456789012',
+            email: 'juan.delacruz@pns.edu.ph',
+            gender: 'Male',
+            grade_level: 'Grade 12',
+            strand: 'STEM',
+            section_block: 'Einstein',
+            created_at: '2024-01-15'
+        };
+        
+        async function testSimpleText() {
+            const simpleText = "Hello, this is a test QR code!";
+            await generateTestQR(simpleText, "Simple Text");
+        }
+        
+        async function testStudentData() {
+            const studentText = `Student: ${sampleStudent.full_name}\nID: ${sampleStudent.student_id}\nGrade: ${sampleStudent.grade_level}\nEmail: ${sampleStudent.email}`;
+            await generateTestQR(studentText, "Student Data");
+        }
+        
+        async function testJSON() {
+            const jsonData = formatStudentDataForQR(sampleStudent);
+            await generateTestQR(jsonData, "JSON Format");
+        }
+        
+        async function testURL() {
+            const urlData = `https://palawan-national-school.edu.ph/student/${sampleStudent.student_id}?name=${encodeURIComponent(sampleStudent.full_name)}`;
+            await generateTestQR(urlData, "URL Format");
+        }
+        
+        async function generateTestQR(data, type) {
+            const statusDiv = document.getElementById('qrStatus');
+            const dataDiv = document.getElementById('currentData');
+            
+            statusDiv.innerHTML = `<div class="info">🔄 Generating ${type} QR code...</div>`;
+            dataDiv.textContent = data;
+            
+            try {
+                // Clear canvas first
+                const canvas = document.getElementById('testQRCanvas');
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Try QRCode.js library first
+                if (typeof QRCode !== 'undefined') {
+                    await new Promise((resolve, reject) => {
+                        QRCode.toCanvas(canvas, data, {
+                            width: 300,
+                            height: 300,
+                            margin: 2,
+                            errorCorrectionLevel: 'M',
+                            color: {
+                                dark: '#000000',
+                                light: '#FFFFFF'
+                            }
+                        }, function (error) {
+                            if (error) {
+                                reject(error);
+                            } else {
+                                resolve();
+                            }
+                        });
+                    });
+                    
+                    statusDiv.innerHTML = `<div class="success">✅ ${type} QR Generated Successfully!</div>`;
+                } else {
+                    throw new Error('QRCode.js library not loaded');
+                }
+                
+            } catch (error) {
+                console.error('QR Generation Error:', error);
+                statusDiv.innerHTML = `<div class="error">❌ Failed to generate ${type} QR: ${error.message}</div>`;
+            }
+        }
+        
+        // Auto-generate simple test on page load
+        window.addEventListener('load', function() {
+            console.log('QR Test Page Loaded');
+            console.log('QRCode.js available:', typeof QRCode !== 'undefined');
+            
+            setTimeout(() => {
+                testSimpleText();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

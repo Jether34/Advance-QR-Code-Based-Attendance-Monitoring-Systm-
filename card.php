@@ -195,9 +195,26 @@ $code = $user['student_id'];
         </div>
         
         <div class="action-buttons">
-            <button onclick="regenerateQR()" class="btn btn-primary">🔄 Regenerate QR</button>
-            <button onclick="downloadQRCard()" class="btn btn-primary">📥 Download PNG</button>
-            <button onclick="downloadPDFCard()" class="btn btn-secondary">📄 Download PDF</button>
+            <button onclick="regenerateQR()" class="btn btn-primary" id="regenerateBtn">
+                🔄 Regenerate QR Code
+            </button>
+            <button onclick="downloadQRCard()" class="btn btn-primary" id="downloadPngBtn">
+                �️ Download PNG Image
+            </button>
+            <button onclick="downloadPDFCard()" class="btn btn-secondary" id="downloadPdfBtn">
+                📄 Download PDF Card
+            </button>
+        </div>
+        
+        <div style="margin: 20px 0; text-align: center;">
+            <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; border-left: 4px solid #007bff;">
+                <strong>📱 Quick Actions Guide:</strong><br>
+                <small style="line-height: 1.6;">
+                    <strong>🔄 Regenerate:</strong> Create a new QR code with fresh timestamp<br>
+                    <strong>🖼️ PNG:</strong> Download high-quality image file for printing<br>
+                    <strong>📄 PDF:</strong> Download complete professional student ID card
+                </small>
+            </div>
         </div>
         
         <div class="instructions">
@@ -335,86 +352,184 @@ $code = $user['student_id'];
             }
             return Math.abs(hash);
         }
-
-        function regenerateQR() {
-            generateStudentQRCode();
-        }
-
-        function downloadQRCard() {
-            const canvas = document.getElementById('studentQRCanvas');
-            if (!canvas) {
-                alert('Please generate QR code first!');
-                return;
-            }
-            
-            // Check if canvas has content
+        
+        // Helper function to check if canvas has actual content
+        function canvasHasContent(canvas) {
             const ctx = canvas.getContext('2d');
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            let hasContent = false;
             
+            // Check if canvas has any non-white pixels
             for (let i = 0; i < imageData.data.length; i += 4) {
-                if (imageData.data[i] !== 255 || imageData.data[i + 1] !== 255 || imageData.data[i + 2] !== 255) {
-                    hasContent = true;
-                    break;
+                const r = imageData.data[i];
+                const g = imageData.data[i + 1];
+                const b = imageData.data[i + 2];
+                const a = imageData.data[i + 3];
+                
+                // If pixel is not white or transparent, canvas has content
+                if (!(r === 255 && g === 255 && b === 255) && a > 0) {
+                    return true;
                 }
             }
-            
-            if (!hasContent) {
-                alert('Please generate QR code first!');
-                return;
-            }
-            
-            // Download the QR code as PNG
-            const timestamp = new Date().toISOString().split('T')[0];
-            const filename = `${studentCardData.student_id}-qr-${timestamp}.png`;
-            const link = document.createElement('a');
-            link.download = filename;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-            
-            document.getElementById('qrStatus').innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">📥 PNG Downloaded: ' + filename + '</span>';
+            return false;
         }
 
-        async function downloadPDFCard() {
+        async function regenerateQR() {
+            const btn = document.getElementById('regenerateBtn');
+            const statusDiv = document.getElementById('qrStatus');
+            
+            // Disable button and show loading state
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Regenerating...';
+            
+            statusDiv.innerHTML = '<span style="color: #0c5460; background: #cce7ff; padding: 8px; border-radius: 5px;">🔄 Creating new QR code with updated timestamp...</span>';
+            
+            try {
+                // Clear canvas first
+                const canvas = document.getElementById('studentQRCanvas');
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#f8f9fa';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                }
+                
+                // Wait a moment for visual feedback
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Generate new QR code
+                await generateStudentQRCode();
+                
+                // Success feedback
+                statusDiv.innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">✅ QR Code regenerated successfully with new timestamp!</span>';
+                
+            } catch (error) {
+                console.error('Regeneration error:', error);
+                statusDiv.innerHTML = '<span style="color: #dc3545; background: #f8d7da; padding: 8px; border-radius: 5px;">❌ Regeneration failed: ' + error.message + '</span>';
+            } finally {
+                // Re-enable button
+                btn.disabled = false;
+                btn.innerHTML = '🔄 Regenerate QR Code';
+            }
+        }
+
+        async function downloadQRCard() {
             const canvas = document.getElementById('studentQRCanvas');
+            const btn = document.getElementById('downloadPngBtn');
             const statusDiv = document.getElementById('qrStatus');
             
             if (!canvas) {
-                alert('Please generate QR code first!');
+                alert('❌ No QR code found! Please generate QR code first.');
                 return;
             }
             
             // Check if canvas has content
-            const ctx = canvas.getContext('2d');
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            let hasContent = false;
-            
-            for (let i = 0; i < imageData.data.length; i += 4) {
-                if (imageData.data[i] !== 255 || imageData.data[i + 1] !== 255 || imageData.data[i + 2] !== 255) {
-                    hasContent = true;
-                    break;
-                }
-            }
-            
-            if (!hasContent) {
-                alert('Please generate QR code first!');
+            if (!canvasHasContent(canvas)) {
+                alert('❌ QR code is empty! Please generate QR code first.');
                 return;
             }
             
             try {
-                statusDiv.innerHTML = '<span style="color: #0c5460; background: #cce7ff; padding: 8px; border-radius: 5px;">📄 Generating PDF...</span>';
+                // Show loading state
+                btn.disabled = true;
+                btn.innerHTML = '⏳ Preparing PNG...';
+                statusDiv.innerHTML = '<span style="color: #0c5460; background: #cce7ff; padding: 8px; border-radius: 5px;">📸 Preparing high-quality PNG download...</span>';
+                
+                // Generate high-quality PNG
+                const timestamp = new Date().toISOString().split('T')[0];
+                const timeOnly = new Date().toTimeString().split(' ')[0].replace(/:/g, '-');
+                const filename = `${studentCardData.student_id}-QR-${timestamp}-${timeOnly}.png`;
+                
+                // Create download link with high quality
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = canvas.toDataURL('image/png', 1.0); // Maximum quality
+                
+                // Trigger download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Success feedback
+                statusDiv.innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">📥 PNG Downloaded: ' + filename + '</span>';
+                
+                // Analytics (optional)
+                console.log('PNG Download:', {
+                    student: studentCardData.student_id,
+                    filename: filename,
+                    timestamp: new Date().toISOString()
+                });
+                
+            } catch (error) {
+                console.error('PNG download error:', error);
+                statusDiv.innerHTML = '<span style="color: #dc3545; background: #f8d7da; padding: 8px; border-radius: 5px;">❌ PNG download failed: ' + error.message + '</span>';
+                alert('❌ Failed to download PNG. Please try again.');
+            } finally {
+                // Reset button
+                btn.disabled = false;
+                btn.innerHTML = '🖼️ Download PNG Image';
+            }
+        }
+
+        async function downloadPDFCard() {
+            const canvas = document.getElementById('studentQRCanvas');
+            const btn = document.getElementById('downloadPdfBtn');
+            const statusDiv = document.getElementById('qrStatus');
+            
+            if (!canvas) {
+                alert('❌ No QR code found! Please generate QR code first.');
+                return;
+            }
+            
+            // Check if canvas has content
+            if (!canvasHasContent(canvas)) {
+                alert('❌ QR code is empty! Please generate QR code first.');
+                return;
+            }
+            
+            // Check if PDF library is available
+            if (typeof window.jsPDF === 'undefined') {
+                alert('❌ PDF library not loaded! Please refresh the page.');
+                return;
+            }
+            
+            try {
+                // Show loading state
+                btn.disabled = true;
+                btn.innerHTML = '⏳ Creating PDF...';
+                statusDiv.innerHTML = '<span style="color: #0c5460; background: #cce7ff; padding: 8px; border-radius: 5px;">📄 Generating professional student ID card PDF...</span>';
+                
+                // Wait a moment for visual feedback
+                await new Promise(resolve => setTimeout(resolve, 300));
                 
                 const pdfGenerator = new StudentCardPDFGenerator();
                 const filename = await pdfGenerator.downloadPDF(studentCardData, canvas);
                 
                 statusDiv.innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">📄 PDF Downloaded: ' + filename + '</span>';
+                
+                // Analytics (optional)
+                console.log('PDF Download:', {
+                    student: studentCardData.student_id,
+                    filename: filename,
+                    timestamp: new Date().toISOString()
+                });
+                
             } catch (error) {
                 console.error('PDF generation error:', error);
                 statusDiv.innerHTML = '<span style="color: #dc3545; background: #f8d7da; padding: 8px; border-radius: 5px;">❌ PDF generation failed: ' + error.message + '</span>';
                 
-                // Fallback: open print dialog
-                alert('PDF generation failed. Opening print dialog as fallback.');
-                window.print();
+                // Enhanced fallback options
+                const retry = confirm('❌ PDF generation failed. Would you like to try again or open print dialog as fallback?');
+                if (retry) {
+                    // Retry PDF generation
+                    setTimeout(() => downloadPDFCard(), 1000);
+                } else {
+                    // Fallback: open print dialog
+                    alert('📄 Opening print dialog. You can print to PDF from there.');
+                    window.print();
+                }
+            } finally {
+                // Reset button
+                btn.disabled = false;
+                btn.innerHTML = '📄 Download PDF Card';
             }
         }
 

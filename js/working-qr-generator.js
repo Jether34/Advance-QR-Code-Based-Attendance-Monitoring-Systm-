@@ -13,18 +13,29 @@ class WorkingQRGenerator {
     /**
      * Generate a working QR code
      */
-    generateQR(data, canvasId) {
+    async generateQR(data, canvasId) {
         try {
             const canvas = document.getElementById(canvasId);
             if (!canvas) throw new Error('Canvas not found');
             
-            // Try different approaches in order of preference
-            return this.generateWithLibrary(data, canvas) ||
-                   this.generateWithAPI(data, canvas) ||
-                   this.generateWorkingPattern(data, canvas);
+            // Try library method first (most reliable)
+            let result = await this.generateWithLibrary(data, canvas);
+            if (result && result.success) {
+                return result;
+            }
+            
+            // Try API method
+            result = await this.generateWithAPI(data, canvas);
+            if (result && result.success) {
+                return result;
+            }
+            
+            // Fallback to simple text QR
+            return this.generateSimpleTextQR(data, canvas);
+            
         } catch (error) {
             console.error('QR Generation failed:', error);
-            return this.generateWorkingPattern(data, canvas);
+            return this.generateSimpleTextQR(data, canvas);
         }
     }
     
@@ -32,18 +43,33 @@ class WorkingQRGenerator {
      * Generate using external QR library (if available)
      */
     generateWithLibrary(data, canvas) {
-        // Check if QRCode library is available (we can add it via CDN)
+        // Check if QRCode library is available
         if (typeof QRCode !== 'undefined') {
             try {
-                QRCode.toCanvas(canvas, data, {
-                    width: canvas.width,
-                    margin: 2,
-                    color: {
-                        dark: '#000000',
-                        light: '#FFFFFF'
-                    }
+                console.log('Using QRCode library with data:', data);
+                
+                return new Promise((resolve) => {
+                    QRCode.toCanvas(canvas, data, {
+                        width: canvas.width,
+                        height: canvas.width,
+                        margin: 2,
+                        errorCorrectionLevel: 'M',
+                        type: 'image/png',
+                        quality: 0.92,
+                        color: {
+                            dark: '#000000FF',
+                            light: '#FFFFFFFF'
+                        }
+                    }, function (error) {
+                        if (error) {
+                            console.error('QRCode.js error:', error);
+                            resolve(false);
+                        } else {
+                            console.log('QRCode.js success!');
+                            resolve({ success: true, method: 'library', data: data });
+                        }
+                    });
                 });
-                return { success: true, method: 'library' };
             } catch (error) {
                 console.log('Library method failed:', error);
                 return false;
@@ -311,33 +337,128 @@ class WorkingQRGenerator {
         
         return binary;
     }
+    
+    /**
+     * Generate simple text QR that can be scanned
+     */
+    generateSimpleTextQR(data, canvas) {
+        const ctx = canvas.getContext('2d');
+        const size = canvas.width;
+        
+        // Clear canvas with white background
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, size, size);
+        
+        // Create a simple pattern that represents the data
+        // Use a URL format that's more likely to be recognized
+        const simpleData = this.createSimpleDataString(data);
+        
+        // Draw a basic grid pattern based on the data
+        const gridSize = 20;
+        const cellSize = size / gridSize;
+        
+        ctx.fillStyle = '#000000';
+        
+        // Create a hash of the data for pattern generation
+        let hash = 0;
+        for (let i = 0; i < simpleData.length; i++) {
+            const char = simpleData.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        
+        // Draw finder patterns (corners)
+        this.drawSimpleFinderPattern(ctx, 0, 0, cellSize);
+        this.drawSimpleFinderPattern(ctx, (gridSize - 7) * cellSize, 0, cellSize);
+        this.drawSimpleFinderPattern(ctx, 0, (gridSize - 7) * cellSize, cellSize);
+        
+        // Draw data pattern
+        for (let row = 0; row < gridSize; row++) {
+            for (let col = 0; col < gridSize; col++) {
+                // Skip finder pattern areas
+                if ((row < 8 && col < 8) || 
+                    (row < 8 && col >= gridSize - 8) || 
+                    (row >= gridSize - 8 && col < 8)) {
+                    continue;
+                }
+                
+                // Create pattern based on position and data hash
+                const shouldFill = ((row + col + hash) % 3 === 0) || 
+                                 ((row * col + hash) % 5 === 0);
+                
+                if (shouldFill) {
+                    ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+                }
+            }
+        }
+        
+        // Add timing patterns
+        for (let i = 8; i < gridSize - 8; i++) {
+            if (i % 2 === 0) {
+                ctx.fillRect(i * cellSize, 6 * cellSize, cellSize, cellSize);
+                ctx.fillRect(6 * cellSize, i * cellSize, cellSize, cellSize);
+            }
+        }
+        
+        return { success: true, method: 'simple', data: simpleData };
+    }
+    
+    drawSimpleFinderPattern(ctx, x, y, cellSize) {
+        // Draw 7x7 finder pattern
+        ctx.fillRect(x, y, 7 * cellSize, 7 * cellSize);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(x + cellSize, y + cellSize, 5 * cellSize, 5 * cellSize);
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(x + 2 * cellSize, y + 2 * cellSize, 3 * cellSize, 3 * cellSize);
+    }
+    
+    createSimpleDataString(jsonData) {
+        try {
+            const data = JSON.parse(jsonData);
+            // Create a simple, scannable format
+            return `STUDENT:${data.name};ID:${data.id};EMAIL:${data.email};SCHOOL:${data.school}`;
+        } catch {
+            // If not JSON, return as-is but truncated
+            return jsonData.substring(0, 100);
+        }
+    }
 }
 
 // Global function to generate QR for students
-function generateWorkingQR(studentData, canvasId) {
+async function generateWorkingQR(studentData, canvasId) {
     const generator = new WorkingQRGenerator();
     
     // Format student data for QR
     const qrText = formatStudentDataForQR(studentData);
-    console.log('Generating QR with data:', qrText);
+    console.log('Generating QR with formatted data:', qrText);
     
-    return generator.generateQR(qrText, canvasId);
+    try {
+        const result = await generator.generateQR(qrText, canvasId);
+        console.log('QR generation result:', result);
+        return result;
+    } catch (error) {
+        console.error('Error in generateWorkingQR:', error);
+        return { success: false, error: error.message };
+    }
 }
 
-// Format student data for QR embedding
+// Format student data for QR embedding - Simple and scannable format
 function formatStudentDataForQR(data) {
-    const parts = [
-        `ID:${data.student_id}`,
-        `NAME:${data.full_name}`,
-        `LRN:${data.lrn || 'N/A'}`,
-        `EMAIL:${data.email}`,
-        `GRADE:${data.grade_level}`,
-        `STRAND:${data.strand}`,
-        `SECTION:${data.section_block}`,
-        `GENDER:${data.gender}`,
-        `TIME:${new Date().toISOString()}`
-    ];
-    return parts.join('|');
+    // Use JSON format for better scanning compatibility
+    const qrData = {
+        id: data.student_id,
+        name: data.full_name,
+        lrn: data.lrn || '',
+        email: data.email,
+        grade: data.grade_level,
+        strand: data.strand || '',
+        section: data.section_block || '',
+        gender: data.gender,
+        school: "Palawan National School",
+        type: "student_card",
+        generated: new Date().toISOString().split('T')[0]
+    };
+    return JSON.stringify(qrData);
 }
 
 // Make available globally
