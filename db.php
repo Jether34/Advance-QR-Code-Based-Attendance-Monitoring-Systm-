@@ -1,12 +1,14 @@
 <?php
-// db.php - simple PDO SQLite wrapper
+// db.php - PDO MySQL connection using environment variables (.env)
 
 function get_db(){
-    $host = 'localhost';
-    $db   = 'attendance_qr_system';
-    $user = 'root';
-    $pass = '';
-    $charset = 'utf8mb4';
+    $host    = getenv('DB_HOST')    ?: 'localhost';
+    $db      = getenv('DB_NAME')    ?: 'attendance_qr_system';
+    $user    = getenv('DB_USER')    ?: 'root';
+    $passEnv = getenv('DB_PASS');
+    $pass    = $passEnv !== false ? $passEnv : '';
+    $charset = getenv('DB_CHARSET') ?: 'utf8mb4';
+
     $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
     $options = [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -14,8 +16,7 @@ function get_db(){
         PDO::ATTR_EMULATE_PREPARES   => false,
     ];
     try {
-        $pdo = new PDO($dsn, $user, $pass, $options);
-        return $pdo;
+        return new PDO($dsn, $user, $pass, $options);
     } catch (PDOException $e) {
         throw new PDOException($e->getMessage(), (int)$e->getCode());
     }
