@@ -1,0 +1,16 @@
+# Environment variables
+.env
+.env.*
+
+# Local editor settings (optional)
+.vscode/
+
+# Local database artifacts
+data/attendance.db
+
+# Uploads generated at runtime
+puta/uploads/
+
+# Logs / temp
+*.log
+*.tmp
