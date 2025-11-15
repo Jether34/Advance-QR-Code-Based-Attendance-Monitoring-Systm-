@@ -111,8 +111,6 @@ require_once __DIR__ . '/db.php';
     
     <div id="last"></div>
 
-    <p><a href="index.php">Home</a></p>
-
     <script>
         const last = document.getElementById('last');
 

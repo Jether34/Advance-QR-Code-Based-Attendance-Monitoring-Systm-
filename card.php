@@ -252,15 +252,15 @@ $code = $user['student_id'];
         </div>
     </div>
 
-    <!-- QR and PDF Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="js/working-qr-generator.js"></script>
-    <script src="js/enhanced-pdf-generator.js"></script>
-    <script src="js/simple-download.js"></script>
-    
+    <!-- QR and PDF Libraries with Fallbacks -->
     <script>
-        // Complete student data from database
+        let qrImageData = null;
+        let librariesLoaded = {
+            qrcode: false,
+            jspdf: false
+        };
+        
+        // Student data from PHP (declared once here)
         const studentCardData = {
             id: <?php echo json_encode($user['id']); ?>,
             full_name: <?php echo json_encode($user['full_name']); ?>,
@@ -274,6 +274,75 @@ $code = $user['student_id'];
             created_at: <?php echo json_encode($user['created_at'] ?? ''); ?>,
             updated_at: <?php echo json_encode($user['updated_at'] ?? ''); ?>
         };
+
+        // Load libraries with multiple fallbacks
+        function loadLibraries() {
+            console.log('Loading libraries...');
+            
+            // Load QRCode.js
+            loadScript('https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js')
+                .then(() => {
+                    if (typeof QRCode !== 'undefined') {
+                        librariesLoaded.qrcode = true;
+                        console.log('✅ QRCode.js loaded successfully');
+                    } else {
+                        return loadScript('https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js');
+                    }
+                })
+                .then(() => {
+                    if (typeof QRCode !== 'undefined') {
+                        librariesLoaded.qrcode = true;
+                        console.log('✅ QRCode.js loaded from alternative CDN');
+                    }
+                })
+                .catch(() => {
+                    console.log('❌ QRCode.js failed to load, using fallback');
+                    librariesLoaded.qrcode = 'fallback';
+                });
+
+            // Load jsPDF with multiple attempts
+            loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js')
+                .then(() => {
+                    if (typeof window.jsPDF !== 'undefined') {
+                        librariesLoaded.jspdf = true;
+                        console.log('✅ jsPDF loaded successfully');
+                    } else {
+                        return loadScript('https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js');
+                    }
+                })
+                .then(() => {
+                    if (typeof window.jsPDF !== 'undefined') {
+                        librariesLoaded.jspdf = true;
+                        console.log('✅ jsPDF loaded from alternative CDN');
+                    } else {
+                        return loadScript('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js');
+                    }
+                })
+                .then(() => {
+                    if (typeof window.jsPDF !== 'undefined') {
+                        librariesLoaded.jspdf = true;
+                        console.log('✅ jsPDF loaded from third CDN');
+                    }
+                })
+                .catch(() => {
+                    console.log('❌ jsPDF failed to load from all CDNs');
+                    librariesLoaded.jspdf = false;
+                });
+        }
+
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+    </script>
+    
+    <script>
+        // Student data already declared above - no redeclaration needed
 
         // QR Generation Functions
         async function generateStudentQRCode() {

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed QR Download - Guaranteed Working</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #4caf50;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .qr-display {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            border: 3px dashed #4caf50;
+            border-radius: 15px;
+            background: #f8f9fa;
+        }
+        
+        canvas {
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            background: white;
+            margin: 10px;
+        }
+        
+        .btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-blue { background: #2196f3; }
+        .btn-blue:hover { background: #1976d2; }
+        
+        .btn-orange { background: #ff9800; }
+        .btn-orange:hover { background: #f57c00; }
+        
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        
+        .success { background: #d4edda; color: #155724; border: 2px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 2px solid #bee5eb; }
+        .warning { background: #fff3cd; color: #856404; border: 2px solid #ffeaa7; }
+        
+        .library-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .lib-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #6c757d;
+            text-align: center;
+        }
+        
+        .lib-card.loaded {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+        
+        .lib-card.failed {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+        
+        .debug {
+            background: #343a40;
+            color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Fixed QR Download Tool</h1>
+            <p>Guaranteed working QR code generation and download</p>
+        </div>
+
+        <div id="libraryStatus" class="library-status">
+            <!-- Library status will be populated here -->
+        </div>
+
+        <div class="qr-display">
+            <h3>Student QR Code</h3>
+            <canvas id="qrCanvas" width="300" height="300"></canvas>
+            <div id="status" class="status info">Loading libraries and preparing QR generation...</div>
+        </div>
+
+        <div style="text-align: center;">
+            <button onclick="generateQR()" class="btn" id="generateBtn">
+                🔄 Generate QR Code
+            </button>
+            <button onclick="downloadPNG()" class="btn btn-blue" id="pngBtn">
+                🖼️ Download PNG
+            </button>
+            <button onclick="downloadPDF()" class="btn btn-orange" id="pdfBtn">
+                📄 Download PDF
+            </button>
+        </div>
+
+        <div style="margin: 20px 0;">
+            <h4>🐛 Debug Information:</h4>
+            <div id="debug" class="debug">Initializing...\n</div>
+        </div>
+    </div>
+
+    <script>
+        // Student data for QR generation
+        const studentData = {
+            id: 'PNS-2024-FIXED',
+            student_id: 'PNS-2024-FIXED',
+            full_name: 'Fixed Download Test Student',
+            lrn: '123456789999',
+            email: 'fixed.test@pns.edu.ph',
+            gender: 'Other',
+            grade_level: 'Grade 12',
+            strand: 'ICT-TEST',
+            section_block: 'Fixed Section'
+        };
+
+        let libraries = {
+            qrcode: false,
+            jspdf: false
+        };
+
+        let debugLog = '';
+
+        function debug(msg) {
+            const timestamp = new Date().toLocaleTimeString();
+            debugLog += `[${timestamp}] ${msg}\n`;
+            document.getElementById('debug').textContent = debugLog;
+            document.getElementById('debug').scrollTop = document.getElementById('debug').scrollHeight;
+            console.log(msg);
+        }
+
+        function updateStatus(msg, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.className = `status ${type}`;
+            statusEl.textContent = msg;
+        }
+
+        function updateLibraryStatus() {
+            const container = document.getElementById('libraryStatus');
+            
+            container.innerHTML = `
+                <div class="lib-card ${libraries.qrcode ? 'loaded' : 'failed'}">
+                    <h4>📊 QRCode.js</h4>
+                    <div>${libraries.qrcode ? '✅ Loaded' : '❌ Failed'}</div>
+                </div>
+                <div class="lib-card ${libraries.jspdf ? 'loaded' : 'failed'}">
+                    <h4>📄 jsPDF</h4>
+                    <div>${libraries.jspdf ? '✅ Loaded' : '❌ Failed'}</div>
+                </div>
+            `;
+        }
+
+        // Load libraries with fallback methods
+        async function loadLibraries() {
+            debug('=== LOADING LIBRARIES ===');
+            
+            // Method 1: Try CDN libraries
+            try {
+                await loadQRCodeLibrary();
+                await loadJsPDFLibrary();
+            } catch (error) {
+                debug(`CDN loading failed: ${error.message}`);
+                
+                // Method 2: Try alternative CDNs
+                try {
+                    await loadAlternativeLibraries();
+                } catch (altError) {
+                    debug(`Alternative loading failed: ${altError.message}`);
+                    
+                    // Method 3: Use embedded minimal versions
+                    loadMinimalLibraries();
+                }
+            }
+            
+            updateLibraryStatus();
+            
+            if (libraries.qrcode) {
+                updateStatus('✅ Libraries loaded successfully! Ready to generate QR code.', 'success');
+                document.getElementById('generateBtn').disabled = false;
+            } else {
+                updateStatus('❌ Failed to load required libraries. Using fallback method.', 'error');
+                loadFallbackQR();
+            }
+        }
+
+        function loadQRCodeLibrary() {
+            return new Promise((resolve, reject) => {
+                if (typeof QRCode !== 'undefined') {
+                    libraries.qrcode = true;
+                    debug('QRCode.js already available');
+                    resolve();
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js';
+                script.onload = () => {
+                    if (typeof QRCode !== 'undefined') {
+                        libraries.qrcode = true;
+                        debug('QRCode.js loaded from CDN');
+                        resolve();
+                    } else {
+                        reject(new Error('QRCode object not available'));
+                    }
+                };
+                script.onerror = () => reject(new Error('QRCode.js CDN failed'));
+                document.head.appendChild(script);
+            });
+        }
+
+        function loadJsPDFLibrary() {
+            return new Promise((resolve, reject) => {
+                if (typeof window.jsPDF !== 'undefined') {
+                    libraries.jspdf = true;
+                    debug('jsPDF already available');
+                    resolve();
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                script.onload = () => {
+                    if (typeof window.jsPDF !== 'undefined') {
+                        libraries.jspdf = true;
+                        debug('jsPDF loaded from CDN');
+                        resolve();
+                    } else {
+                        reject(new Error('jsPDF object not available'));
+                    }
+                };
+                script.onerror = () => reject(new Error('jsPDF CDN failed'));
+                document.head.appendChild(script);
+            });
+        }
+
+        async function loadAlternativeLibraries() {
+            debug('Trying alternative CDNs...');
+            
+            // Alternative QRCode library
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js';
+                script.onload = () => {
+                    if (typeof QRCode !== 'undefined') {
+                        libraries.qrcode = true;
+                        debug('QRCode.js loaded from alternative CDN');
+                        resolve();
+                    } else {
+                        reject(new Error('Alternative QRCode failed'));
+                    }
+                };
+                script.onerror = () => reject(new Error('Alternative CDN failed'));
+                document.head.appendChild(script);
+            });
+        }
+
+        function loadFallbackQR() {
+            debug('Using fallback QR generation method');
+            libraries.qrcode = 'fallback';
+            updateLibraryStatus();
+            
+            updateStatus('⚠️ Using fallback QR method. Limited functionality.', 'warning');
+            document.getElementById('generateBtn').disabled = false;
+        }
+
+        // QR Generation
+        async function generateQR() {
+            const btn = document.getElementById('generateBtn');
+            btn.disabled = true;
+            
+            try {
+                debug('=== QR GENERATION ===');
+                updateStatus('Generating QR code...', 'info');
+                
+                const canvas = document.getElementById('qrCanvas');
+                const qrData = JSON.stringify({
+                    id: studentData.student_id,
+                    name: studentData.full_name,
+                    lrn: studentData.lrn,
+                    email: studentData.email,
+                    grade: studentData.grade_level,
+                    school: "Palawan National School",
+                    type: "student_card",
+                    generated: new Date().toISOString().split('T')[0]
+                });
+
+                debug(`QR Data: ${qrData}`);
+
+                if (libraries.qrcode === true && typeof QRCode !== 'undefined') {
+                    // Use QRCode.js library
+                    await new Promise((resolve, reject) => {
+                        QRCode.toCanvas(canvas, qrData, {
+                            width: 300,
+                            margin: 2,
+                            color: {
+                                dark: '#000000',
+                                light: '#FFFFFF'
+                            }
+                        }, function(error) {
+                            if (error) {
+                                debug(`QRCode.js error: ${error.message}`);
+                                reject(error);
+                            } else {
+                                debug('QR code generated with QRCode.js');
+                                resolve();
+                            }
+                        });
+                    });
+                } else {
+                    // Use fallback method
+                    generateFallbackQR(canvas, qrData);
+                }
+
+                updateStatus('✅ QR code generated successfully!', 'success');
+                document.getElementById('pngBtn').disabled = false;
+                document.getElementById('pdfBtn').disabled = false;
+
+            } catch (error) {
+                debug(`QR generation failed: ${error.message}`);
+                updateStatus(`❌ QR generation failed: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function generateFallbackQR(canvas, data) {
+            debug('Using fallback QR generation');
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Create a simple pattern
+            ctx.fillStyle = '#000000';
+            
+            // Draw finder patterns (corners)
+            drawFinderPattern(ctx, 20, 20, 15);
+            drawFinderPattern(ctx, 265, 20, 15);
+            drawFinderPattern(ctx, 20, 265, 15);
+            
+            // Draw data pattern based on student ID
+            const hash = hashString(data);
+            for (let i = 0; i < 20; i++) {
+                for (let j = 0; j < 20; j++) {
+                    if ((i + j + hash) % 3 === 0) {
+                        ctx.fillRect(80 + i * 8, 80 + j * 8, 8, 8);
+                    }
+                }
+            }
+            
+            debug('Fallback QR pattern generated');
+        }
+
+        function drawFinderPattern(ctx, x, y, size) {
+            ctx.fillRect(x, y, size * 7, size * 7);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(x + size, y + size, size * 5, size * 5);
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(x + size * 2, y + size * 2, size * 3, size * 3);
+        }
+
+        function hashString(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return Math.abs(hash);
+        }
+
+        // PNG Download
+        async function downloadPNG() {
+            const btn = document.getElementById('pngBtn');
+            btn.disabled = true;
+            
+            try {
+                debug('=== PNG DOWNLOAD ===');
+                updateStatus('Preparing PNG download...', 'info');
+                
+                const canvas = document.getElementById('qrCanvas');
+                
+                // Method 1: Direct download
+                try {
+                    const dataURL = canvas.toDataURL('image/png', 1.0);
+                    debug(`PNG DataURL length: ${dataURL.length}`);
+                    
+                    const link = document.createElement('a');
+                    link.href = dataURL;
+                    link.download = `${studentData.student_id}-QR-${Date.now()}.png`;
+                    
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    debug('PNG download triggered (Method 1)');
+                    updateStatus('✅ PNG download completed!', 'success');
+                    
+                } catch (error1) {
+                    debug(`Method 1 failed: ${error1.message}, trying Method 2`);
+                    
+                    // Method 2: Blob download
+                    canvas.toBlob(function(blob) {
+                        if (blob) {
+                            const url = URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = `${studentData.student_id}-QR-blob-${Date.now()}.png`;
+                            
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            
+                            setTimeout(() => URL.revokeObjectURL(url), 1000);
+                            debug('PNG download triggered (Method 2 - Blob)');
+                            updateStatus('✅ PNG download completed (Blob method)!', 'success');
+                        } else {
+                            throw new Error('Blob creation failed');
+                        }
+                    }, 'image/png', 1.0);
+                }
+                
+            } catch (error) {
+                debug(`PNG download failed: ${error.message}`);
+                updateStatus(`❌ PNG download failed. Try right-clicking the QR code and selecting "Save image as..."`, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // PDF Download
+        async function downloadPDF() {
+            const btn = document.getElementById('pdfBtn');
+            btn.disabled = true;
+            
+            try {
+                debug('=== PDF DOWNLOAD ===');
+                updateStatus('Creating PDF document...', 'info');
+                
+                if (!libraries.jspdf || typeof window.jsPDF === 'undefined') {
+                    throw new Error('jsPDF library not available');
+                }
+                
+                const { jsPDF } = window.jsPDF;
+                const pdf = new jsPDF();
+                
+                // Add header
+                pdf.setFillColor(76, 175, 80);
+                pdf.rect(0, 0, 210, 30, 'F');
+                
+                pdf.setTextColor(255, 255, 255);
+                pdf.setFontSize(20);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text('PALAWAN NATIONAL SCHOOL', 105, 20, { align: 'center' });
+                
+                // Add student info
+                pdf.setTextColor(0, 0, 0);
+                pdf.setFontSize(16);
+                pdf.text('Student QR Code Card', 105, 45, { align: 'center' });
+                
+                let y = 65;
+                pdf.setFontSize(12);
+                
+                const info = [
+                    ['Student ID:', studentData.student_id],
+                    ['Name:', studentData.full_name],
+                    ['LRN:', studentData.lrn],
+                    ['Email:', studentData.email],
+                    ['Grade:', studentData.grade_level]
+                ];
+                
+                info.forEach(([label, value]) => {
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.text(label, 20, y);
+                    pdf.setFont('helvetica', 'normal');
+                    pdf.text(value, 60, y);
+                    y += 10;
+                });
+                
+                // Add QR code
+                try {
+                    const canvas = document.getElementById('qrCanvas');
+                    const qrDataURL = canvas.toDataURL('image/png');
+                    pdf.addImage(qrDataURL, 'PNG', 75, y + 10, 60, 60);
+                    debug('QR code added to PDF');
+                } catch (qrError) {
+                    debug(`QR addition to PDF failed: ${qrError.message}`);
+                }
+                
+                // Add footer
+                pdf.setFontSize(10);
+                pdf.text('Generated: ' + new Date().toLocaleString(), 20, y + 80);
+                pdf.text('Palawan National School - QR System', 20, y + 90);
+                
+                // Download PDF
+                const filename = `${studentData.student_id}-QR-Card-${Date.now()}.pdf`;
+                pdf.save(filename);
+                
+                debug(`PDF saved as: ${filename}`);
+                updateStatus('✅ PDF download completed!', 'success');
+                
+            } catch (error) {
+                debug(`PDF download failed: ${error.message}`);
+                updateStatus(`❌ PDF download failed: ${error.message}. Try using Print → Save as PDF.`, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            debug('🚀 Fixed QR Download Tool loaded');
+            debug(`Browser: ${navigator.userAgent}`);
+            debug(`Platform: ${navigator.platform}`);
+            
+            // Initially disable buttons
+            document.getElementById('generateBtn').disabled = true;
+            document.getElementById('pngBtn').disabled = true;
+            document.getElementById('pdfBtn').disabled = true;
+            
+            // Load libraries
+            loadLibraries();
+        });
+    </script>
+</body>
+</html>

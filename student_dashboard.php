@@ -54,202 +54,297 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
 
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Student Dashboard - School Attendance System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - PNS</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: linear-gradient(135deg, #d6f5d6 0%, #eaffea 100%);
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+            background: linear-gradient(135deg, #1e5128 0%, #2d6a4f 100%);
             min-height: 100vh;
+            color: #2c3e50;
         }
         .navbar {
-            background: linear-gradient(90deg, #218c21 0%, #176617 100%);
+            background: linear-gradient(135deg, #1e5128 0%, #2d6a4f 100%);
             padding: 0;
-            border-radius: 0;
-            box-shadow: 0 2px 8px rgba(33, 140, 33, 0.3);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar-brand {
+            padding: 18px 32px;
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #fff;
+        }
+        .navbar-links {
+            display: flex;
         }
         .navbar a {
             color: #fff;
-            padding: 18px 24px;
+            padding: 20px 28px;
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s;
             border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .navbar a:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-bottom: 3px solid #b2e2b2;
+            background: rgba(255,255,255,0.15);
+            border-bottom-color: #d8f3dc;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 32px auto;
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(33, 140, 33, 0.2);
-            padding: 32px;
+            padding: 0 24px;
         }
-        .header-row {
+        .page-header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+            border-radius: 20px;
+            padding: 32px 40px;
+            margin-bottom: 28px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 32px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #eaffea;
+            border: 1px solid rgba(255,255,255,0.8);
         }
         .welcome-text {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #218c21;
+            font-size: 2em;
+            font-weight: 700;
+            color: #1e5128;
+        }
+        .welcome-subtitle {
+            font-size: 1em;
+            color: #5a6c7d;
+            margin-top: 6px;
         }
         .clock {
             font-size: 1.1em;
-            color: #176617;
+            color: #2d6a4f;
             font-weight: 600;
-        }
-        .info-section {
-            background: #eaffea;
+            background: #d8f3dc;
+            padding: 12px 20px;
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 24px;
         }
-        .info-section h3 {
-            margin-top: 0;
-            color: #218c21;
-            font-size: 1.3em;
-            margin-bottom: 16px;
-        }
-        .stats-row {
-            display: flex;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
-            margin-bottom: 16px;
+            margin-bottom: 28px;
         }
-        .stat-box {
-            background: #fff;
-            border-radius: 8px;
-            padding: 12px 16px;
-            flex: 1;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(33, 140, 33, 0.1);
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            border-left: 4px solid #2d6a4f;
+            transition: all 0.3s;
         }
-        .stat-box strong {
-            color: #218c21;
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+        }
+        .stat-label {
+            color: #5a6c7d;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .stat-value {
+            font-size: 2.2em;
+            font-weight: 800;
+            color: #1e5128;
+        }
+        .content-section {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+            border-radius: 20px;
+            padding: 32px 40px;
+            margin-bottom: 28px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(45,106,79,0.08);
+        }
+        .content-section h2 {
+            color: #1e5128;
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 3px solid #d8f3dc;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+        .info-item {
+            padding: 14px 18px;
+            background: #f6fff7;
+            border-radius: 10px;
+            border-left: 3px solid #2d6a4f;
+        }
+        .info-item strong {
+            color: #1e5128;
             display: block;
             margin-bottom: 4px;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 16px;
-            border-radius: 8px;
-            overflow: hidden;
+        .info-item span {
+            color: #2c3e50;
+            font-size: 1.05em;
         }
-        th {
-            background: #218c21;
-            color: #fff;
-            padding: 14px;
-            text-align: left;
-            font-weight: 600;
-        }
-        td {
-            padding: 12px 14px;
-            border-bottom: 1px solid #eaffea;
-        }
-        tr:hover {
-            background: #f8fff8;
-        }
-        .list-section {
-            margin-top: 24px;
-        }
-        .list-section ul {
+        .student-list {
             list-style: none;
-            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 14px;
         }
-        .list-section li {
-            background: #f8fff8;
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            border-left: 4px solid #218c21;
+        .student-list li {
+            background: linear-gradient(135deg, #f6fff7 0%, #fff 100%);
+            padding: 14px 18px;
+            border-radius: 12px;
+            border-left: 4px solid #2d6a4f;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
-
+        .student-list li:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 16px rgba(45,106,79,0.15);
+        }
+        @media (max-width: 768px) {
+            .navbar-links { flex-direction: column; }
+            .page-header { flex-direction: column; gap: 16px; text-align: center; }
+        }
     </style>
 </head>
 <body>
     <div class="navbar">
-        <a href="student_dashboard.php">Dashboard</a>
-        <a href="card.php?id=<?php echo $user['id']; ?>">QR Card</a>
-        <a href="logout.php">Logout</a>
+        <div class="navbar-brand">👨‍🎓 PNS Student Portal</div>
+        <div class="navbar-links">
+            <a href="student_dashboard.php">📊 Dashboard</a>
+            <a href="student_qr.php">📱 My QR Code</a>
+            <a href="logout.php">🚪 Logout</a>
+        </div>
     </div>
     <div class="container">
-        <div class="header-row">
-            <div class="welcome-text">Welcome, <?php echo htmlspecialchars($user['full_name']); ?></div>
+        <div class="page-header">
+            <div>
+                <div class="welcome-text">Welcome, <?php echo htmlspecialchars($user['full_name']); ?>!</div>
+                <div class="welcome-subtitle">Grade <?php echo htmlspecialchars($user['grade_level']); ?> - <?php echo htmlspecialchars($user['strand']); ?> - Section <?php echo htmlspecialchars($user['section_block']); ?></div>
+            </div>
             <div id="clock" class="clock"></div>
         </div>
         <script>
         function updateClock() {
             var now = new Date();
-            var date = now.toLocaleDateString();
+            var date = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
             var time = now.toLocaleTimeString();
-            document.getElementById('clock').textContent = date + ' ' + time;
+            document.getElementById('clock').textContent = time;
         }
         setInterval(updateClock, 1000);
         updateClock();
         </script>
-    <div class="info-section">
-        <h3>📚 My Information</h3>
-        <div class="stats-row">
-            <div class="stat-box">
-                <strong>Grade</strong>
-                <?php echo htmlspecialchars($user['grade_level']); ?>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Classmates</div>
+                <div class="stat-value"><?php echo $count; ?></div>
             </div>
-            <div class="stat-box">
-                <strong>Strand</strong>
-                <?php echo htmlspecialchars($user['strand']); ?>
+            <div class="stat-card">
+                <div class="stat-label">Male Students</div>
+                <div class="stat-value"><?php echo $male; ?></div>
             </div>
-            <div class="stat-box">
-                <strong>Section</strong>
-                <?php echo htmlspecialchars($user['section_block']); ?>
-            </div>
-        </div>
-    </div>
-
-
-    
-    <div class="info-section">
-        <h3>👥 Classmates (<?php echo $count; ?>)</h3>
-        <div class="stats-row">
-            <div class="stat-box">
-                <strong>Male</strong>
-                <?php echo $male; ?>
-            </div>
-            <div class="stat-box">
-                <strong>Female</strong>
-                <?php echo $female; ?>
+            <div class="stat-card">
+                <div class="stat-label">Female Students</div>
+                <div class="stat-value"><?php echo $female; ?></div>
             </div>
         </div>
-        <div class="list-section">
-            <ul>
+
+        <div class="content-section">
+            <h2>📚 My Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>Student ID</strong>
+                    <span><?php echo htmlspecialchars($user['student_id']); ?></span>
+                </div>
+                <div class="info-item">
+                    <strong>LRN</strong>
+                    <span><?php echo htmlspecialchars($user['lrn'] ?? 'N/A'); ?></span>
+                </div>
+                <div class="info-item">
+                    <strong>Grade Level</strong>
+                    <span><?php echo htmlspecialchars($user['grade_level']); ?></span>
+                </div>
+                <div class="info-item">
+                    <strong>Strand</strong>
+                    <span><?php echo htmlspecialchars($user['strand']); ?></span>
+                </div>
+                <div class="info-item">
+                    <strong>Section</strong>
+                    <span><?php echo htmlspecialchars($user['section_block']); ?></span>
+                </div>
+                <div class="info-item">
+                    <strong>Email</strong>
+                    <span><?php echo htmlspecialchars($user['email']); ?></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>👨‍🏫 Class Adviser</h2>
+            <?php if($adviserRow): ?>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Name</strong>
+                        <span><?php echo htmlspecialchars($adviserRow['full_name']); ?></span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Email</strong>
+                        <span><?php echo htmlspecialchars($adviserRow['email']); ?></span>
+                    </div>
+                    <?php if(isset($adviserRow['faculty'])): ?>
+                    <div class="info-item">
+                        <strong>Department</strong>
+                        <span><?php echo htmlspecialchars($adviserRow['faculty']); ?></span>
+                    </div>
+                    <?php endif; ?>
+                </div>
+        <?php else: ?>
+            <p style="color:#7f8c8d;padding:20px 0">No adviser assigned yet.</p>
+        <?php endif; ?>
+        </div>
+        
+        <div class="content-section">
+            <h2>👥 My Classmates (<?php echo $count; ?>)</h2>
+            <ul class="student-list">
                 <?php foreach($studentList as $s): ?>
-                    <li><?php echo htmlspecialchars($s['full_name']); ?> - <?php echo htmlspecialchars($s['email']); ?> (<?php echo htmlspecialchars($s['gender']); ?>)</li>
+                    <li>
+                        <strong><?php echo htmlspecialchars($s['full_name']); ?></strong><br>
+                        <span style="color:#5a6c7d;font-size:0.9em"><?php echo htmlspecialchars($s['email']); ?> • <?php echo htmlspecialchars($s['gender']); ?></span>
+                    </li>
                 <?php endforeach; ?>
             </ul>
         </div>
-    </div>
-    
-    <div class="info-section">
-        <h3>👨‍🏫 Adviser</h3>
-        <?php if($adviserRow): ?>
-            <p style="font-size:1.1em"><strong><?php echo htmlspecialchars($adviserRow['full_name']); ?></strong> - <?php echo htmlspecialchars($adviserRow['email']); ?> (<?php echo htmlspecialchars($adviserRow['faculty']); ?>)</p>
-        <?php else: ?>
-            <p>No adviser assigned.</p>
-        <?php endif; ?>
-    </div>
-    <div class="info-section">
-        <h3>� Monthly Attendance Summary</h3>
+
+        <div class="content-section">
+            <h2>📅 Monthly Attendance Summary</h2>
         <?php
         // Use the student's public student_id for attendance_records
         $sid = $user['student_id'];
@@ -298,7 +393,7 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
             <?php endforeach; ?>
         </table>
         <?php endif; ?>
-    </div>
+        </div>
     </div>
 
 

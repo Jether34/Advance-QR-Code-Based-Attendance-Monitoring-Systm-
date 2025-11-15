@@ -88,6 +88,10 @@
             <a href="login.php" class="btn-home">Login</a>
             <a href="signup.php" class="btn-home btn-secondary">Sign Up</a>
         </div>
+        
+        <div class="home-footer">
+            <a href="developer_login.php">🔧 Developer Dashboard</a>
+        </div>
     </div>
 </body>
 </html>

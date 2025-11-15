@@ -1,0 +1,17 @@
+        <div class="student-info">
+            <h4 style="color: #218c21; margin-top: 0;">📊 Student Information</h4>
+            
+            <!-- Essential Student Data -->
+            <p><strong>🆔 Student ID:</strong> <?php echo htmlspecialchars($user['student_id']); ?></p>
+            <p><strong>📚 LRN:</strong> <?php echo htmlspecialchars($user['lrn'] ?? 'N/A'); ?></p>
+            <p><strong>👤 Full Name:</strong> <?php echo htmlspecialchars($user['full_name']); ?></p>
+            <p><strong>🎓 Grade Level:</strong> <?php echo htmlspecialchars($user['grade_level']); ?></p>
+            <p><strong>🎯 Strand:</strong> <?php echo htmlspecialchars($user['strand']); ?></p>
+            <p><strong>📋 Section/Block:</strong> <?php echo htmlspecialchars($user['section_block']); ?></p>
+            <p><strong>⚧️ Gender:</strong> <?php echo htmlspecialchars($user['gender']); ?></p>
+            <p><strong>📧 Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
+            
+            <div style="background: #d1ecf1; padding: 10px; border-radius: 5px; margin-top: 15px; font-size: 0.9em;">
+                <strong>🔒 QR Security:</strong> Essential student information encoded in binary QR code for secure attendance tracking.
+            </div>
+        </div>
