@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/logging.php';
 
 $role = $_POST['role'] ?? '';
 $full_name = trim($_POST['full_name'] ?? '');
@@ -33,6 +34,15 @@ if ($role === 'teacher') {
         ':section_block' => $block,
         ':faculty' => $faculty
     ]);
+    // Log signup success for teacher
+    $newId = $pdo->lastInsertId();
+    try {
+        log_event($pdo, 'signup_success', [
+            'user_role' => 'teacher',
+            'user_id'   => $newId,
+            'email'     => $email,
+        ]);
+    } catch (Throwable $ignored) {}
 } else {
     // Generate random alphanumeric student_id
     function generateStudentId($length = 10) {
@@ -55,6 +65,15 @@ if ($role === 'teacher') {
         ':strand' => $strand,
         ':section_block' => $block
     ]);
+    // Log signup success for student
+    $newId = $pdo->lastInsertId();
+    try {
+        log_event($pdo, 'signup_success', [
+            'user_role' => 'student',
+            'user_id'   => $newId,
+            'email'     => $email,
+        ]);
+    } catch (Throwable $ignored) {}
 }
 
 $id = $pdo->lastInsertId();

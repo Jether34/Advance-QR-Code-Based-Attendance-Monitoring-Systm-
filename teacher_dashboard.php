@@ -283,6 +283,106 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
             .main {
                 margin-left: 0;
                 width: 100%;
+                padding: 12px;
+            }
+            
+            /* Enhanced mobile styles */
+            .sidebar {
+                width: 100%;
+                padding: 12px 0;
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 1000;
+                min-height: auto;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            }
+            
+            .sidebar-header {
+                padding: 12px 16px;
+                margin-bottom: 8px;
+            }
+            
+            .sidebar-header h2 {
+                font-size: 1.1em;
+            }
+            
+            .sidebar-header p {
+                font-size: 0.8em;
+            }
+            
+            .sidebar a {
+                padding: 10px 16px;
+                font-size: 0.85em;
+                gap: 8px;
+            }
+            
+            .sidebar a:hover {
+                padding-left: 16px;
+            }
+            
+            body {
+                padding-top: 200px; /* Account for fixed sidebar */
+            }
+            
+            .page-header {
+                padding: 16px 20px;
+                margin-bottom: 16px;
+            }
+            
+            .page-header h1 {
+                font-size: 1.3em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .stat-card {
+                padding: 16px;
+            }
+            
+            .stat-card h3 {
+                font-size: 1em;
+            }
+            
+            .stat-card .number {
+                font-size: 2em;
+            }
+            
+            .card {
+                padding: 16px;
+                margin-bottom: 16px;
+            }
+            
+            .card h2 {
+                font-size: 1.2em;
+            }
+            
+            table {
+                font-size: 0.8em;
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            th, td {
+                padding: 8px 6px;
+                white-space: nowrap;
+            }
+            
+            .btn, button {
+                font-size: 0.9em;
+                padding: 10px 16px;
+            }
+            
+            .search-box {
+                margin-bottom: 12px;
+            }
+            
+            input, select {
+                font-size: 16px; /* Prevent iOS zoom */
             }
         }
     </style>
@@ -586,48 +686,6 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 <?php endforeach; ?>
                 </tbody>
             </table>
-            </div>
-            <?php
-            $search = trim($_GET['search'] ?? '');
-            $filtered = $studentList;
-            if ($search) {
-                $filtered = array_filter($studentList, function($s) use ($search) {
-                    return stripos($s['full_name'], $search) !== false || stripos($s['student_id'], $search) !== false;
-                });
-            }
-            ?>
-            <table style="width:100%;border-collapse:collapse">
-                <tr style="background:#eaffea">
-                    <th style="padding:6px 8px;border:1px solid #b2e2b2">Student ID</th>
-                    <th style="padding:6px 8px;border:1px solid #b2e2b2">Full Name</th>
-                    <th style="padding:6px 8px;border:1px solid #b2e2b2">Gender</th>
-                </tr>
-                <?php foreach($filtered as $s): ?>
-                <tr>
-                    <td style="padding:6px 8px;border:1px solid #b2e2b2"><?php echo htmlspecialchars($s['student_id']); ?></td>
-                    <td style="padding:6px 8px;border:1px solid #b2e2b2"><?php echo htmlspecialchars($s['full_name']); ?></td>
-                    <td style="padding:6px 8px;border:1px solid #b2e2b2"><?php echo htmlspecialchars($s['gender']); ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </table>
-    <script>
-    // Sidebar toggle logic
-    const sidebar = document.getElementById('studentSidebar');
-    const openBtn = document.getElementById('toggleSidebar');
-    const closeBtn = document.getElementById('closeSidebar');
-    openBtn.onclick = function(e) {
-        e.preventDefault();
-        sidebar.style.left = '0';
-    };
-    closeBtn.onclick = function() {
-        sidebar.style.left = '-400px';
-    };
-    document.addEventListener('click', function(e) {
-        if (!sidebar.contains(e.target) && e.target !== openBtn) {
-            sidebar.style.left = '-400px';
-        }
-    });
-    </script>
         <?php elseif($section === 'student_list'): ?>
             <div class="page-header">
                 <h1>👥 Student List</h1>

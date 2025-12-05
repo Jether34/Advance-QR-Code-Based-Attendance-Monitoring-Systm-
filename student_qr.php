@@ -91,7 +91,24 @@ $packed = $structured;
         .footer-links { margin-top:35px;font-size:.9em; }
         .footer-links a { color:#218c21;text-decoration:none;margin:0 10px; }
         .footer-links a:hover { text-decoration:underline; }
-        @media (max-width:600px){ .qr-card { padding:28px 22px; } .grid { grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); } }
+        @media (max-width:768px){ 
+            body { padding:12px; }
+            .qr-card { padding:28px 20px;border-radius:12px; } 
+            h1 { font-size:1.6em; }
+            .meta { font-size:0.9em; }
+            #qrcode { padding:10px;border-width:2px; }
+            .grid { grid-template-columns:1fr;gap:8px; }
+            .field { padding:10px 12px; }
+            .actions { flex-direction:column;width:100%; }
+            .btn { width:100%;padding:14px 20px;box-sizing:border-box; }
+            .details { padding:16px 18px;font-size:0.9em; }
+            .footer-links { margin-top:25px; }
+            .footer-links a { display:block;margin:8px 0; }
+        }
+        @media (max-width:480px){
+            h1 { font-size:1.4em; }
+            #qrcode { transform:scale(0.9); }
+        }
     </style>
 </head>
 <body>

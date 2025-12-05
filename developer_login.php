@@ -2,6 +2,7 @@
 // developer_login.php - Dedicated login page for developers/admins
 session_start();
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/logging.php';
 
 $error = '';
 
@@ -30,13 +31,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['developer_id'] = $admin['id'];
                 $_SESSION['developer_username'] = $admin['username'];
                 $_SESSION['developer_role'] = $admin['role'];
+                log_event($pdo, 'developer_login_success', [
+                    'user_role' => 'developer',
+                    'user_id'   => $admin['id'],
+                    'email'     => $admin['username'],
+                ]);
                 header('Location: developer_dashboard.php');
                 exit;
             } else {
                 $error = 'Invalid username or password.';
+                log_event($pdo, 'developer_login_failed', [
+                    'user_role' => 'developer',
+                    'email'     => $username,
+                    'success'   => 0,
+                    'message'   => 'Invalid username or password',
+                ]);
             }
         } catch (PDOException $e) {
             $error = 'Database error. Please contact system administrator.';
+            try {
+                if (!isset($pdo)) { $pdo = get_db(); }
+                log_event($pdo, 'developer_login_failed', [
+                    'user_role' => 'developer',
+                    'email'     => $username,
+                    'success'   => 0,
+                    'message'   => 'DB error during login',
+                ]);
+            } catch (Throwable $ignored) {}
         }
     }
 }

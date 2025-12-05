@@ -78,34 +78,14 @@ require_once __DIR__ . '/db.php';
 <body>
     <h1> Automatic Attendance Scanner</h1>
     
-    <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #218c21;">
-        <strong> Auto-Record Mode Active:</strong> This scanner automatically records attendance when QR codes are scanned! 
-        The system extracts the student ID from any QR code format, validates it against the database, and records attendance 
-        using the exact scan timestamp. No manual buttons needed - just scan and go!
-    </div>
-    
-    <div style="background: #fff3cd; padding: 12px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #f0ad4e;">
-        <strong> Automatic Process:</strong> 
-        QR Code Scanned → Student ID Extracted → Database Validated → Attendance Recorded → Confirmation Displayed
-    </div>
-    
     <div class="scanner-container">
         <div class="scanner-section">
             <h3> QR Code Scanner</h3>
             <div id="reader" style="width:400px"></div>
-            <div style="margin-top: 15px; padding: 10px; background: #fff3cd; border-radius: 6px; font-size: 0.9em; color: #856404;">
-                <strong> Auto-Record Mode:</strong> Point camera at student's QR code. The system will automatically extract the student ID, 
-                validate it in the database, and record attendance immediately using the scan timestamp.
-            </div>
         </div>
         <div class="scanner-section">
             <h3>⌨ Manual Barcode Input</h3>
-            <p>If you have a hardware barcode scanner, focus the input below and scan — it will auto-submit.</p>
             <input id="barcodeInput" placeholder="Scan or type student ID / barcode" />
-            <div style="margin-top: 10px; padding: 10px; background: #e3f2fd; border-radius: 6px; font-size: 0.9em; color: #1976d2;">
-                <strong> Quick Entry:</strong> Enter student ID directly or use barcode scanner. System will automatically validate 
-                and record attendance for valid student IDs.
-            </div>
         </div>
     </div>
     

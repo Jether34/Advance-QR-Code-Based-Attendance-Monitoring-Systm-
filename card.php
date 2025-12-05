@@ -193,6 +193,14 @@ $code = $user['student_id'];
             <canvas id="studentQRCanvas" width="300" height="300" style="border: 3px solid #218c21; border-radius: 12px; background: white; box-shadow: 0 5px 20px rgba(33, 140, 33, 0.15); margin: 20px 0;"></canvas>
             <div id="qrStatus" style="text-align: center; margin: 10px 0; padding: 10px; border-radius: 8px; font-weight: 600;"></div>
         </div>
+
+        <div class="qr-section">
+            <h3>🧾 1D Barcode (Code 128)</h3>
+            <svg id="studentBarcode" style="background:#fff;border:3px solid #218c21;border-radius:12px;padding:10px;box-shadow:0 5px 20px rgba(33,140,33,0.15);"></svg>
+            <div style="margin-top:10px">
+                <button onclick="downloadBarcodePNG()" class="btn btn-secondary">🖼️ Download Barcode PNG</button>
+            </div>
+        </div>
         
         <div class="action-buttons">
             <button onclick="regenerateQR()" class="btn btn-primary" id="regenerateBtn">
@@ -252,11 +260,12 @@ $code = $user['student_id'];
         </div>
     </div>
 
-    <!-- QR and PDF Libraries with Fallbacks -->
+    <!-- QR, Barcode and PDF Libraries with Fallbacks -->
     <script>
         let qrImageData = null;
         let librariesLoaded = {
             qrcode: false,
+            barcode: false,
             jspdf: false
         };
         
@@ -299,6 +308,11 @@ $code = $user['student_id'];
                     console.log('❌ QRCode.js failed to load, using fallback');
                     librariesLoaded.qrcode = 'fallback';
                 });
+
+            // Load JsBarcode (Code128)
+            loadScript('https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js')
+                .then(()=>{ librariesLoaded.barcode = (typeof JsBarcode !== 'undefined'); console.log('✅ JsBarcode loaded:', librariesLoaded.barcode); })
+                .catch(()=>{ console.warn('❌ JsBarcode failed to load'); librariesLoaded.barcode = false; });
 
             // Load jsPDF with multiple attempts
             loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js')
@@ -369,6 +383,55 @@ $code = $user['student_id'];
                 // Try fallback generation
                 generateFallbackQR();
             }
+        }
+
+        // BARCODE generation (Code 128 with Student ID)
+        function generateStudentBarcode(){
+            if (typeof JsBarcode === 'undefined') {
+                console.warn('JsBarcode not available');
+                return;
+            }
+            const el = document.getElementById('studentBarcode');
+            if (!el) return;
+            // Keep payload concise for high scan reliability: use Student ID only
+            const payload = String(studentCardData.student_id || '').trim();
+            if(!payload){ return; }
+            try{
+                JsBarcode(el, payload, {
+                    format: 'CODE128',
+                    lineColor: '#000',
+                    width: 2,
+                    height: 80,
+                    displayValue: true,
+                    fontSize: 18,
+                    margin: 8
+                });
+            }catch(e){ console.error('Barcode generation error', e); }
+        }
+
+        function downloadBarcodePNG(){
+            const svg = document.getElementById('studentBarcode');
+            if(!svg){ return; }
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const img = new Image();
+            const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+            const url = URL.createObjectURL(svgBlob);
+            img.onload = function(){
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width + 40; // add padding
+                canvas.height = img.height + 40;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+                ctx.drawImage(img, 20, 20);
+                URL.revokeObjectURL(url);
+                const a = document.createElement('a');
+                const ts = new Date().toISOString().split('T')[0];
+                a.download = `${studentCardData.student_id}-BARCODE-${ts}.png`;
+                a.href = canvas.toDataURL('image/png');
+                a.click();
+            };
+            img.src = url;
         }
 
         function generateFallbackQR() {
@@ -718,8 +781,8 @@ $code = $user['student_id'];
             const qrData = formatStudentDataForQR(studentCardData);
             console.log('QR Data to embed:', qrData);
             
-            // Auto-generate QR code after short delay
-            setTimeout(generateStudentQRCode, 1200);
+            // Auto-generate QR + Barcode after short delay
+            setTimeout(()=>{ generateStudentQRCode(); generateStudentBarcode(); }, 1200);
         });
     </script>
 </body>

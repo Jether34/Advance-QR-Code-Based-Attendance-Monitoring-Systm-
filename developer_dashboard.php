@@ -31,6 +31,27 @@ try {
     $stmt = $pdo->query('SELECT COUNT(*) as total FROM attendance_records WHERE DATE(attendance_date) = CURDATE()');
     $stats['today_attendance'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
     
+    // Traffic analytics (last 24 hours)
+    try {
+        $stmt = $pdo->query("SELECT COUNT(*) as total FROM system_events WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
+        $stats['traffic_24h'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+        
+        $stmt = $pdo->query("SELECT COUNT(*) as total FROM system_events WHERE event_type LIKE '%login%' AND created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
+        $stats['logins_24h'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+        
+        $stmt = $pdo->query("SELECT COUNT(*) as total FROM system_events WHERE success = 0 AND created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
+        $stats['failed_24h'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+        
+        // Recent system events (last 10)
+        $stmt = $pdo->query("SELECT * FROM system_events ORDER BY created_at DESC LIMIT 10");
+        $recent_events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $stats['traffic_24h'] = 0;
+        $stats['logins_24h'] = 0;
+        $stats['failed_24h'] = 0;
+        $recent_events = [];
+    }
+    
     // Recent activity (last 10 attendance records)
     $stmt = $pdo->query('
         SELECT ar.*, s.full_name, s.student_id 
@@ -262,7 +283,126 @@ try {
         .status-late { background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); color: #856404; border: 1px solid #ffe08a; }
         .status-absent { background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%); color: #721c24; border: 1px solid #f1aeb5; }
         .status-excuse { background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%); color: #0c5460; border: 1px solid #abdde5; }
+        
+        /* AI Assistant Styles */
+        .ai-container { background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%); border-radius: 20px; padding: 32px 40px; margin-bottom: 28px; box-shadow: 0 10px 40px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.05); border: 1px solid rgba(45, 106, 79, 0.08); }
+        .ai-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .ai-header h2 { color: #1e5128; font-size: 1.5em; margin: 0; }
+        .ai-badge { background: linear-gradient(135deg, #2d6a4f 0%, #1e5128 100%); color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 0.75em; font-weight: 700; }
+        .ai-chat { background: #f8fffe; border: 2px solid #d8f3dc; border-radius: 12px; padding: 20px; max-height: 400px; overflow-y: auto; margin-bottom: 16px; }
+        .ai-message { margin-bottom: 16px; padding: 12px 16px; border-radius: 10px; line-height: 1.6; }
+        .ai-message.user { background: #e6f7ed; border-left: 4px solid #2d6a4f; }
+        .ai-message.assistant { background: #fff; border-left: 4px solid #1e5128; white-space: pre-line; }
+        .ai-input-group { display: flex; gap: 10px; }
+        .ai-input { flex: 1; padding: 12px 16px; border: 2px solid #d8f3dc; border-radius: 10px; font-size: 0.95em; }
+        .ai-input:focus { outline: none; border-color: #2d6a4f; }
+        .ai-btn { padding: 12px 24px; background: linear-gradient(135deg, #2d6a4f 0%, #1e5128 100%); color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .ai-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(45, 106, 79, 0.4); }
+        .ai-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .ai-suggestions { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .ai-suggestion { padding: 6px 12px; background: #d8f3dc; color: #1e5128; border: 1px solid #b7e4c7; border-radius: 20px; font-size: 0.85em; cursor: pointer; transition: all 0.2s; }
+        .ai-suggestion:hover { background: #b7e4c7; transform: scale(1.05); }
     </style>
+    <script>
+        let chatHistory = [];
+        
+        async function askAI(question) {
+            if (!question.trim()) return;
+            
+            const chatDiv = document.getElementById('ai-chat');
+            const input = document.getElementById('ai-input');
+            const btn = document.getElementById('ai-btn');
+            
+            // Add user message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'ai-message user';
+            userMsg.innerHTML = '<strong>You:</strong> ' + escapeHtml(question);
+            chatDiv.appendChild(userMsg);
+            
+            // Disable input
+            input.value = '';
+            input.disabled = true;
+            btn.disabled = true;
+            btn.textContent = 'Thinking...';
+            
+            // Add loading message
+            const loadingMsg = document.createElement('div');
+            loadingMsg.className = 'ai-message assistant';
+            loadingMsg.id = 'loading-msg';
+            loadingMsg.innerHTML = '<strong>Jether:</strong> Analyzing data...';
+            chatDiv.appendChild(loadingMsg);
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+            
+            try {
+                const response = await fetch('developer_ai_assistant.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question: question })
+                });
+                
+                const data = await response.json();
+                
+                // Remove loading message
+                loadingMsg.remove();
+                
+                if (data.success) {
+                    const assistantMsg = document.createElement('div');
+                    assistantMsg.className = 'ai-message assistant';
+                    assistantMsg.innerHTML = '<strong>Jether:</strong>\n' + escapeHtml(data.answer);
+                    chatDiv.appendChild(assistantMsg);
+                    
+                    chatHistory.push({ question, answer: data.answer });
+                } else {
+                    const errorMsg = document.createElement('div');
+                    errorMsg.className = 'ai-message assistant';
+                    errorMsg.innerHTML = '<strong>Jether:</strong>\n' + escapeHtml(data.answer || data.error || 'Unknown error');
+                    chatDiv.appendChild(errorMsg);
+                }
+            } catch (error) {
+                loadingMsg.remove();
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'ai-message assistant';
+                errorMsg.innerHTML = '<strong>Error:</strong> Failed to connect to AI assistant.\n\n' +
+                                   'Details: ' + escapeHtml(error.message) + '\n\n' +
+                                   'Please check:\n' +
+                                   '• Database connection is active\n' +
+                                   '• system_events table exists (run complete_database_setup.sql)\n' +
+                                   '• PHP error logs for details';
+                chatDiv.appendChild(errorMsg);
+            }
+            
+            // Re-enable input
+            input.disabled = false;
+            btn.disabled = false;
+            btn.textContent = 'Ask';
+            input.focus();
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('ai-input');
+            const btn = document.getElementById('ai-btn');
+            
+            btn.addEventListener('click', () => askAI(input.value));
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') askAI(input.value);
+            });
+            
+            // Suggestion buttons
+            document.querySelectorAll('.ai-suggestion').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    input.value = btn.textContent;
+                    askAI(btn.textContent);
+                });
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="container">
@@ -271,6 +411,41 @@ try {
             <div class="header-actions">
                 <span class="user-info">Logged in as: <strong><?php echo htmlspecialchars($_SESSION['developer_username']); ?></strong></span>
                 <a href="developer_logout.php" class="btn btn-logout">Logout</a>
+            </div>
+        </div>
+        
+        <div class="ai-container">
+            <div class="ai-header">
+                <h2>🤖 Jether AI</h2>
+                <span class="ai-badge">LIVE</span>
+            </div>
+            
+            <div class="ai-suggestions">
+                <button class="ai-suggestion">Who created this system?</button>
+                <button class="ai-suggestion">Explain the database schema</button>
+                <button class="ai-suggestion">What are the main PHP files?</button>
+                <button class="ai-suggestion">Security analysis</button>
+                <button class="ai-suggestion">Show attendance trends</button>
+                <button class="ai-suggestion">System overview</button>
+            </div>
+            
+            <div id="ai-chat" class="ai-chat">
+                <div class="ai-message assistant">
+                    <strong>Jether:</strong> Hi! I'm Jether AI Assistant, powered by Llama 3.2. I have comprehensive knowledge of this QR-Based Attendance System including:
+                    
+• Frontend: HTML5, CSS3, JavaScript (QR scanning)
+• Backend: PHP files, database schema, system architecture
+• Database: All 8 tables (students, teachers, attendance_records, system_events, posts, etc.)
+• Real-time data: Traffic logs, attendance patterns, security analysis
+• System info: Created by Jether Garque (Grade 12 ICT Student) for Palawan National School
+
+Ask me about the system architecture, database schema, creator information, or analyze live data!
+                </div>
+            </div>
+            
+            <div class="ai-input-group">
+                <input type="text" id="ai-input" class="ai-input" placeholder="Ask about system status, security, attendance patterns..." />
+                <button id="ai-btn" class="ai-btn">Ask</button>
             </div>
         </div>
         
@@ -295,6 +470,21 @@ try {
                 <div class="stat-value"><?php echo number_format($stats['today_attendance']); ?></div>
                 <div class="stat-label">Today's Attendance</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value"><?php echo number_format($stats['traffic_24h']); ?></div>
+                <div class="stat-label">Events (24h)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔐</div>
+                <div class="stat-value"><?php echo number_format($stats['logins_24h']); ?></div>
+                <div class="stat-label">Logins (24h)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚠️</div>
+                <div class="stat-value"><?php echo number_format($stats['failed_24h']); ?></div>
+                <div class="stat-label">Failed Events (24h)</div>
+            </div>
         </div>
         
         <div class="section">
@@ -306,7 +496,60 @@ try {
                 <a href="test_connection.php" class="quick-link">🔌 Test DB Connection</a>
                 <a href="developer_students.php" class="quick-link">👤 Student Directory</a>
                 <a href="developer_teachers.php" class="quick-link">👨‍🏫 Teacher Directory</a>
+                <a href="developer_traffic.php" class="quick-link">📈 Traffic Monitor</a>
             </div>
+        </div>
+        
+        <div class="section">
+            <h2>🔔 Recent System Events</h2>
+            <?php if (!empty($recent_events)): ?>
+                <table class="activity-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Event</th>
+                            <th>User</th>
+                            <th>IP</th>
+                            <th>Device</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($recent_events as $evt): ?>
+                            <?php
+                              // Parse device from UA
+                              $ua = $evt['user_agent'] ?? '';
+                              $device = 'Unknown';
+                              if ($ua) {
+                                if (stripos($ua, 'Mobile') !== false || stripos($ua, 'Android') !== false || stripos($ua, 'iPhone') !== false) {
+                                  $device = 'Mobile';
+                                } elseif (stripos($ua, 'Tablet') !== false || stripos($ua, 'iPad') !== false) {
+                                  $device = 'Tablet';
+                                } else {
+                                  $device = 'Desktop';
+                                }
+                              }
+                            ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars(date('M d, H:i', strtotime($evt['created_at']))); ?></td>
+                                <td><?php echo htmlspecialchars($evt['event_type']); ?></td>
+                                <td><?php echo htmlspecialchars($evt['email'] ?? ($evt['user_role'] ?? 'N/A')); ?></td>
+                                <td><?php echo htmlspecialchars($evt['ip_address'] ?? 'N/A'); ?></td>
+                                <td><?php echo htmlspecialchars($device); ?></td>
+                                <td>
+                                    <?php if ((int)$evt['success'] === 1): ?>
+                                        <span class="status-badge status-present">OK</span>
+                                    <?php else: ?>
+                                        <span class="status-badge status-absent">FAIL</span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p style="color: #7f8c8d; text-align: center; padding: 20px;">No recent system events found.</p>
+            <?php endif; ?>
         </div>
         
         <div class="section">

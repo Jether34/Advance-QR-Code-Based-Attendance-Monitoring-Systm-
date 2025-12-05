@@ -1,7 +1,10 @@
 <?php
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/logging.php';
 date_default_timezone_set('Asia/Manila');
 session_start();
+
+$request_start = microtime(true);
 
 // Accept JSON body
 $raw = file_get_contents('php://input');
@@ -17,6 +20,14 @@ $type = $data['type'] ?? 'qr';
 $period = $data['period'] ?? 'morning_in'; // Default to morning in if not provided
 
 if(!$code){
+    try {
+        $pdo = get_db();
+        log_event($pdo, 'attendance_scan', [
+            'success' => 0,
+            'message' => 'Missing code',
+            'context_json' => ['type' => $type, 'period' => $period],
+        ]);
+    } catch (Throwable $ignored) {}
     echo json_encode(['success'=>false,'error'=>'Missing code']); exit;
 }
 
@@ -77,6 +88,13 @@ try {
     exit;
 }
 if(!$student){
+    log_event($pdo, 'attendance_scan', [
+        'success' => 0,
+        'message' => 'Student not found',
+        'object_type' => 'students',
+        'object_id' => $code,
+        'context_json' => ['type' => $type, 'period' => $period, 'scan_source' => $type],
+    ]);
     echo json_encode(['success'=>false,'error'=>'Student not found']); exit;
 }
 
@@ -145,6 +163,22 @@ try {
     $status_update->execute([
         ':status'=>$status,
         ':id'=>$updated_record['id']
+    ]);
+
+    // Log successful scan
+    $latency_ms = (int)((microtime(true) - $request_start) * 1000);
+    log_event($pdo, 'attendance_scan', [
+        'user_role' => 'teacher',
+        'user_id' => $teacher_id,
+        'object_type' => 'attendance_records',
+        'object_id' => $updated_record['id'],
+        'latency_ms' => $latency_ms,
+        'context_json' => [
+            'student_id' => $student['student_id'],
+            'scan_source' => $type,
+            'period' => $period,
+            'status' => $status,
+        ],
     ]);
 } catch (Exception $e) {
     echo json_encode(['success'=>false,'error'=>'Attendance save failed: ' . $e->getMessage()]);

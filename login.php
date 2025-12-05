@@ -2,6 +2,7 @@
 // login.php - login form and handler
 session_start();
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/logging.php';
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -16,6 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user && $user['password'] && password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['role'] = 'teacher';
+            // Log successful teacher login
+            log_event($pdo, 'login_success', [
+                'user_role' => 'teacher',
+                'user_id'   => $user['id'],
+                'email'     => $email,
+            ]);
             header('Location: teacher_dashboard.php');
             exit;
         }
@@ -26,12 +33,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user && $user['password'] && password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['role'] = 'student';
+            // Log successful student login
+            log_event($pdo, 'login_success', [
+                'user_role' => 'student',
+                'user_id'   => $user['id'],
+                'email'     => $email,
+            ]);
             header('Location: student_dashboard.php');
             exit;
         }
         $error = 'Invalid email or password';
+        // Log failed login attempt
+        log_event($pdo, 'login_failed', [
+            'email'   => $email,
+            'success' => 0,
+            'message' => 'Invalid credentials',
+        ]);
     } else {
         $error = 'Please enter email and password';
+        // Log failed login attempt due to missing fields
+        $pdo = get_db();
+        log_event($pdo, 'login_failed', [
+            'email'   => $email ?: null,
+            'success' => 0,
+            'message' => 'Missing email or password',
+        ]);
     }
 }
 ?>
@@ -39,7 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Login - School Attendance System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Login - Palawan National School</title>
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -48,15 +75,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
         .login-container {
             background: #fff;
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(33, 140, 33, 0.2);
             padding: 40px 32px;
-            max-width: 420px;
+            max-width: 600px;
             width: 100%;
-            margin: 20px;
+            margin: 20px auto;
+        }
+        .logo-header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #b2e2b2;
+        }
+        .logo-header img {
+            max-width: 90px;
+            height: auto;
+            margin-bottom: 12px;
+        }
+        .logo-header .school-name {
+            color: #218c21;
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 4px;
         }
         .login-header {
             text-align: center;
@@ -128,9 +173,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div class="login-container">
+        <div class="logo-header">
+            <img src="uploads/OIP (1).webp" alt="Palawan National School Logo">
+            <div class="school-name">Palawan National School</div>
+        </div>
         <div class="login-header">
             <h1>Welcome Back</h1>
-            <p>Login to School Attendance System</p>
+            <p>Hybrid QR Code Based Attendance System</p>
         </div>
         <?php if($error): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
         <form method="post">

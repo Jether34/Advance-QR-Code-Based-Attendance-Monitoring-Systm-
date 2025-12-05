@@ -229,8 +229,164 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
             box-shadow: 0 4px 16px rgba(45,106,79,0.15);
         }
         @media (max-width: 768px) {
-            .navbar-links { flex-direction: column; }
-            .page-header { flex-direction: column; gap: 16px; text-align: center; }
+            body {
+                padding: 0;
+            }
+            
+            .navbar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                align-items: stretch;
+                z-index: 1000;
+            }
+            
+            .navbar-brand {
+                padding: 16px 20px;
+                font-size: 1.1em;
+                text-align: center;
+                border-bottom: 1px solid rgba(255,255,255,0.2);
+            }
+            
+            .navbar-links {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                width: 100%;
+            }
+            
+            .navbar a {
+                padding: 14px 12px;
+                font-size: 0.85em;
+                justify-content: center;
+                text-align: center;
+                border-bottom: 2px solid transparent;
+                border-right: 1px solid rgba(255,255,255,0.1);
+            }
+            
+            .navbar a:nth-child(2n) {
+                border-right: none;
+            }
+            
+            .container {
+                margin-top: 160px;
+                padding: 0 12px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+                padding: 24px 20px;
+                border-radius: 12px;
+                margin-bottom: 20px;
+            }
+            
+            .welcome-text {
+                font-size: 1.5em;
+            }
+            
+            .welcome-subtitle {
+                font-size: 0.9em;
+            }
+            
+            .clock {
+                font-size: 0.95em;
+                padding: 10px 16px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+            
+            .stat-card {
+                padding: 20px;
+            }
+            
+            .stat-value {
+                font-size: 2em;
+            }
+            
+            .content-section {
+                padding: 24px 20px;
+                border-radius: 12px;
+                margin-bottom: 20px;
+            }
+            
+            .content-section h2 {
+                font-size: 1.3em;
+                margin-bottom: 20px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .info-item {
+                padding: 12px 16px;
+            }
+            
+            .student-list {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .student-list li {
+                padding: 12px 16px;
+            }
+            
+            /* Make tables scrollable */
+            table {
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                white-space: nowrap;
+            }
+            
+            table thead,
+            table tbody,
+            table tr {
+                display: table;
+                width: 100%;
+                table-layout: fixed;
+            }
+        }
+        
+        /* Small mobile devices */
+        @media (max-width: 480px) {
+            .navbar-brand {
+                font-size: 1em;
+                padding: 14px 16px;
+            }
+            
+            .navbar a {
+                font-size: 0.8em;
+                padding: 12px 8px;
+            }
+            
+            .container {
+                margin-top: 150px;
+            }
+            
+            .welcome-text {
+                font-size: 1.3em;
+            }
+            
+            .welcome-subtitle {
+                font-size: 0.85em;
+            }
+            
+            .stat-value {
+                font-size: 1.8em;
+            }
+            
+            .content-section h2 {
+                font-size: 1.2em;
+            }
         }
     </style>
 </head>
@@ -238,9 +394,10 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
     <div class="navbar">
         <div class="navbar-brand">👨‍🎓 PNS Student Portal</div>
         <div class="navbar-links">
-            <a href="student_dashboard.php">📊 Dashboard</a>
-            <a href="student_qr.php">📱 My QR Code</a>
-            <a href="logout.php">🚪 Logout</a>
+            <a href="student_dashboard.php"> Dashboard</a>
+            <a href="student_qr.php"> My QR Code</a>
+            <a href="review_center.php"> Review Center</a>
+            <a href="logout.php"> Logout</a>
         </div>
     </div>
     <div class="container">

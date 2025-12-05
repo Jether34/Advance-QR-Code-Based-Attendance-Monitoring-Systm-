@@ -1,12 +1,16 @@
 <?php
 require_once 'db.php';
+require_once 'logging.php';
 $pdo = get_db();
 session_start();
 
-$strand = $_SESSION['strand'] ?? '';
-$block = $_SESSION['block'] ?? '';
-$grade_level = $_SESSION['grade_level'] ?? '';
-$teacher_name = $_SESSION['teacher_name'] ?? 'Adviser';
+$request_start = microtime(true);
+
+// Accept filters from query string with safe fallbacks to session (when present)
+$strand = isset($_GET['strand']) ? trim($_GET['strand']) : ($_SESSION['strand'] ?? '');
+$block = isset($_GET['block']) ? trim($_GET['block']) : ($_SESSION['block'] ?? '');
+$grade_level = isset($_GET['grade_level']) ? trim($_GET['grade_level']) : ($_SESSION['grade_level'] ?? '');
+$teacher_name = isset($_GET['teacher_name']) ? trim($_GET['teacher_name']) : ($_SESSION['teacher_name'] ?? 'Adviser');
 
 // Get month from GET or default to current
 $month = $_GET['month'] ?? date('Y-m');
@@ -20,9 +24,27 @@ $region = 'IV-B';
 $section = $block;
 $course = $strand;
 
-// Fetch all students for SF2 (no filter)
-$stmt = $pdo->prepare("SELECT s.student_id, s.full_name as name, s.strand, s.section_block as block, s.grade_level, s.gender FROM students s");
-$stmt->execute();
+// Fetch only students matching the teacher's advisory class (grade, strand, section/block)
+$query = "SELECT s.student_id,
+                                 s.full_name AS name,
+                                 s.strand,
+                                 s.section_block AS block,
+                                 s.grade_level,
+                                 s.gender
+                    FROM students s
+                    WHERE (? = '' OR s.grade_level = ?)
+                        AND (? = '' OR s.strand = ?)
+                        AND (? = '' OR s.section_block = ?)
+                    ORDER BY s.gender, s.full_name";
+$stmt = $pdo->prepare($query);
+$stmt->execute([
+    $grade_level,
+    $grade_level,
+    $strand,
+    $strand,
+    $block,
+    $block,
+]);
 $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Get all school days in the month (Monday-Friday)
@@ -351,3 +373,25 @@ foreach ($students as $idx => $student) {
             <button onclick="window.print()" style="padding:8px 16px;background:#1db954;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:bold;">Print SF2</button>
 </body>
 </html>
+<?php
+// Log report export after render
+$latency_ms = (int)((microtime(true) - $request_start) * 1000);
+$teacher_id = $_SESSION['user_id'] ?? null;
+log_event($pdo, 'report_export', [
+    'user_role' => 'teacher',
+    'user_id' => $teacher_id,
+    'object_type' => 'sf2_report',
+    'latency_ms' => $latency_ms,
+    'context_json' => [
+        'report_type' => 'SF2',
+        'month' => $month,
+        'grade_level' => $grade_level,
+        'strand' => $strand,
+        'block' => $block,
+        'teacher_name' => $teacher_name,
+        'export_format' => 'html',
+        'student_count' => count($students),
+        'school_days' => count($dates),
+    ],
+]);
+?>

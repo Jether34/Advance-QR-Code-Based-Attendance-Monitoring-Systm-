@@ -5,7 +5,8 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Signup - School Attendance System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Signup - Palawan National School</title>
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -20,6 +21,23 @@
             padding: 40px 32px;
             max-width: 600px;
             margin: 0 auto;
+        }
+        .logo-header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #b2e2b2;
+        }
+        .logo-header img {
+            max-width: 90px;
+            height: auto;
+            margin-bottom: 12px;
+        }
+        .logo-header .school-name {
+            color: #218c21;
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 4px;
         }
         .signup-header {
             text-align: center;
@@ -99,9 +117,13 @@
 </head>
 <body>
     <div class="signup-container">
+        <div class="logo-header">
+            <img src="uploads/OIP (1).webp" alt="Palawan National School Logo">
+            <div class="school-name">Palawan National School</div>
+        </div>
         <div class="signup-header">
             <h1>Create Account</h1>
-            <p>Join School Attendance System</p>
+            <p>Join Hybrid QR Code Based Attendance System</p>
         </div>
         <form id="signupForm" method="post" action="process_signup.php">
             <div class="form-group">

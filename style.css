@@ -209,3 +209,276 @@ tr:nth-child(even) {
     text-align: right;
     margin-bottom: 10px;
 }
+
+/* ============================================
+   MOBILE RESPONSIVE STYLES
+   ============================================ */
+
+/* Mobile First - Base styles for small screens */
+@media screen and (max-width: 768px) {
+    
+    /* Body and container adjustments */
+    body {
+        font-size: 14px;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .container, .main.container {
+        margin: 8px;
+        padding: 16px 12px;
+        border-radius: 12px;
+        max-width: 100%;
+        box-shadow: 0 2px 12px rgba(178, 226, 178, 0.3);
+    }
+    
+    /* Navbar/Sidebar - Make it horizontal on mobile */
+    .navbar, .sidebar {
+        width: 100%;
+        border-radius: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        padding: 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .sidebar a {
+        padding: 12px 16px;
+        font-size: 0.9em;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+    }
+    
+    .sidebar a.active, .sidebar a:hover {
+        border-left: none;
+        border-bottom: 3px solid #b2e2b2;
+    }
+    
+    /* Add top padding to content to account for fixed navbar */
+    body.teacher-dashboard,
+    body.student-dashboard {
+        padding-top: 60px;
+    }
+    
+    /* Form elements - Make them full width */
+    input, select, button, textarea {
+        font-size: 16px; /* Prevent zoom on iOS */
+        padding: 12px;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 12px;
+    }
+    
+    button {
+        width: 100%;
+        padding: 14px;
+        font-size: 16px;
+        margin-top: 8px;
+    }
+    
+    /* Tables - Make them scrollable */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+    }
+    
+    table thead {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+    
+    table tbody {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+    
+    th, td {
+        padding: 8px 6px;
+        font-size: 0.85em;
+    }
+    
+    /* Headings */
+    h1 {
+        font-size: 1.5em;
+        margin-bottom: 12px;
+    }
+    
+    h2 {
+        font-size: 1.3em;
+        margin-bottom: 10px;
+    }
+    
+    h3 {
+        font-size: 1.1em;
+        margin-bottom: 8px;
+    }
+    
+    /* Cards and panels */
+    .card, .panel {
+        margin-bottom: 16px;
+        padding: 12px;
+    }
+    
+    /* Dashboard stats cards - Stack vertically */
+    .stats-container,
+    .dashboard-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .stat-card {
+        width: 100%;
+        margin: 0;
+        padding: 16px;
+    }
+    
+    /* QR Scanner adjustments */
+    #qr-reader {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    #qr-reader video {
+        width: 100% !important;
+        height: auto !important;
+    }
+    
+    /* Login/Signup forms */
+    .login-container,
+    .signup-container {
+        margin: 16px;
+        padding: 20px;
+        max-width: 100%;
+    }
+    
+    /* Student/Teacher List */
+    .student-card,
+    .teacher-card {
+        margin-bottom: 12px;
+        padding: 12px;
+    }
+    
+    /* Navigation links */
+    nav a {
+        display: block;
+        padding: 10px;
+        margin: 4px 0;
+    }
+    
+    /* Hide desktop-only elements */
+    .desktop-only {
+        display: none !important;
+    }
+    
+    /* Action buttons - Stack vertically on mobile */
+    .action-buttons,
+    .button-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .action-buttons button,
+    .button-group button {
+        width: 100%;
+        margin: 0;
+    }
+    
+    /* Attendance records table */
+    .attendance-table {
+        font-size: 0.8em;
+    }
+    
+    .attendance-table th,
+    .attendance-table td {
+        padding: 6px 4px;
+    }
+    
+    /* Print SF2 button */
+    .print-button {
+        width: 100%;
+        padding: 14px;
+        margin: 12px 0;
+    }
+    
+    /* Search boxes */
+    .search-box {
+        width: 100%;
+        margin-bottom: 12px;
+    }
+    
+    /* Modal adjustments */
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 16px;
+    }
+    
+    /* Review Center AI Chat */
+    #reviewerOutput {
+        font-size: 0.95em;
+        padding: 12px;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    /* PDF Upload section */
+    #uploadStatus {
+        padding: 12px;
+        font-size: 0.9em;
+    }
+}
+
+/* Tablet adjustments (768px - 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .container, .main.container {
+        margin: 16px;
+        padding: 24px 20px;
+        max-width: 95%;
+    }
+    
+    .sidebar {
+        width: 200px;
+    }
+    
+    table {
+        font-size: 0.95em;
+    }
+}
+
+/* Landscape mobile adjustments */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+    .container, .main.container {
+        margin: 8px;
+        padding: 12px;
+    }
+    
+    h1 {
+        font-size: 1.3em;
+    }
+    
+    .sidebar a {
+        padding: 8px 12px;
+        font-size: 0.85em;
+    }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+    input, select, textarea {
+        font-size: 16px; /* Prevent zoom on focus */
+    }
+    
+    body {
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+    }
+}

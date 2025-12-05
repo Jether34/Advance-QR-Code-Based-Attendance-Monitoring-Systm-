@@ -1,14 +1,18 @@
 <?php
-// db.php - PDO MySQL connection using environment variables (.env)
+// db.php - simple PDO MySQL wrapper with PH timezone
+//i have successfully integrate local network functions
+
+// Ensure all PHP date()/time functions use Manila time
+if (!ini_get('date.timezone')) {
+    date_default_timezone_set('Asia/Manila');
+}
 
 function get_db(){
-    $host    = getenv('DB_HOST')    ?: 'localhost';
-    $db      = getenv('DB_NAME')    ?: 'attendance_qr_system';
-    $user    = getenv('DB_USER')    ?: 'root';
-    $passEnv = getenv('DB_PASS');
-    $pass    = $passEnv !== false ? $passEnv : '';
-    $charset = getenv('DB_CHARSET') ?: 'utf8mb4';
-
+    $host = 'localhost';
+    $db   = 'attendance_qr_system';
+    $user = 'root';
+    $pass = '';
+    $charset = 'utf8mb4';
     $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
     $options = [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -16,7 +20,10 @@ function get_db(){
         PDO::ATTR_EMULATE_PREPARES   => false,
     ];
     try {
-        return new PDO($dsn, $user, $pass, $options);
+        $pdo = new PDO($dsn, $user, $pass, $options);
+        // Align MySQL session time zone with Manila as well
+        try { $pdo->exec("SET time_zone = '+08:00'"); } catch (Throwable $ignored) {}
+        return $pdo;
     } catch (PDOException $e) {
         throw new PDOException($e->getMessage(), (int)$e->getCode());
     }
