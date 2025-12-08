@@ -1528,6 +1528,91 @@ EOD;
 $pdf->MultiCell(0, 4.5, $architecture_detail, 0, 'J');
 
 //=============================================================================
+// SECTION 16.5: SYSTEM ARCHITECTURE VISUALIZATION
+//=============================================================================
+$pdf->AddPage();
+$pdf->SetFont('helvetica', 'B', 14);
+$pdf->Cell(0, 8, '16.5 Complete System Architecture Diagram', 0, 1, 'L');
+$pdf->Ln(2);
+
+$pdf->SetFont('helvetica', '', 8);
+$arch_visual = <<<EOD
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                   QR-BASED ATTENDANCE SYSTEM WITH AI INTEGRATION                │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                         PRESENTATION TIER (Client-Side)                        ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│  Teacher Portal        Student Portal         AI Features                      │
+│  ┌──────────────┐     ┌──────────────┐       ┌──────────────┐                 │
+│  │ Dashboard    │     │ QR Display   │       │ Review Center│                 │
+│  │ QR Scanner   │     │ Attendance   │       │ AI Assistant │                 │
+│  │ Analytics    │     │ History      │       │ PDF Converter│                 │
+│  │ SF2 Export   │     │ Profile      │       │ Study Helper │                 │
+│  └──────────────┘     └──────────────┘       └──────────────┘                 │
+│                                                                                │
+│  JavaScript: html5-qrcode.min.js, JsBarcode, AJAX Handlers                    │
+└────────────────────────────────────────────────────────────────────────────────┘
+                                      ↓ HTTP Requests
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                      BUSINESS LOGIC TIER (PHP Server-Side)                     ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│  CORE MODULES                    AI MODULES                                    │
+│  ┌────────────┐ ┌────────────┐  ┌────────────┐ ┌────────────┐                │
+│  │ db.php     │ │auto_reset  │  │reviewer_ai │ │developer_  │                │
+│  │(PDO/MySQL) │ │_7pm.php    │  │.php        │ │ai_assist   │                │
+│  └────────────┘ └────────────┘  └────────────┘ └────────────┘                │
+│  ┌────────────┐ ┌────────────┐  ┌────────────┐ ┌────────────┐                │
+│  │teacher_    │ │record_     │  │review_     │ │pdf_to_csv  │                │
+│  │dashboard   │ │attendance  │  │center.php  │ │_converter  │                │
+│  └────────────┘ └────────────┘  └────────────┘ └────────────┘                │
+│  ┌────────────┐                  ┌────────────┐                               │
+│  │export_sf2  │                  │api_config  │                               │
+│  │_excel.php  │                  │.php        │                               │
+│  └────────────┘                  └────────────┘                               │
+└────────────────────────────────────────────────────────────────────────────────┘
+                    ↓ Database Queries              ↓ AI API Calls
+╔═══════════════════════════════╗   ╔═══════════════════════════════════════════╗
+║    DATA TIER (MySQL 5.7+)     ║   ║   AI LAYER (Ollama Neural Network)        ║
+╚═══════════════════════════════╝   ╚═══════════════════════════════════════════╝
+
+┌────────────────────────────────┐   ┌──────────────────────────────────────────┐
+│  Tables:                       │   │  Llama 3.2 (3B Parameters)               │
+│  • teachers                    │   │  http://192.168.1.12:11434               │
+│  • students                    │   │                                          │
+│  • attendance_records          │   │  32 Transformer Layers                   │
+│  • posts                       │   │  4,096 Embedding Dimensions              │
+│  • profile_edits               │   │  32 Attention Heads                      │
+│  • event_log                   │   │  128,256 Vocabulary Size                 │
+└────────────────────────────────┘   └──────────────────────────────────────────┘
+
+NETWORK TOPOLOGY (LAN Deployment):
+
+    ┌─────────────┐
+    │   Router    │  192.168.1.1
+    └──────┬──────┘
+           │
+    ┌──────┴──────────────────────┐
+    │                             │
+┌───┴────┐                  ┌─────┴──────┐
+│ Server │                  │  Devices   │
+│  PC    │                  │ (Teachers/ │
+└────────┘                  │  Students) │
+192.168.1.12                └────────────┘
+    │                       192.168.1.x
+    ├─ Apache :80
+    ├─ MySQL :3306
+    └─ Ollama :11434
+EOD;
+$pdf->SetFont('courier', '', 7);
+$pdf->MultiCell(0, 3.5, $arch_visual, 0, 'L');
+
+//=============================================================================
 // SECTION 17: AI AND INTELLIGENT FEATURES
 //=============================================================================
 $pdf->AddPage();
@@ -1713,6 +1798,366 @@ The development team acknowledges the importance of:
 All future AI implementations will undergo ethical review and student/parent consent procedures.
 EOD;
 $pdf->MultiCell(0, 4.5, $ai_future, 0, 'J');
+
+//=============================================================================
+// SECTION 17.3: OLLAMA NEURAL NETWORK ARCHITECTURE VISUALIZATION
+//=============================================================================
+$pdf->AddPage();
+$pdf->SetFont('helvetica', 'B', 12);
+$pdf->Cell(0, 6, '17.3 Ollama Neural Network Architecture Deep Dive', 0, 1, 'L');
+$pdf->Ln(2);
+
+$pdf->SetFont('helvetica', 'B', 10);
+$pdf->Cell(0, 5, 'LLAMA 3.2 TRANSFORMER ARCHITECTURE (3 Billion Parameters)', 0, 1, 'L');
+$pdf->Ln(1);
+
+$pdf->SetFont('courier', '', 6.5);
+$ollama_arch = <<<EOD
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                        LLAMA 3.2 NEURAL NETWORK LAYERS                          │
+│                              (32-Layer Transformer)                             │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+INPUT PROCESSING PIPELINE:
+═══════════════════════════════════════════════════════════════════════════════════
+
+User Prompt: "Explain photosynthesis for Grade 12 students"
+     │
+     ↓
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ TOKENIZATION (Byte-Pair Encoding)                                             │
+│ ["Explain", "photo", "##synthesis", "for", "Grade", "12", "students"]         │
+│ → Token IDs: [1234, 5678, 9012, 3456, 7890, 1357, 2468]                       │
+└────────────────────────────────────────────────────────────────────────────────┘
+     │
+     ↓
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ EMBEDDING LAYER: Token → Vector Transformation                                │
+│ Dimensions: 4,096 per token                                                   │
+│                                                                                │
+│ Token "Explain" (ID: 1234) →                                                  │
+│ [0.123, -0.456, 0.789, 0.234, -0.567, ..., 0.891] (4,096 values)             │
+│                                                                                │
+│ Matrix Shape: [sequence_length × 4,096]                                       │
+│ Example: [7 tokens × 4,096] = 28,672 embedding values                         │
+└────────────────────────────────────────────────────────────────────────────────┘
+     │
+     ↓
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ POSITIONAL ENCODING: RoPE (Rotary Position Embedding)                         │
+│ Adds position information to preserve word order                              │
+│ Each position gets unique sinusoidal pattern                                  │
+└────────────────────────────────────────────────────────────────────────────────┘
+
+
+TRANSFORMER BLOCK (REPEATED 32 TIMES):
+═══════════════════════════════════════════════════════════════════════════════════
+
+                    Input: [batch, sequence, 4096]
+                                 │
+                                 ↓
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                    MULTI-HEAD SELF-ATTENTION (32 Heads)                         │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│  Input Vector (4,096 dim) → Split into 32 heads (128 dim each)                 │
+│                                                                                 │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │  HEAD 1 (128 dim)     HEAD 2 (128 dim)    ...    HEAD 32 (128 dim)      │  │
+│  │  ┌────────────┐       ┌────────────┐             ┌────────────┐         │  │
+│  │  │  Q₁ K₁ V₁  │       │  Q₂ K₂ V₂  │     ...     │  Q₃₂ K₃₂ V₃₂│         │  │
+│  │  └────────────┘       └────────────┘             └────────────┘         │  │
+│  └──────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                 │
+│  Each Head Performs (Parallel Processing):                                     │
+│  ┌──────────────────────────────────────────────────────────────────────────┐  │
+│  │  1. Query (Q) = Input × W_Q    [128 × 128 weight matrix]                │  │
+│  │  2. Key (K)   = Input × W_K    [128 × 128 weight matrix]                │  │
+│  │  3. Value (V) = Input × W_V    [128 × 128 weight matrix]                │  │
+│  │                                                                          │  │
+│  │  4. Attention Scores = (Q × K^T) / √128                                 │  │
+│  │     Score Matrix: [seq_len × seq_len]                                   │  │
+│  │                                                                          │  │
+│  │  5. Attention Weights = softmax(Attention Scores)                       │  │
+│  │     Converts scores to probabilities (sum = 1.0)                        │  │
+│  │                                                                          │  │
+│  │  6. Output = Attention Weights × V                                      │  │
+│  │     Weighted combination of values                                      │  │
+│  └──────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                 │
+│  ATTENTION VISUALIZATION (Head 1 Example):                                      │
+│  ┌────────────────────────────────────────────────────────────────────────┐    │
+│  │        Token:  Explain  photo  synthesis  for  Grade  12  students     │    │
+│  │ Explain:       0.89    0.05    0.03     0.01   0.01  0.00   0.01       │    │
+│  │ photo:         0.12    0.76    0.08     0.02   0.01  0.00   0.01       │    │
+│  │ synthesis:     0.08    0.15    0.72     0.02   0.01  0.01   0.01       │    │
+│  │ for:           0.25    0.10    0.08     0.45   0.08  0.02   0.02       │    │
+│  │ Grade:         0.05    0.03    0.02     0.15   0.60  0.10   0.05       │    │
+│  │ 12:            0.03    0.02    0.01     0.10   0.25  0.55   0.04       │    │
+│  │ students:      0.15    0.08    0.05     0.12   0.18  0.10   0.32       │    │
+│  │                                                                         │    │
+│  │ (Higher values = stronger attention between tokens)                    │    │
+│  └────────────────────────────────────────────────────────────────────────┘    │
+│                                                                                 │
+│  Concatenate all 32 heads: [32 × 128] = 4,096 dimensions                       │
+│  Linear Projection: 4,096 → 4,096 (W_O weight matrix)                          │
+│                                                                                 │
+│  Output: [batch, sequence, 4096]                                               │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 ↓
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                      ADD & NORMALIZE (Residual Connection #1)                   │
+│  output = LayerNorm(input + attention_output)                                  │
+│  Prevents vanishing gradients, stabilizes training                             │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 ↓
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                    FEED-FORWARD NETWORK (Position-wise FFN)                     │
+├─────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                 │
+│  Two-layer neural network applied to each position independently               │
+│                                                                                 │
+│  Layer 1: Linear Transformation (Expansion)                                    │
+│  ┌─────────────────────────────────────────────────────────────────────────┐   │
+│  │  Input: 4,096 dimensions                                                │   │
+│  │    ↓ × W₁ (Weight Matrix: 4,096 × 11,008)                               │   │
+│  │  Hidden: 11,008 dimensions (2.69× expansion)                            │   │
+│  │    ↓ SwiGLU Activation (Gated Linear Unit variant)                      │   │
+│  │  Activated: 11,008 dimensions                                           │   │
+│  └─────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                 │
+│  SwiGLU(x) = (x × W_gate) ⊙ SiLU(x × W_up)                                     │
+│  where ⊙ is element-wise multiplication                                        │
+│  SiLU(x) = x × sigmoid(x)  [Smooth activation function]                        │
+│                                                                                 │
+│  Layer 2: Linear Transformation (Contraction)                                  │
+│  ┌─────────────────────────────────────────────────────────────────────────┐   │
+│  │  Hidden: 11,008 dimensions                                              │   │
+│  │    ↓ × W₂ (Weight Matrix: 11,008 × 4,096)                               │   │
+│  │  Output: 4,096 dimensions (back to original size)                       │   │
+│  └─────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                 │
+│  Total FFN Parameters per layer: (4,096×11,008) + (11,008×4,096) ≈ 90M params  │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 ↓
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                      ADD & NORMALIZE (Residual Connection #2)                   │
+│  output = LayerNorm(input + FFN_output)                                        │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 ↓
+                    Pass to Next Transformer Block
+                    (Repeat 32 times total)
+
+
+OUTPUT GENERATION:
+═══════════════════════════════════════════════════════════════════════════════════
+
+                Final Transformer Layer Output
+                    [batch, sequence, 4096]
+                                 │
+                                 ↓
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                         LANGUAGE MODEL HEAD                                     │
+│  Linear Projection: 4,096 → 128,256 (vocabulary size)                          │
+│  Weight Matrix: [4,096 × 128,256] ≈ 525M parameters                            │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 ↓
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                            SOFTMAX LAYER                                        │
+│  Converts logits to probability distribution                                   │
+│                                                                                 │
+│  P(token_i) = exp(logit_i) / Σ exp(logit_j)  for all j in vocabulary           │
+│                                                                                 │
+│  Example Output Probabilities:                                                 │
+│  Token "Photo":      P = 0.352  (35.2%)                                        │
+│  Token "The":        P = 0.189  (18.9%)                                        │
+│  Token "Light":      P = 0.124  (12.4%)                                        │
+│  Token "synthesis":  P = 0.098  ( 9.8%)                                        │
+│  Token "...":        P = 0.237  (remaining 128,252 tokens)                     │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 ↓
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                         SAMPLING STRATEGY                                       │
+│  • Temperature (τ): Controls randomness (0.7 default)                          │
+│    P'(i) = P(i)^(1/τ)  (Lower τ = more deterministic)                          │
+│                                                                                 │
+│  • Top-K Sampling: Consider only top K tokens (K=40)                           │
+│  • Top-P (Nucleus) Sampling: Consider tokens with cumulative P > 0.9           │
+│                                                                                 │
+│  Selected Token → Add to output sequence → Feed back as next input             │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 ↓
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                          DETOKENIZATION                                         │
+│  Token IDs → Text: [1234, 5678, 9012] → "Photosynthesis is the"               │
+│  Merge subword tokens, handle spaces and punctuation                           │
+└─────────────────────────────────────────────────────────────────────────────────┘
+                                 │
+                                 ↓
+            Final Output: "Photosynthesis is the process by which..."
+
+
+PARAMETER BREAKDOWN:
+═══════════════════════════════════════════════════════════════════════════════════
+
+Total Parameters: 3,000,000,000 (3 Billion)
+
+Per Transformer Layer (~93.75M parameters × 32 layers = 3B):
+┌────────────────────────────────────────────────┬──────────────────┐
+│ Component                                      │ Parameters       │
+├────────────────────────────────────────────────┼──────────────────┤
+│ Multi-Head Attention:                          │                  │
+│   - Q, K, V projections (3 × 4096 × 4096)     │  50.3M           │
+│   - Output projection (4096 × 4096)            │  16.8M           │
+│ Feed-Forward Network:                          │                  │
+│   - Layer 1 (4096 × 11008)                     │  45.1M           │
+│   - Layer 2 (11008 × 4096)                     │  45.1M           │
+│ Layer Normalization (2 × 4096)                 │   0.016M         │
+├────────────────────────────────────────────────┼──────────────────┤
+│ Total per Layer:                               │  93.75M          │
+│ Total for 32 Layers:                           │  3,000M (3B)     │
+└────────────────────────────────────────────────┴──────────────────┘
+
+Memory Footprint (Q4_0 Quantization):
+• Full Precision (FP16): ~6 GB
+• 4-bit Quantization: ~2 GB (used in our deployment)
+• 8-bit Quantization: ~3 GB (alternative)
+
+Inference Performance:
+• Tokens/second: ~20-30 (CPU, 4-bit)
+• Tokens/second: ~80-120 (GPU, 4-bit)
+• Context Window: 8,192 tokens
+• Average Response: 150-200 tokens (2-5 seconds)
+EOD;
+$pdf->MultiCell(0, 3, $ollama_arch, 0, 'L');
+
+$pdf->AddPage();
+$pdf->SetFont('helvetica', 'B', 10);
+$pdf->Cell(0, 5, 'MULTI-HEAD ATTENTION MECHANISM DETAILED VISUALIZATION', 0, 1, 'L');
+$pdf->Ln(1);
+
+$pdf->SetFont('courier', '', 6.5);
+$attention_viz = <<<EOD
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│              HOW MULTI-HEAD ATTENTION WORKS (32 Parallel Heads)                 │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+INPUT SENTENCE: "The student scanned QR code for attendance"
+Tokens: [The, student, scanned, QR, code, for, attendance]
+
+STEP 1: PROJECT INPUT TO Q, K, V FOR EACH HEAD
+═══════════════════════════════════════════════════════════════════════════════════
+
+Original Input: [7 tokens × 4,096 dim]
+
+Split into 32 heads: Each head gets [7 tokens × 128 dim]
+
+HEAD 1 PERSPECTIVE:                      HEAD 2 PERSPECTIVE:
+┌─────────────────────────────┐         ┌─────────────────────────────┐
+│ Token      Q₁    K₁    V₁   │         │ Token      Q₂    K₂    V₂   │
+├─────────────────────────────┤         ├─────────────────────────────┤
+│ The        [128 vector]     │         │ The        [128 vector]     │
+│ student    [128 vector]     │         │ student    [128 vector]     │
+│ scanned    [128 vector]     │         │ scanned    [128 vector]     │
+│ QR         [128 vector]     │         │ QR         [128 vector]     │
+│ code       [128 vector]     │         │ code       [128 vector]     │
+│ for        [128 vector]     │         │ for        [128 vector]     │
+│ attendance [128 vector]     │         │ attendance [128 vector]     │
+└─────────────────────────────┘         └─────────────────────────────┘
+    (Focuses on syntax)                     (Focuses on semantics)
+
+... HEAD 3 through HEAD 32 (each learns different patterns)
+
+
+STEP 2: CALCULATE ATTENTION SCORES (Q × K^T)
+═══════════════════════════════════════════════════════════════════════════════════
+
+For HEAD 1, compute all pairwise similarities:
+
+Attention Score Matrix (before softmax):
+        The    student  scanned   QR      code    for    attendance
+The     89.2    12.3     5.6      2.1     3.4     8.7    15.2
+student 15.6    92.4     18.9     3.2     2.8     6.1    22.3
+scanned  8.3    24.5     88.7     12.4    15.8    5.2    18.6
+QR       3.2     5.1     14.2     91.3    78.2    2.8     8.9
+code     4.1     3.9     16.8     82.4    90.1    3.1     7.6
+for     11.2     8.7      6.3      3.8     4.2    85.3   42.1
+attendance 18.4  28.3     21.7     9.2    10.1    38.6   94.8
+
+Divide by √128 ≈ 11.31 (scaling factor to stabilize gradients)
+
+
+STEP 3: APPLY SOFTMAX (Convert to probabilities)
+═══════════════════════════════════════════════════════════════════════════════════
+
+Attention Weight Matrix (after softmax, each row sums to 1.0):
+
+              The    student  scanned   QR      code    for    attendance
+The           0.72    0.09     0.04     0.01    0.02    0.06    0.06
+student       0.08    0.68     0.12     0.02    0.01    0.03    0.06
+scanned       0.03    0.15     0.65     0.08    0.10    0.02    0.07
+QR            0.01    0.02     0.06     0.42    0.38    0.01    0.03
+code          0.01    0.01     0.07     0.39    0.48    0.01    0.03
+for           0.04    0.03     0.02     0.01    0.02    0.52    0.36
+attendance    0.06    0.10     0.08     0.03    0.04    0.18    0.51
+
+INTERPRETATION:
+- "QR" attends strongly to "code" (0.42 + 0.38 = 80% attention)
+- "student" attends to itself (0.68) and "scanned" (0.12)
+- "attendance" attends to "for" (0.18) and itself (0.51)
+→ Model learns contextual relationships!
+
+
+STEP 4: WEIGHTED SUM OF VALUES (Attention × V)
+═══════════════════════════════════════════════════════════════════════════════════
+
+For token "QR":
+Output = 0.01×V[The] + 0.02×V[student] + 0.06×V[scanned] + 0.42×V[QR] + 
+         0.38×V[code] + 0.01×V[for] + 0.03×V[attendance]
+
+Result: New representation of "QR" enriched with context from "code"
+
+
+STEP 5: CONCATENATE ALL 32 HEADS
+═══════════════════════════════════════════════════════════════════════════════════
+
+Head 1 Output:  [7 tokens × 128 dim]  (Learned syntax patterns)
+Head 2 Output:  [7 tokens × 128 dim]  (Learned semantic relations)
+Head 3 Output:  [7 tokens × 128 dim]  (Learned word order)
+...
+Head 32 Output: [7 tokens × 128 dim]  (Learned domain knowledge)
+
+Concatenate: [7 tokens × (32 × 128) = 4,096 dim]
+
+Final Linear Projection: 4,096 → 4,096 (W_O matrix)
+
+
+WHAT DIFFERENT HEADS LEARN:
+═══════════════════════════════════════════════════════════════════════════════════
+
+Research shows different heads specialize:
+
+Head 1-8:   Syntactic relationships (subject-verb, noun-adjective)
+Head 9-16:  Semantic similarity (QR-code, student-attendance)
+Head 17-24: Positional patterns (adjacent words, sentence structure)
+Head 25-32: Task-specific patterns (domain vocabulary, technical terms)
+
+This parallel processing allows Llama 3.2 to understand:
+• "QR code" as a compound term (semantic heads)
+• "student scanned" as subject-verb (syntactic heads)
+• "for attendance" as purpose clause (positional heads)
+• Educational context (domain-specific heads)
+
+All 32 perspectives combine to create rich, context-aware representations!
+EOD;
+$pdf->MultiCell(0, 3, $attention_viz, 0, 'L');
 
 //=============================================================================
 // SECTION 18: RELATED STUDIES AND RESEARCH
