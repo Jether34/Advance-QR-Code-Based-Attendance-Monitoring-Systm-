@@ -71,7 +71,7 @@ $pdf->SetFont('helvetica', 'B', 11);
 $pdf->Cell(0, 6, 'Developed by:', 0, 1, 'C');
 $pdf->SetFont('helvetica', '', 10);
 $pdf->Cell(0, 5, 'ICT Strand - Grade 12 Block 3', 0, 1, 'C');
-$pdf->Cell(0, 5, 'School Year 2024-2025', 0, 1, 'C');
+$pdf->Cell(0, 5, 'School Year 2025-2026', 0, 1, 'C');
 
 // Research Purpose Notice
 $pdf->SetY(180);
@@ -224,12 +224,12 @@ $pdf->SetTextColor(0, 0, 0);
 $pdf->SetFont('helvetica', '', 9);
 
 $timeline = [
-    ['Phase 1', 'August 2024', 'System planning, requirements gathering, database design'],
-    ['Phase 2', 'September 2024', 'Core functionality: QR generation, basic scanning'],
-    ['Phase 3', 'October 2024', 'Teacher/student dashboards, role-based access'],
-    ['Phase 4', 'November 2024', 'Smart status system, half-day attendance'],
-    ['Phase 5', 'December 2024', 'SF2 export, timezone implementation, auto-reset'],
-    ['Phase 6', 'December 2024', 'Security hardening, documentation, final testing'],
+    ['Phase 1', 'August 2025', 'System planning, requirements gathering, database design'],
+    ['Phase 2', 'September 2025', 'Core functionality: QR generation, basic scanning'],
+    ['Phase 3', 'October 2025', 'Teacher/student dashboards, role-based access'],
+    ['Phase 4', 'November 2025', 'Smart status system, half-day attendance'],
+    ['Phase 5', 'December 2025', 'SF2 export, timezone implementation, auto-reset'],
+    ['Phase 6', 'December 2025', 'Security hardening, documentation, final testing'],
 ];
 
 $fill = false;
@@ -250,7 +250,7 @@ $dev_time = <<<EOD
 • Core Development: 12 weeks
 • Testing and Refinement: 3 weeks
 • Documentation: 1 week
-• Total: Approximately 4.5 months (August - December 2024)
+• Total: Approximately 4.5 months (August - December 2025)
 EOD;
 $pdf->MultiCell(0, 5, $dev_time, 0, 'L');
 
@@ -1103,13 +1103,13 @@ SCHOOL INFORMATION:
 Institution: Palawan National School
 Location: Puerto Princesa City, Palawan, Philippines
 Department: Senior High School - ICT Strand
-Academic Year: 2024-2025
+Academic Year: 2025-2026
 
 DEVELOPMENT TEAM:
 Class: Grade 12 Block 3 - ICT Strand
 Project Type: Capstone Research Project
 Project Title: QR-Based Attendance Monitoring System for Palawan National School
-Development Period: August 2024 - December 2024
+Development Period: August 2025 - December 2025
 
 TECHNICAL LEADS:
 The system was developed collaboratively by ICT Grade 12 Block 3 students under the guidance of:
@@ -1157,7 +1157,7 @@ REPOSITORY INFORMATION:
 GitHub Repository: Jether34/Advance-QR-Code-Based-Attendance-Monitoring-Systm-
 Branch: update-2025-11-dev-qr
 License: Educational Use Only
-Last Updated: December 2024
+Last Updated: December 2025
 
 FUTURE MAINTAINERS:
 This system is designed to be maintained by:
