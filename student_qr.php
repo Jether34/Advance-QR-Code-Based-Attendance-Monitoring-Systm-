@@ -41,27 +41,29 @@ foreach(['lrn','created_at','updated_at'] as $optional){
   if(!array_key_exists($optional,$student)) $student[$optional] = '';
 }
 
-// Build structured multi-line TEXT payload instead of full JSON.
-// NOTE: Scanning logic depending on previous JSON format will need adjustment.
+// Build JSON payload with all student information
+// Scanner will extract only student_id for validation
 $generatedAt = gmdate('c');
-$version = '1.1';
-$checksumSource = $student['student_id'] . '|' . $generatedAt . '|' . ($adviser_name ?? '');
-$checksum = substr(hash('sha256', $checksumSource),0,16);
-$structured = "==========\n".
-            ($student['lrn'] ?? 'NO_LRN') . "\n".
-            ($student['full_name'] ?? 'NO_NAME') . "\n".
-            'Grade ' . ($student['grade_level'] ?? 'NA') . "\n".
-            'Strand ' . ($student['strand'] ?? 'NA') . "\n".
-            'Block/Section ' . ($student['section_block'] ?? 'NA') . "\n".
-            'Adviser ' . ($adviser_name ?? 'N/A') . "\n".
-            'Gender ' . ($student['gender'] ?? 'NA') . "\n".
-            "==========\n".
-            'version:' . $version . "\n".
-            'generated_at:' . $generatedAt . "\n".
-            'student_id:' . ($student['student_id'] ?? $student['id']) . "\n".
-            'checksum:' . $checksum . "\n".
-            "==========";
-$packed = $structured;
+$version = '1.2';
+
+$qrData = [
+    'student_id' => $student['student_id'] ?? $student['id'],
+    'name' => $student['full_name'] ?? '',
+    'lrn' => $student['lrn'] ?? '',
+    'email' => $student['email'] ?? '',
+    'grade' => $student['grade_level'] ?? '',
+    'strand' => $student['strand'] ?? '',
+    'section' => $student['section_block'] ?? '',
+    'gender' => $student['gender'] ?? '',
+    'adviser' => $adviser_name,
+    'school' => 'Palawan National School',
+    'type' => 'student_card',
+    'version' => $version,
+    'generated' => date('Y-m-d'),
+    'generated_at' => $generatedAt
+];
+
+$packed = json_encode($qrData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -114,12 +116,32 @@ $packed = $structured;
 <body>
 <div class="qr-card">
     <h1>My Student QR</h1>
-  <div class="meta">Scannable QR embedding FULL student JSON (with checksum).</div>
+    <div class="meta">Choose QR code format and download options</div>
+    
+    <!-- QR Format Selection -->
+    <div style="background: #e7f3ff; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #007bff;">
+        <h3 style="margin: 0 0 12px; color: #007bff; font-size: 1.1em;">📋 QR Code Format</h3>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+            <label style="display: flex; align-items: center; cursor: pointer; padding: 10px 15px; background: #fff; border: 2px solid #218c21; border-radius: 8px; font-weight: 600;">
+                <input type="radio" name="qrFormat" value="full" checked style="margin-right: 8px; width: 18px; height: 18px;">
+                <span>📦 Full Information (Recommended)</span>
+            </label>
+            <label style="display: flex; align-items: center; cursor: pointer; padding: 10px 15px; background: #fff; border: 2px solid #6c757d; border-radius: 8px;">
+                <input type="radio" name="qrFormat" value="idonly" style="margin-right: 8px; width: 18px; height: 18px;">
+                <span>🆔 Student ID Only</span>
+            </label>
+        </div>
+        <div id="formatDescription" style="margin-top: 10px; font-size: 0.9em; color: #555; text-align: center;">
+            Contains all your information: Name, Grade, Section, LRN, etc.
+        </div>
+    </div>
+    
     <div id="qrcode" aria-label="Student QR Code"></div>
     <div id="status" class="status">Generating...</div>
     <div class="actions">
-      <button class="btn" id="btnDownloadPdf">Download PDF</button>
-      <button class="btn alt" id="btnShowRaw">Show Raw Data</button>
+      <button class="btn" id="btnDownloadPdf">📄 Download PDF</button>
+      <button class="btn" id="btnDownloadPng">🖼️ Download PNG</button>
+      <button class="btn alt" id="btnShowRaw">📋 Show Raw Data</button>
     </div>
     <div class="details">
         <h3>Embedded Fields</h3>
@@ -138,23 +160,55 @@ $packed = $structured;
 <script src="assets/qrcode.min.js"></script>
 <!-- jsPDF will be loaded dynamically when needed (avoid race issues) -->
 <script>
-// Simplified QR generation using standard QRCode.js constructor API.
-const packed = <?php echo json_encode($packed, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>;
+// Student data from PHP
+const studentData = <?php echo json_encode($qrData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>;
+const studentIdOnly = <?php echo json_encode($student['student_id'] ?? $student['id']); ?>;
+
 const statusEl = document.getElementById('status');
 function setStatus(msg, cls){ statusEl.textContent = msg; statusEl.className = 'status ' + (cls||''); }
+
+let currentQrData = studentData;
+let currentFormat = 'full';
+
+// Update description when format changes
+document.querySelectorAll('input[name="qrFormat"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+        currentFormat = e.target.value;
+        const descEl = document.getElementById('formatDescription');
+        
+        if (currentFormat === 'full') {
+            descEl.textContent = 'Contains all your information: Name, Grade, Section, LRN, etc.';
+            descEl.style.color = '#555';
+            currentQrData = JSON.stringify(studentData);
+        } else {
+            descEl.textContent = 'Contains only your Student ID for quick scanning';
+            descEl.style.color = '#007bff';
+            currentQrData = studentIdOnly;
+        }
+        
+        // Regenerate QR with new format
+        generateRealQR();
+    });
+});
 
 function generateRealQR(){
   try {
     const container = document.getElementById('qrcode');
     container.innerHTML = '';
     if(typeof QRCode !== 'function') throw new Error('QRCode library missing');
+    
+    // Use currentQrData based on selected format
+    const dataToEncode = currentFormat === 'full' ? JSON.stringify(studentData) : studentIdOnly;
+    
     new QRCode(container, {
-      text: packed,
+      text: dataToEncode,
       width: 320,
       height: 320,
       correctLevel: QRCode.CorrectLevel.M
     });
-    setStatus('✅ QR Ready ('+packed.length+' chars text)','success');
+    
+    const formatLabel = currentFormat === 'full' ? 'Full Info' : 'ID Only';
+    setStatus(`✅ QR Ready (${formatLabel} - ${dataToEncode.length} chars)`,'success');
   } catch(e){
     console.error(e);
     setStatus('QR generation failed: '+e.message,'error');
@@ -236,9 +290,12 @@ function generatePdf(){
     y += 10;
     doc.setFontSize(9);
     doc.setTextColor(120);
-    doc.text('Generated: '+ new Date().toISOString() +'  |  Checksum: '+ packed.slice(-20), 40, y);
+    const formatInfo = currentFormat === 'full' ? 'Full Information' : 'ID Only';
+    doc.text('Generated: '+ new Date().toISOString() +'  |  Format: ' + formatInfo, 40, y);
     doc.text('This PDF is valid only when viewed intact with QR.', 40, y+12);
-    doc.save('student_qr_<?php echo (int)$student['id']; ?>.pdf');
+    
+    const pdfFilename = `student_qr_<?php echo $student['student_id']; ?>_${currentFormat}_${Date.now()}.pdf`;
+    doc.save(pdfFilename);
   });
 }
 
@@ -270,10 +327,41 @@ document.addEventListener('DOMContentLoaded', () => {
     generateRealQR();
   }
   document.getElementById('btnDownloadPdf').addEventListener('click', () => ensurePdfLib(generatePdf));
+  document.getElementById('btnDownloadPng').addEventListener('click', downloadPng);
   document.getElementById('btnShowRaw').addEventListener('click', () => {
-    alert(packed.substring(0,1600));
+    const dataToShow = currentFormat === 'full' ? JSON.stringify(studentData, null, 2) : studentIdOnly;
+    alert('QR Code Data:\n\n' + dataToShow);
   });
 });
+
+function downloadPng() {
+  const canvas = document.querySelector('#qrcode canvas');
+  if (!canvas) {
+    alert('QR code not ready yet. Please wait...');
+    return;
+  }
+  
+  try {
+    const formatLabel = currentFormat === 'full' ? 'full' : 'id';
+    const filename = `student_qr_<?php echo $student['student_id']; ?>_${formatLabel}_${new Date().getTime()}.png`;
+    
+    // Convert canvas to blob and download
+    canvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      setStatus('✅ PNG downloaded successfully', 'success');
+    }, 'image/png');
+  } catch (error) {
+    console.error('Download failed:', error);
+    alert('Failed to download PNG: ' + error.message);
+  }
+}
 </script>
 </body>
 </html>

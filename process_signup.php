@@ -12,6 +12,12 @@ $email = $_POST['email'] ?? null;
 $faculty = $_POST['faculty'] ?? null;
 $password = $_POST['password'] ?? null;
 $gender = $_POST['gender'] ?? null;
+$accept_terms = isset($_POST['accept_terms']) ? 1 : 0;
+
+// Validate terms acceptance
+if (!$accept_terms) {
+    die('You must accept the Terms and Conditions and Privacy Policy to sign up');
+}
 
 if(!$role || !$full_name || !$email || !$password || !$gender){
     die('Missing required fields');
@@ -44,9 +50,9 @@ if ($role === 'teacher') {
         ]);
     } catch (Throwable $ignored) {}
 } else {
-    // Generate random alphanumeric student_id
-    function generateStudentId($length = 10) {
-        $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    // Generate random 6-character student_id with letters, numbers, and symbols
+    function generateStudentId($length = 6) {
+        $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
         $id = '';
         for ($i = 0; $i < $length; $i++) {
             $id .= $chars[random_int(0, strlen($chars) - 1)];

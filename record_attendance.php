@@ -1,10 +1,14 @@
 <?php
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/logging.php';
+require_once __DIR__ . '/auto_reset_7pm.php'; // Auto-reset system
 date_default_timezone_set('Asia/Manila');
 session_start();
 
 $request_start = microtime(true);
+
+// Use attendance date (auto-adjusts after 7PM for next day)
+$attendance_date = get_attendance_date();
 
 // Accept JSON body
 $raw = file_get_contents('php://input');
@@ -100,17 +104,13 @@ if(!$student){
 
 // Record attendance
 $now = date('Y-m-d H:i:s');
-$today = date('Y-m-d');
-
 
 try {
-
-
-    // Check if attendance already recorded for today
+    // Check if attendance already recorded for current tracking date (respects 7PM reset)
     $check = $pdo->prepare('SELECT * FROM attendance_records WHERE student_id = :sid AND attendance_date = :date');
     $check->execute([
         ':sid'=>$student['student_id'],
-        ':date'=>$today
+        ':date'=>$attendance_date
     ]);
     $existing = $check->fetch(PDO::FETCH_ASSOC);
 
@@ -142,7 +142,7 @@ try {
         $ins = $pdo->prepare("INSERT INTO attendance_records ($fields) VALUES ($values)");
         $ins->execute([
             ':sid'=>$student['student_id'],
-            ':date'=>$today,
+            ':date'=>$attendance_date,
             ':now'=>$now,
             ':time'=>$now
         ]);

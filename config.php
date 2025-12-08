@@ -24,7 +24,9 @@
 //next week implementation on local area network (LAN) security measures
 //deployment via local server only (no internet access) for enhanced security
 //implement 
-
+// implementation of firewall rules to restrict unauthorized access
+// implementation of secure coding practices to prevent common vulnerabilities
+// implementation of regular software updates and patch management
 
 // IMPORTANT: To find your IP address, run this command in PowerShell:
 // ipconfig

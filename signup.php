@@ -113,6 +113,153 @@
         .form-footer a:hover {
             text-decoration: underline;
         }
+        .terms-checkbox-group {
+            margin: 24px 0;
+            padding: 16px;
+            background: #f0f7f0;
+            border-radius: 8px;
+            border-left: 4px solid #218c21;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            color: #176617;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+        .checkbox-label input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: #218c21;
+            flex-shrink: 0;
+        }
+        .terms-links {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            font-size: 0.9em;
+            flex-wrap: wrap;
+        }
+        .terms-links a {
+            color: #218c21;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid #b2e2b2;
+            padding-bottom: 2px;
+        }
+        .terms-links a:hover {
+            border-bottom-color: #218c21;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 32px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #b2e2b2;
+        }
+        .modal-header h2 {
+            color: #218c21;
+            font-size: 1.6em;
+            margin: 0;
+        }
+        .modal-close {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #176617;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+        .modal-close:hover {
+            background: #f0f7f0;
+        }
+        .modal-body {
+            color: #333;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        .modal-body h3 {
+            color: #218c21;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+        .modal-body ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+        .modal-body li {
+            margin-bottom: 8px;
+        }
+        .modal-footer {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #b2e2b2;
+        }
+        .btn-modal {
+            background: #218c21;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-modal:hover {
+            background: #176617;
+        }
+        @media screen and (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                padding: 24px;
+                margin: 20% auto;
+            }
+            .terms-links {
+                gap: 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -134,6 +281,15 @@
                 </select>
             </div>
             <div id="dynamicFields"></div>
+            
+            <!-- Terms and Conditions Checkbox -->
+            <div class="terms-checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="accept_terms" id="acceptTerms" required />
+                    <span>By signing up, I agree to the <a href="#" onclick="openTermsModal(); return false;" style="color: #218c21; font-weight: 600; text-decoration: underline;">Terms and Conditions</a> and <a href="#" onclick="openPrivacyModal(); return false;" style="color: #218c21; font-weight: 600; text-decoration: underline;">Privacy Policy</a></span>
+                </label>
+            </div>
+            
             <button type="submit" class="btn-signup">Create Account</button>
         </form>
         <div class="form-footer">
@@ -142,24 +298,189 @@
         </div>
     </div>
 
-    <script>
-    const roleSel = document.getElementById('role');
-    const dynamicFields = document.getElementById('dynamicFields');
+    <!-- Terms and Conditions Modal -->
+    <div id="termsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📋 Terms and Conditions</h2>
+                <button class="modal-close" onclick="closeTermsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3>1. Acceptance of Terms</h3>
+                <p>By accessing and using the Palawan National School Hybrid QR Code Based Attendance Monitoring System, you accept and agree to be bound by the terms and provision of this agreement.</p>
+                
+                <h3>2. Use License</h3>
+                <p>Permission is granted to temporarily download one copy of the materials (information or software) on the Attendance System for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
+                <ul>
+                    <li>Modifying or copying the materials</li>
+                    <li>Using the materials for any commercial purpose or for any public display (commercial or non-commercial)</li>
+                    <li>Attempting to decompile or reverse engineer any software contained on the system</li>
+                    <li>Removing any copyright or other proprietary notations from the materials</li>
+                    <li>Transferring the materials to another person or "mirroring" the materials on any other server</li>
+                </ul>
 
-    function renderFields(role) {
-        let html = '';
-        if (role === 'student') {
-            html += `
-                <div class="form-group" id="lrnField">
-                    <label>LRN</label>
-                    <input name="lrn" type="text" placeholder="Enter your LRN" required />
-                </div>
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input name="email" type="email" placeholder="Enter your email" required />
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
+                <h3>3. Disclaimer</h3>
+                <p>The materials on the Attendance System are provided for educational purposes. Palawan National School does not warrant the accuracy, completeness, or usefulness of this information. Any reliance you place on such material is strictly at your own risk.</p>
+
+                <h3>4. Limitations</h3>
+                <p>In no event shall Palawan National School or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on the Attendance System.</p>
+
+                <h3>5. Accuracy of Materials</h3>
+                <p>The materials appearing on the Attendance System could include technical, typographical, or photographic errors. Palawan National School does not warrant that any of the materials on its website are accurate, complete, or current. Palawan National School may make changes to the materials contained on its website at any time without notice.</p>
+
+                <h3>6. Links</h3>
+                <p>Palawan National School has not reviewed all of the sites linked to its website and is not responsible for the contents of any such linked site. The inclusion of any link does not imply endorsement by Palawan National School of the site. Use of any such linked website is at the user's own risk.</p>
+
+                <h3>7. Modifications</h3>
+                <p>Palawan National School may revise these terms of service for its website at any time without notice. By using this website, you are agreeing to be bound by the then current version of these terms of service.</p>
+
+                <h3>8. Governing Law</h3>
+                <p>These terms and conditions are governed by and construed in accordance with the laws of the Republic of the Philippines, and you irrevocably submit to the exclusive jurisdiction of the courts in that location.</p>
+
+                <h3>9. Student Responsibilities</h3>
+                <p>Students agree to:</p>
+                <ul>
+                    <li>Maintain the confidentiality of their login credentials</li>
+                    <li>Provide accurate and truthful information during registration</li>
+                    <li>Use the system in accordance with school policies</li>
+                    <li>Not engage in any unauthorized access or use of the system</li>
+                </ul>
+
+                <h3>10. Teacher Responsibilities</h3>
+                <p>Teachers agree to:</p>
+                <ul>
+                    <li>Maintain the confidentiality of student attendance information</li>
+                    <li>Use the system only for legitimate educational purposes</li>
+                    <li>Follow school policies regarding data management</li>
+                    <li>Report any system issues or security concerns immediately</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal" onclick="closeTermsModal()">I Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div id="privacyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔒 Privacy Policy</h2>
+                <button class="modal-close" onclick="closePrivacyModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h3>1. Information We Collect</h3>
+                <p>We collect information you provide directly to us, such as when you create an account or use the Attendance System. This information may include:</p>
+                <ul>
+                    <li>Name and email address</li>
+                    <li>Grade level, strand, and section</li>
+                    <li>Attendance records and timestamps</li>
+                    <li>Login activity and system usage data</li>
+                </ul>
+
+                <h3>2. How We Use Your Information</h3>
+                <p>We use the information we collect to:</p>
+                <ul>
+                    <li>Maintain accurate attendance records</li>
+                    <li>Generate reports for teachers and administrators</li>
+                    <li>Improve system functionality and user experience</li>
+                    <li>Ensure school security and policy compliance</li>
+                    <li>Communicate important school-related information</li>
+                </ul>
+
+                <h3>3. Data Security</h3>
+                <p>We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. Your passwords are encrypted using industry-standard security protocols.</p>
+
+                <h3>4. Data Retention</h3>
+                <p>Attendance records are retained for the duration of your enrollment at Palawan National School. Upon graduation or withdrawal, records will be maintained in accordance with school policy and applicable legal requirements.</p>
+
+                <h3>5. Access to Your Information</h3>
+                <p>You have the right to access, review, and request corrections to your personal information. Please contact your teacher or the administrative office to request access to your records.</p>
+
+                <h3>6. Information Sharing</h3>
+                <p>Your personal information is only shared with authorized school personnel who have a legitimate need to access it for educational purposes. We do not sell or share your information with third parties without your consent, except as required by law.</p>
+
+                <h3>7. Student Information Protection</h3>
+                <p>The protection of student data is a priority. Access to student information is restricted to authorized school personnel only. Parents/guardians have the right to review their child's attendance records.</p>
+
+                <h3>8. Cookies and Tracking</h3>
+                <p>The system uses session cookies to maintain your login session and improve functionality. You can disable cookies in your browser settings, but this may limit system functionality.</p>
+
+                <h3>9. Third-Party Services</h3>
+                <p>The Attendance System is hosted locally on school servers. We do not use external cloud services that would transfer your data outside the school network, ensuring maximum data protection and privacy.</p>
+
+                <h3>10. Policy Changes</h3>
+                <p>We may update this privacy policy from time to time. Any changes will be posted on this page, and your continued use of the system following the posting of revised Privacy Policy means that you accept and agree to the changes.</p>
+
+                <h3>11. Contact Information</h3>
+                <p>If you have questions about this Privacy Policy or our privacy practices, please contact the school administration office. We are committed to addressing your concerns regarding privacy and data protection.</p>
+
+                <h3>12. Compliance</h3>
+                <p>This privacy policy complies with the Data Privacy Act of 2012 (Republic Act No. 10173) and other applicable Philippine laws regarding data protection.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal" onclick="closePrivacyModal()">I Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functions
+        function openTermsModal() {
+            document.getElementById('termsModal').style.display = 'block';
+        }
+
+        function closeTermsModal() {
+            document.getElementById('termsModal').style.display = 'none';
+        }
+
+        function openPrivacyModal() {
+            document.getElementById('privacyModal').style.display = 'block';
+        }
+
+        function closePrivacyModal() {
+            document.getElementById('privacyModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            var termsModal = document.getElementById('termsModal');
+            var privacyModal = document.getElementById('privacyModal');
+            
+            if (event.target === termsModal) {
+                termsModal.style.display = 'none';
+            }
+            if (event.target === privacyModal) {
+                privacyModal.style.display = 'none';
+            }
+        }
+
+        // Form submission validation
+        document.getElementById('signupForm').onsubmit = function(e) {
+            var checkbox = document.getElementById('acceptTerms');
+            if (!checkbox.checked) {
+                e.preventDefault();
+                alert('Please accept the Terms and Conditions and Privacy Policy to continue.');
+                checkbox.focus();
+                return false;
+            }
+            return true;
+        }
+
+        // Signup form field rendering
+        const roleSel = document.getElementById('role');
+        const dynamicFields = document.getElementById('dynamicFields');
+
+        function renderFields(role) {
+            let html = '';
+            if (role === 'student') {
+                html += `
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input name="email" type="email" placeholder="Enter your email" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
                     <input name="password" type="password" placeholder="Create a password" required minlength="4" />
                 </div>
                 <div class="form-group">
@@ -297,3 +618,5 @@
         renderFields(roleSel.value);
     });
     </script>
+</body>
+</html>

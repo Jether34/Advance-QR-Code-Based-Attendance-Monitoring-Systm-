@@ -182,7 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p>Hybrid QR Code Based Attendance System</p>
         </div>
         <?php if($error): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
-        <form method="post">
+        <form method="post" id="loginForm">
             <div class="form-group">
                 <label>Email Address</label>
                 <input name="email" type="email" placeholder="Enter your email" required />

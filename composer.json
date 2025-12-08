@@ -1,5 +1,7 @@
 {
     "require": {
-        "smalot/pdfparser": "^2.12"
+        "smalot/pdfparser": "^2.12",
+        "phpoffice/phpspreadsheet": "^1.29",
+        "tecnickcom/tcpdf": "^6.10"
     }
 }

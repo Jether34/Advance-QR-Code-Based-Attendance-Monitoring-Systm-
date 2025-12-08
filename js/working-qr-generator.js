@@ -442,11 +442,12 @@ async function generateWorkingQR(studentData, canvasId) {
     }
 }
 
-// Format student data for QR embedding - Simple and scannable format
+// Format student data for QR embedding - Include all info but scanner will extract only ID
 function formatStudentDataForQR(data) {
-    // Use JSON format for better scanning compatibility
+    // Embed complete student information in QR code
+    // Scanner will extract only the student_id for validation
     const qrData = {
-        id: data.student_id,
+        student_id: data.student_id || data.id || '',
         name: data.full_name,
         lrn: data.lrn || '',
         email: data.email,
