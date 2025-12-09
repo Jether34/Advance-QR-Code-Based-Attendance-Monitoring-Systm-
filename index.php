@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="/puta/manifest.json">
     <meta name="theme-color" content="#218c21">
-    <link rel="apple-touch-icon" href="uploads/System logo.jpg">
+    <link rel="apple-touch-icon" href="/puta/webapp/icons/apple-touch-180.png">
+    <link rel="icon" sizes="192x192" href="/puta/webapp/icons/icon-192.png">
     <style>
         body {
             background: linear-gradient(135deg, #d6f5d6 0%, #eaffea 100%);
