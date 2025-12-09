@@ -26,7 +26,7 @@ $posts = $pdo->query('
 ')->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>Community Wall</title>

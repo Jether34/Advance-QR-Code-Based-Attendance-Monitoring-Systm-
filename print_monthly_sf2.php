@@ -152,7 +152,7 @@ $total_pct_attendance = $total_count > 0 ? round(($total_avg_daily / $total_coun
 // Output SF2 HTML
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>SF2 Monthly Attendance - <?php echo htmlspecialchars($month); ?></title>
     <style>

@@ -18,7 +18,8 @@ if (file_exists(__DIR__ . '/.env')) {
 }
 
 // Server Configuration (from environment or defaults)
-define('SERVER_IP', getenv('SERVER_IP') ?: '169.254.248.166');
+// Local Wi-Fi IP for phone testing (update if your LAN IP changes)
+define('SERVER_IP', getenv('SERVER_IP') ?: '192.168.1.12');
 define('SERVER_PORT', getenv('SERVER_PORT') && getenv('SERVER_PORT') != '80' ? ':' . getenv('SERVER_PORT') : '');
 define('PROJECT_PATH', getenv('PROJECT_PATH') ?: '/puta');
 

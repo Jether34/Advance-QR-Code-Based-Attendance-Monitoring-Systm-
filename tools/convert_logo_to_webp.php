@@ -47,6 +47,7 @@ if (function_exists('imagewebp')) {
 // fallback to Imagick if available
 if (class_exists('Imagick')) {
     try {
+        /** @var Imagick $im */
         $im = new Imagick($src);
         $im->setImageFormat('webp');
         $im->setImageCompressionQuality(80);

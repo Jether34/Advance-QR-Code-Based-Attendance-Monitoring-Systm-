@@ -173,16 +173,23 @@
 </head>
 <body>
     <div class="home-container">
-        <div class="logo-section">
-            <img src="uploads/OIP (1).webp" alt="Palawan National School Logo" title="Palawan National School" width="70" height="70">
+        <div class="logo-section" style="display:flex; gap:16px; justify-content:center; align-items:center; flex-wrap:wrap;">
             <picture>
-                <source srcset="uploads/System logo.webp" type="image/webp">
-                <source srcset="uploads/System logo.jpg" type="image/jpeg">
-                <img src="uploads/System logo.webp" alt="QR Attendance System Logo" title="QR Attendance System" width="70" height="70" style="margin-left: 20px;" loading="eager">
+                <source type="image/webp" srcset="uploads/OIP (1)-72.webp 72w, uploads/OIP (1)-150.webp 150w, uploads/OIP (1)-300.webp 300w, uploads/OIP (1)-474.webp 474w">
+                <img src="uploads/OIP (1)-150.webp" srcset="uploads/OIP (1)-72.webp 72w, uploads/OIP (1)-150.webp 150w, uploads/OIP (1)-300.webp 300w, uploads/OIP (1)-474.webp 474w" sizes="(max-width:480px) 72px, 100px" alt="Palawan National School Logo" title="Palawan National School" width="100" height="100" loading="eager">
+            </picture>
+            <picture>
+                <source type="image/webp" srcset="uploads/System logo-72.webp 72w, uploads/System logo-150.webp 150w, uploads/System logo-300.webp 300w">
+                <source type="image/jpeg" srcset="uploads/System logo.jpg 150w">
+                <img src="uploads/System logo-150.webp" srcset="uploads/System logo-72.webp 72w, uploads/System logo-150.webp 150w, uploads/System logo-300.webp 300w" sizes="(max-width:480px) 72px, 100px" alt="QR Attendance System Logo" title="QR Attendance System" width="100" height="100" loading="eager">
             </picture>
         </div>
+
         <h1>Palawan National School</h1>
-        <div class="subtitle">Hybrid QR Code Based Attendance Monitoring System<br>with AI-Powered Dashboards & Reviewing Center</div>
+        <p class="subtitle">Hybrid QR Code Based Attendance Monitoring System integrating AI-powered validation, smart analytics, and resilient offline-ready access.</p>
+        <p style="margin-top: 6px; font-weight: 600; color: #155a15;">No pen? No paper? No problem!! Use TapIn </p>
+        <p>Select an option to continue.</p>
+
         <div class="btn-group">
             <a href="login.php" class="btn-home">Login</a>
             <a href="signup.php" class="btn-home btn-secondary">Sign Up</a>

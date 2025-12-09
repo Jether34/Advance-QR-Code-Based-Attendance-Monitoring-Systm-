@@ -11,7 +11,7 @@ if(!$user){ echo "Student not found"; exit; }
 $code = $user['student_id'];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>Student QR Card - <?php echo htmlspecialchars($user['full_name']); ?></title>

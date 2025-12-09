@@ -1003,7 +1003,10 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
     <div class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-brand">
-                <img src="<?php echo file_exists(__DIR__.'/uploads/OIP (1).webp') ? 'uploads/OIP (1).webp' : '#'; ?>" alt="PNS Logo" class="sidebar-logo">
+                <picture>
+                    <source type="image/webp" srcset="uploads/OIP (1)-72.webp 72w, uploads/OIP (1)-150.webp 150w, uploads/OIP (1)-300.webp 300w, uploads/OIP (1)-474.webp 474w">
+                    <img src="<?php echo file_exists(__DIR__.'/uploads/OIP (1)-150.webp') ? 'uploads/OIP (1)-150.webp' : (file_exists(__DIR__.'/uploads/OIP (1).webp') ? 'uploads/OIP (1).webp' : '#'); ?>" srcset="uploads/OIP (1)-72.webp 72w, uploads/OIP (1)-150.webp 150w, uploads/OIP (1)-300.webp 300w, uploads/OIP (1)-474.webp 474w" sizes="120px" alt="PNS Logo" class="sidebar-logo">
+                </picture>
                 <div class="sidebar-text">
                     <h2>Teacher Portal</h2>
                     <p class="school-name">Palawan National School</p>

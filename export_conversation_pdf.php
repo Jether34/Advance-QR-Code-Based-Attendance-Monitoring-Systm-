@@ -35,7 +35,7 @@ $fileName = preg_replace('/\s+/', '_', $topic) . '_' . date('Y-m-d') . '.pdf';
 // NO PDF headers - this is HTML that will be printed to PDF by browser
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title><?php echo htmlspecialchars($topic); ?> - Jether AI Review</title>

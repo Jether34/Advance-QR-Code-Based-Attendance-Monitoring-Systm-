@@ -183,9 +183,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="login-container">
         <div class="logo-header">
             <picture>
-                <source srcset="uploads/System logo.webp" type="image/webp">
-                <source srcset="uploads/System logo.jpg" type="image/jpeg">
-                <img src="uploads/System logo.webp" alt="QR Attendance System Logo" width="70" height="70" loading="eager">
+                <source type="image/webp" srcset="uploads/System logo-72.webp 72w, uploads/System logo-150.webp 150w, uploads/System logo-300.webp 300w">
+                <source type="image/jpeg" srcset="uploads/System logo.jpg 150w">
+                <img src="uploads/System logo-150.webp" srcset="uploads/System logo-72.webp 72w, uploads/System logo-150.webp 150w, uploads/System logo-300.webp 300w" sizes="72px" alt="QR Attendance System Logo" width="70" height="70" loading="eager">
             </picture>
             <div class="school-name">Palawan National School</div>
         </div>
