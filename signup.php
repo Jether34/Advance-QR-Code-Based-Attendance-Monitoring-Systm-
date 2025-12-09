@@ -267,7 +267,8 @@
         <div class="logo-header">
             <picture>
                 <source srcset="uploads/System logo.webp" type="image/webp">
-                <img src="uploads/System logo.jpg" alt="QR Attendance System Logo" width="70" height="70" loading="eager">
+                <source srcset="uploads/System logo.jpg" type="image/jpeg">
+                <img src="uploads/System logo.webp" alt="QR Attendance System Logo" width="70" height="70" loading="eager">
             </picture>
             <div class="school-name">Palawan National School</div>
         </div>

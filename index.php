@@ -176,7 +176,8 @@
             <img src="uploads/OIP (1).webp" alt="Palawan National School Logo" title="Palawan National School" width="70" height="70">
             <picture>
                 <source srcset="uploads/System logo.webp" type="image/webp">
-                <img src="uploads/System logo.jpg" alt="QR Attendance System Logo" title="QR Attendance System" width="70" height="70" style="margin-left: 20px;" loading="eager">
+                <source srcset="uploads/System logo.jpg" type="image/jpeg">
+                <img src="uploads/System logo.webp" alt="QR Attendance System Logo" title="QR Attendance System" width="70" height="70" style="margin-left: 20px;" loading="eager">
             </picture>
         </div>
         <h1>Palawan National School</h1>
