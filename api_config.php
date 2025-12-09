@@ -6,9 +6,21 @@
 $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
 $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
 
-// Ollama API endpoint - when accessed from phone, routes through the PC's IP
-// Since Ollama runs on localhost:11434 on the PC, we need to route through the PC's IP
-define('OLLAMA_API_URL', 'http://192.168.1.12:11434/api/generate');
+// Detect the server IP to determine which network we're on
+$server_ip = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '127.0.0.1';
+
+// Determine Ollama API endpoint based on server IP
+// Supports multiple network configurations
+if (strpos($server_ip, '192.168.254.') === 0) {
+    // Network 192.168.254.x (New network configuration)
+    define('OLLAMA_API_URL', 'http://192.168.254.254:11434/api/generate');
+} elseif (strpos($server_ip, '192.168.1.') === 0) {
+    // Network 192.168.1.x (Original network configuration)
+    define('OLLAMA_API_URL', 'http://192.168.1.12:11434/api/generate');
+} else {
+    // Fallback to localhost for local development
+    define('OLLAMA_API_URL', 'http://localhost:11434/api/generate');
+}
 
 // Database endpoint
 define('DB_HOST', 'localhost');

@@ -4,10 +4,25 @@ header('Content-Type: application/json');
 
 $status = [
     'timestamp' => date('Y-m-d H:i:s'),
+    'server_ip' => isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : 'unknown',
     'pc_ip' => gethostbyname(gethostname()),
     'server_url' => 'http://' . (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'unknown') . '/puta',
+    'network_detected' => 'unknown',
     'tests' => []
 ];
+
+// Detect which network we're on
+$server_ip = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '127.0.0.1';
+if (strpos($server_ip, '192.168.254.') === 0) {
+    $status['network_detected'] = '192.168.254.x (Network B)';
+    $status['ollama_endpoint'] = 'http://192.168.254.254:11434';
+} elseif (strpos($server_ip, '192.168.1.') === 0) {
+    $status['network_detected'] = '192.168.1.x (Network A - Original)';
+    $status['ollama_endpoint'] = 'http://192.168.1.12:11434';
+} else {
+    $status['network_detected'] = 'localhost (Development)';
+    $status['ollama_endpoint'] = 'http://localhost:11434';
+}
 
 // Test 1: Check if server IP is configured correctly
 $status['tests']['config_file'] = file_exists(__DIR__ . '/config.php') ? 'OK' : 'MISSING';
