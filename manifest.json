@@ -1,0 +1,21 @@
+{
+  "name": "Palawan National School - QR Attendance",
+  "short_name": "PNS Attendance",
+  "description": "Hybrid QR Code Based Attendance Monitoring System",
+  "start_url": "/puta/index.php",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#218c21",
+  "icons": [
+    {
+      "src": "uploads/System logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "uploads/System logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

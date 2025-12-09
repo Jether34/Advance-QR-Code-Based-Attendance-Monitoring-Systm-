@@ -8,6 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Palawan National School - Hybrid QR Code Based Attendance Monitoring System</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="/puta/manifest.json">
+    <meta name="theme-color" content="#218c21">
+    <link rel="apple-touch-icon" href="uploads/System logo.jpg">
     <style>
         body {
             background: linear-gradient(135deg, #d6f5d6 0%, #eaffea 100%);
@@ -183,5 +186,17 @@
             <a href="developer_login.php"> Developer Dashboard</a>
         </div>
     </div>
+    <script>
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/puta/sw.js').then(function(reg) {
+                    console.log('ServiceWorker registration successful with scope: ', reg.scope);
+                }).catch(function(err) {
+                    console.warn('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
 </body>
 </html>
