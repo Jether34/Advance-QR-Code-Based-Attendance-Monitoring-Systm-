@@ -18,14 +18,18 @@ if (file_exists(__DIR__ . '/.env')) {
 }
 
 // Server Configuration (from environment or defaults)
-// Local Wi-Fi IP for phone testing (update if your LAN IP changes)
+// Auto-detect server URL from current request origin (works with ngrok, LAN, and localhost)
+if (getenv('SERVER_URL')) {
+    define('SERVER_URL', getenv('SERVER_URL'));
+} else {
+    // Use the current request's host/scheme to build the URL (works transparently across ngrok, LAN, localhost)
+    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? (getenv('SERVER_IP') ?: '192.168.1.12');
+    $path = getenv('PROJECT_PATH') ?: '/puta';
+    define('SERVER_URL', $protocol . '://' . $host . $path);
+}
 define('SERVER_IP', getenv('SERVER_IP') ?: '192.168.1.12');
 define('SERVER_PORT', getenv('SERVER_PORT') && getenv('SERVER_PORT') != '80' ? ':' . getenv('SERVER_PORT') : '');
-define('PROJECT_PATH', getenv('PROJECT_PATH') ?: '/puta');
-
-// Determine protocol (HTTP/HTTPS)
-$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
-define('SERVER_URL', $protocol . '://' . SERVER_IP . SERVER_PORT . PROJECT_PATH);
 
 // Application Settings
 define('APP_ENV', getenv('APP_ENV') ?: 'production');
