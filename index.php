@@ -7,7 +7,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Palawan National School - Hybrid QR Code Based Attendance Monitoring System</title>
-    <link rel="stylesheet" href="style.css">
+    <?php $cssFile = file_exists(__DIR__ . '/style.min.css') ? 'style.min.css' : 'style.css'; ?>
+    <link rel="stylesheet" href="<?php echo $cssFile; ?>">
     <link rel="manifest" href="/puta/manifest.json">
     <meta name="theme-color" content="#196619">
     <link rel="apple-touch-icon" href="/puta/webapp/icons/apple-touch-180.webp" type="image/webp">
