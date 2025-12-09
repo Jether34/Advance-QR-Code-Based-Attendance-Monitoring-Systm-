@@ -6,7 +6,7 @@ The QR Attendance System now supports **automatic network detection** and config
 
 ---
 
-## 📡 Supported Networks
+##  Supported Networks
 
 ### Network A (Original Configuration)
 - **IP Range:** `192.168.1.0/24`
@@ -18,29 +18,34 @@ The QR Attendance System now supports **automatic network detection** and config
 - **IP Range:** `192.168.254.0/24`
 - **Server IP:** `192.168.254.254`
 - **Ollama Endpoint:** `http://192.168.254.254:11434`
-- **Usage:** Alternative school network / Mobile hotspot
+- **Usage:** Alternative home based network / Mobile hotspot
 
 ### Localhost (Development)
 - **IP:** `127.0.0.1`
 - **Ollama Endpoint:** `http://localhost:11434`
-- **Usage:** Local development and testing
+- **Usage:** Local development and testing/local network are server InnoDB
+
 
 ---
 
-## ⚙️ Automatic Network Detection
+##  Automatic Network Detection
 
-The system automatically detects which network it's connected to and configures endpoints accordingly:
+Based on the current network and server configurations, The system automatically detects which network it's connected to and configures endpoints accordingly
 
 ```php
 // In api_config.php
 if (strpos($server_ip, '192.168.254.') === 0) {
-    // Network B: 192.168.254.x
+    // Network B: 192.168.254.x 
+    // School Globe system network branch 
     define('OLLAMA_API_URL', 'http://192.168.254.254:11434/api/generate');
 } elseif (strpos($server_ip, '192.168.1.') === 0) {
     // Network A: 192.168.1.x
+    // branch ng system sa bahay namin jusko
     define('OLLAMA_API_URL', 'http://192.168.1.12:11434/api/generate');
 } else {
     // Localhost fallback
+    // fallback system configuration
+
     define('OLLAMA_API_URL', 'http://localhost:11434/api/generate');
 }
 ```

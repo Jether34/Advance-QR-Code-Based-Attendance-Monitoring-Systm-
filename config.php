@@ -54,4 +54,10 @@ TROUBLESHOOTING:
 - Windows Firewall might be blocking connections - allow Apache HTTP Server
 - Some routers block device-to-device communication (AP Isolation)
 */
+
+//SSL/TLS Implementation for secure connections will be planned for the next patch (12-09-2025 at 11AM Manila zone)
+// SSL certificate setup instructions will be provided in the setup_ssl.ps1 file
+// Reminder: Regularly update your server software to maintain security
+// further customization and security features will be added in the next patch updates
+
 ?>
