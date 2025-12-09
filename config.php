@@ -25,7 +25,9 @@ if (getenv('SERVER_URL')) {
     // Use the current request's host/scheme to build the URL (works transparently across ngrok, LAN, localhost)
     $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
     $host = $_SERVER['HTTP_HOST'] ?? (getenv('SERVER_IP') ?: '192.168.1.12');
-    $path = getenv('PROJECT_PATH') ?: '/puta';
+    // Auto-detect if running from subdirectory or root
+    $scriptDir = dirname($_SERVER['SCRIPT_NAME']);
+    $path = ($scriptDir && $scriptDir !== '/') ? $scriptDir : '';
     define('SERVER_URL', $protocol . '://' . $host . $path);
 }
 define('SERVER_IP', getenv('SERVER_IP') ?: '192.168.1.12');

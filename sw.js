@@ -4,11 +4,11 @@ const RUNTIME_CACHE = 'puta-runtime-v1';
 
 // Core app shell assets to cache during install
 const CORE_ASSETS = [
-  '/puta/index.php',
-  '/puta/style.css',
-  '/puta/login.php',
-  '/puta/signup.php',
-  '/puta/offline.html'
+  '/index.php',
+  '/style.css',
+  '/login.php',
+  '/signup.php',
+  '/offline.html'
 ];
 
 // Utility: is this a navigation request?
@@ -49,7 +49,7 @@ self.addEventListener('fetch', (event) => {
       fetch(req).then((res) => {
         // Update runtime cache for navigations optionally
         return res;
-      }).catch(() => caches.match('/puta/offline.html'))
+      }).catch(() => caches.match('/offline.html'))
     );
     return;
   }
@@ -66,7 +66,7 @@ self.addEventListener('fetch', (event) => {
           caches.open(STATIC_CACHE).then((cache) => cache.put(req, res.clone()));
           return res.clone();
         }).catch(() => null);
-        return cached || networkFetch.then(r => r) || caches.match('/puta/offline.html');
+        return cached || networkFetch.then(r => r) || caches.match('/offline.html');
       })
     );
     return;
@@ -80,13 +80,13 @@ self.addEventListener('fetch', (event) => {
         const copy = res.clone();
         caches.open(RUNTIME_CACHE).then((cache) => cache.put(req, copy));
         return res;
-      }).catch(() => caches.match(req).then(cached => cached || caches.match('/puta/offline.html')))
+      }).catch(() => caches.match(req).then(cached => cached || caches.match('/offline.html')))
     );
     return;
   }
 
   // Default: try cache, then network
   event.respondWith(
-    caches.match(req).then((cached) => cached || fetch(req).catch(() => caches.match('/puta/offline.html')))
+    caches.match(req).then((cached) => cached || fetch(req).catch(() => caches.match('/offline.html')))
   );
 });
