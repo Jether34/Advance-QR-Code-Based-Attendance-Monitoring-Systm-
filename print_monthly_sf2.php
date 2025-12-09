@@ -99,19 +99,55 @@ foreach ($attendance as $student_id => $marks) {
     $totals[$student_id] = array_sum(array_map(function($x){ return $x === 'A' ? 1 : 0; }, $marks));
 }
 
-// Calculate daily totals by gender
+// Calculate daily totals by gender - COUNT ABSENCES (A) like Excel counts X
+$male_daily = array_fill(0, count($dates), 0);
 $female_daily = array_fill(0, count($dates), 0);
 $combined_daily = array_fill(0, count($dates), 0);
 foreach ($students as $idx => $student) {
     foreach ($dates as $j => $d) {
-        if (isset($attendance[$student['student_id']][$j]) && ($attendance[$student['student_id']][$j] === 'P' || $attendance[$student['student_id']][$j] === '/' || $attendance[$student['student_id']][$j] === 'x')) {
-            if (isset($student['gender']) && strtolower($student['gender']) === 'female') {
+        if (isset($attendance[$student['student_id']][$j]) && $attendance[$student['student_id']][$j] === 'A') {
+            if (isset($student['gender']) && strtolower($student['gender']) === 'male') {
+                $male_daily[$j]++;
+            } else if (isset($student['gender']) && strtolower($student['gender']) === 'female') {
                 $female_daily[$j]++;
             }
             $combined_daily[$j]++;
         }
     }
 }
+
+// Calculate summary statistics
+$male_students = array_filter($students, function($s) { return strtolower($s['gender']) === 'male'; });
+$female_students = array_filter($students, function($s) { return strtolower($s['gender']) === 'female'; });
+$male_count = count($male_students);
+$female_count = count($female_students);
+$total_count = count($students);
+
+// Calculate total attendance (present days) by gender
+$male_present_total = 0;
+$female_present_total = 0;
+foreach ($students as $student) {
+    $present_days = 0;
+    foreach ($attendance[$student['student_id']] as $mark) {
+        if ($mark === 'P' || $mark === '/' || $mark === 'x') {
+            $present_days++;
+        }
+    }
+    if (strtolower($student['gender']) === 'male') {
+        $male_present_total += $present_days;
+    } else {
+        $female_present_total += $present_days;
+    }
+}
+
+$school_days = count($dates);
+$male_avg_daily = $school_days > 0 ? round($male_present_total / $school_days, 2) : 0;
+$female_avg_daily = $school_days > 0 ? round($female_present_total / $school_days, 2) : 0;
+$total_avg_daily = $school_days > 0 ? round(($male_present_total + $female_present_total) / $school_days, 2) : 0;
+
+$male_pct_attendance = $male_count > 0 ? round(($male_avg_daily / $male_count) * 100, 2) : 0;
+$female_pct_attendance = $female_count > 0 ? round(($female_avg_daily / $female_count) * 100, 2) : 0;
+$total_pct_attendance = $total_count > 0 ? round(($total_avg_daily / $total_count) * 100, 2) : 0;
 
 // Output SF2 HTML
 ?>
@@ -338,14 +374,14 @@ foreach ($students as $idx => $student) {
                     <!-- Summary Table Right -->
                     <td style="vertical-align:top; width:30%; border:none;">
                         <table style="width:100%; font-size:11px; border:1px solid #333;">
-                            <tr><th colspan="4">Month : <?php echo strtoupper(date('F', strtotime($month))); ?> <span style="float:right;">No. of Days of Classes: 21</span></th></tr>
+                            <tr><th colspan="4">Month : <?php echo strtoupper(date('F', strtotime($month))); ?> <span style="float:right;">No. of Days of Classes: <?php echo $school_days; ?></span></th></tr>
                             <tr><th></th><th>M</th><th>F</th><th>TOTAL</th></tr>
-                            <tr><td>* Enrolment as of<br>(1st Friday of JULY)</td><td>28</td><td>6</td><td>34</td></tr>
+                            <tr><td>* Enrolment as of<br>(1st Friday of JULY)</td><td><?php echo $male_count; ?></td><td><?php echo $female_count; ?></td><td><?php echo $total_count; ?></td></tr>
                             <tr><td>Late enrolment<br>during the month<br>(beyond cut-off)</td><td>0</td><td>0</td><td>0</td></tr>
-                            <tr><td>Registered Learners as of<br>end of month</td><td>28</td><td>6</td><td>34</td></tr>
+                            <tr><td>Registered Learners as of<br>end of month</td><td><?php echo $male_count; ?></td><td><?php echo $female_count; ?></td><td><?php echo $total_count; ?></td></tr>
                             <tr><td>Percentage of Enrolment as of<br>end of month</td><td>100</td><td>100</td><td>100</td></tr>
-                            <tr><td>Average Daily Attendance</td><td>0.1</td><td>0.1</td><td>0.2857</td></tr>
-                            <tr><td>Percentage of Attendance for the month</td><td>0.5</td><td>2.4</td><td>1.4456</td></tr>
+                            <tr><td>Average Daily Attendance</td><td><?php echo $male_avg_daily; ?></td><td><?php echo $female_avg_daily; ?></td><td><?php echo $total_avg_daily; ?></td></tr>
+                            <tr><td>Percentage of Attendance for the month</td><td><?php echo $male_pct_attendance; ?></td><td><?php echo $female_pct_attendance; ?></td><td><?php echo $total_pct_attendance; ?></td></tr>
                             <tr><td>Number of students absent for 5 consecutive days</td><td>0</td><td>0</td><td>0</td></tr>
                             <tr><td>No Longer In School (NLS)</td><td>0</td><td>0</td><td>0</td></tr>
                             <tr><td>Transferred Out</td><td>0</td><td>0</td><td>0</td></tr>
@@ -356,7 +392,7 @@ foreach ($students as $idx => $student) {
                         <div style="font-size:9px; margin-top:2px;">I certify that this is a true and correct report.</div>
                         <div style="margin-top:8px; text-align:left;">
                             <div class="signature-line"></div>
-                            <b>JENNY C. COLO</b><br>
+                            <b><?php echo strtoupper($teacher_name); ?></b><br>
                             <span style="font-size:9px;">(Signature of Adviser over Printed Name)</span><br>
                             <b>Attested by:</b><br>
                             <div class="signature-line"></div>

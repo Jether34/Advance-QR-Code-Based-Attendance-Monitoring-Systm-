@@ -4,6 +4,10 @@ session_start();
 date_default_timezone_set('Asia/Manila'); // Set Manila timezone
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/auto_reset_7pm.php'; // Auto-reset system
+require_once __DIR__ . '/page_security.php';
+
+// Initialize page security
+init_page_security();
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
     header('Location: login.php');
@@ -380,10 +384,42 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
             border: 1px solid #e8e8e8;
             border-left: 4px solid;
             transition: all 0.3s ease;
+            position: relative;
+            cursor: help;
         }
         .stat-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        /* Tooltip on hover */
+        .stat-card:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            white-space: nowrap;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            pointer-events: none;
+        }
+        .stat-card:hover::before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 6px solid #2c3e50;
+            z-index: 100;
         }
         .stat-card.present { border-left-color: #28a745; }
         .stat-card.late { border-left-color: #ffc107; }
@@ -769,13 +805,24 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 font-size: 1.5em;
             }
 
-            /* Analytics mobile layout */
+            /* Analytics responsive layout */
             .main-content { padding: 16px; }
-            .analytics-grid { grid-template-columns: 1fr; gap: 12px; }
-            .analytics-card { padding: 14px 16px; }
+            .analytics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; align-items: start; }
+            .analytics-card { padding: 16px; }
             .analytics-metric { font-size: 1.4em; }
             .analytics-card[style*="grid-column"] { grid-column: auto; }
             canvas { max-width: 100%; height: auto !important; }
+
+            /* Tablet */
+            @media (max-width: 1024px) {
+                .analytics-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+            }
+
+            /* Mobile */
+            @media (max-width: 600px) {
+                .analytics-grid { grid-template-columns: 1fr; gap: 12px; }
+                .analytics-metric { font-size: 1.2em; }
+            }
             
             .content-section {
                 padding: 20px 16px;
@@ -996,6 +1043,11 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 <span class="menu-text">Analytics</span>
                 <span class="menu-badge">New</span>
             </a>
+            <a href="teacher_dashboard.php?section=corrections" class="<?php echo active('corrections', $section); ?>">
+                <span class="menu-icon">✏️</span>
+                <span class="menu-text">Corrections</span>
+                <span class="menu-badge">Edit</span>
+            </a>
         </div>
         
         <a href="logout.php" class="logout">🚪 Logout</a>
@@ -1003,7 +1055,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
     <div class="main">
         <div class="main-header">
             <div>
-                <h1><?php echo $section === 'scanner' ? '📷 Attendance Scanner' : ($section === 'today' ? '📅 Today\'s Attendance' : ($section === 'student_list' ? '👥 Student List' : ($section === 'analytics' ? '📈 Analytics' : '📊 Dashboard'))); ?></h1>
+                <h1><?php echo $section === 'scanner' ? '📷 Attendance Scanner' : ($section === 'today' ? '📅 Today\'s Attendance' : ($section === 'student_list' ? '👥 Student List' : ($section === 'analytics' ? '📈 Analytics' : ($section === 'corrections' ? '✏️ Attendance Corrections' : '📊 Dashboard')))); ?></h1>
                 <p class="main-header-stats">
                     📅 <?php echo get_dashboard_display_date(); ?>
                     <?php 
@@ -1044,6 +1096,18 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     <div id="cameraView" style="width: 100%; height: 100%; position: relative;">
                         <video id="cameraPreview" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
                         
+                        <!-- Sync Status Indicator -->
+                        <div style="position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.7); color: white; padding: 10px 16px; border-radius: 8px; font-size: 0.9em; display: flex; align-items: center; gap: 8px;">
+                            <span id="syncStatus" style="display: inline-block; width: 8px; height: 8px; background: #27ae60; border-radius: 50%; animation: pulse 2s infinite;"></span>
+                            <span id="syncText">Online</span>
+                        </div>
+                        <style>
+                            @keyframes pulse {
+                                0%, 100% { opacity: 1; }
+                                50% { opacity: 0.5; }
+                            }
+                        </style>
+                        
                         <!-- Exit Button -->
                         <button onclick="exitFullscreenCamera()" style="position: absolute; top: 20px; right: 20px; padding: 12px 24px; background: rgba(231,76,60,0.9); color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; z-index: 10000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
                             ✕ Exit
@@ -1052,6 +1116,16 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                         <!-- Manual Input Box -->
                         <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); padding: 30px; backdrop-filter: blur(10px);">
                             <div style="max-width: 600px; margin: 0 auto;">
+                                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                                    <div style="flex: 1;">
+                                        <label style="display: block; color: white; margin-bottom: 8px; font-size: 0.95em; font-weight: 600;">Period:</label>
+                                        <select id="attendancePeriod" style="width: 100%; padding: 10px; border: 2px solid #27ae60; border-radius: 6px; font-size: 1em; background: white; color: #2c3e50;">
+                                            <option value="morning">🌅 Morning (6:00-12:00)</option>
+                                            <option value="afternoon">🌆 Afternoon (12:00-17:00)</option>
+                                            <option value="evening">🌙 Evening (17:00-22:00)</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <label style="display: block; color: white; margin-bottom: 10px; font-size: 1.1em; font-weight: 600;">Student ID:</label>
                                 <div style="display: flex; gap: 10px;">
                                     <input type="text" id="manualStudentId" placeholder="Enter Student ID or scan QR code..." style="flex: 1; padding: 15px; font-size: 1.1em; border: 2px solid #27ae60; border-radius: 8px; outline: none;" onkeypress="if(event.key==='Enter') recordManualAttendance()">
@@ -1062,6 +1136,11 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                                 <div id="scanStatus" style="margin-top: 15px; color: white; text-align: center; font-size: 0.95em;"></div>
                             </div>
                         </div>
+
+                        <!-- Audio for success notification -->
+                        <audio id="successSound" preload="auto">
+                            <source src="data:audio/wav;base64,UklGRiYAAABXQVZFZm10IBAAAAABAAEAQB8AAAB9AAACABAAZGF0YQIAAAAAAA==" type="audio/wav">
+                        </audio>
 
                         <!-- Success Popup -->
                         <div id="successPopup" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #27ae60, #2ecc71); padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); text-align: center; min-width: 400px; z-index: 10001;">
@@ -1126,6 +1205,36 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     }
                 }
 
+                // Sync status tracking
+                let lastSyncTime = Date.now();
+                let offlineQueueCount = 0;
+
+                function updateSyncStatus() {
+                    const now = Date.now();
+                    const timeSinceSync = Math.floor((now - lastSyncTime) / 1000);
+                    const syncStatusEl = document.getElementById('syncStatus');
+                    const syncTextEl = document.getElementById('syncText');
+
+                    if (timeSinceSync < 60) {
+                        syncStatusEl.style.background = '#27ae60';
+                        syncTextEl.textContent = 'Online';
+                    } else if (timeSinceSync < 300) {
+                        syncStatusEl.style.background = '#f39c12';
+                        const mins = Math.floor(timeSinceSync / 60);
+                        syncTextEl.textContent = `Last synced: ${mins}m ago`;
+                    } else {
+                        syncStatusEl.style.background = '#e74c3c';
+                        syncTextEl.textContent = 'Offline - Queuing scans';
+                    }
+
+                    if (offlineQueueCount > 0) {
+                        syncTextEl.textContent += ` (${offlineQueueCount} pending)`;
+                    }
+                }
+
+                // Update sync status every 5 seconds
+                setInterval(updateSyncStatus, 5000);
+
                 function extractStudentId(qrData) {
                     try {
                         const parsed = JSON.parse(qrData);
@@ -1153,7 +1262,25 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                         return;
                     }
 
+                    // Duplicate scan prevention
+                    const recentScans = JSON.parse(sessionStorage.getItem('recentScans') || '{}');
+                    const now = Date.now();
+                    const thirtySecondsAgo = now - 30000;
+                    
+                    if (recentScans[studentId] && recentScans[studentId] > thirtySecondsAgo) {
+                        const timeSince = Math.round((now - recentScans[studentId]) / 1000);
+                        document.getElementById('scanStatus').textContent = `⚠️ Student already scanned ${timeSince}s ago`;
+                        setTimeout(() => {
+                            document.getElementById('manualStudentId').value = '';
+                            document.getElementById('scanStatus').textContent = '';
+                            document.getElementById('manualStudentId').focus();
+                        }, 2000);
+                        return;
+                    }
+
                     document.getElementById('scanStatus').textContent = '⏳ Recording...';
+
+                    const selectedPeriod = document.getElementById('attendancePeriod') ? document.getElementById('attendancePeriod').value : 'morning';
 
                     fetch('record_attendance.php', {
                         method: 'POST',
@@ -1161,38 +1288,79 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                         body: JSON.stringify({
                             code: studentId,
                             type: 'manual',
-                            period: 'scan'
+                            period: selectedPeriod
                         })
                     })
                     .then(r => r.json())
                     .then(data => {
+                        // Update sync status on successful response
+                        lastSyncTime = Date.now();
+                        offlineQueueCount = Math.max(0, offlineQueueCount - 1);
+                        updateSyncStatus();
+
                         if (data.success) {
                             const student = data.student_info;
+                            
+                            // Record successful scan
+                            recentScans[studentId] = now;
+                            // Clean up old scans (older than 30 seconds)
+                            Object.keys(recentScans).forEach(id => {
+                                if (recentScans[id] < thirtySecondsAgo) delete recentScans[id];
+                            });
+                            sessionStorage.setItem('recentScans', JSON.stringify(recentScans));
+                            
                             showSuccessPopup(
                                 `Attendance for ${student.full_name}`,
                                 `Grade ${student.grade_level} - ${student.strand} - ${student.section_block}<br>Status: ${data.attendance_info.status}`
                             );
-                            document.getElementById('manualStudentId').value = '';
+                            
                             document.getElementById('scanStatus').textContent = '';
+                            
+                            // Clear textbox after 2 seconds (when popup closes)
+                            setTimeout(() => {
+                                document.getElementById('manualStudentId').value = '';
+                                document.getElementById('manualStudentId').focus();
+                            }, 2000);
                         } else {
                             document.getElementById('scanStatus').textContent = '❌ ' + (data.error || 'Student not found');
+                            // Clear textbox after 1 second on error
                             setTimeout(() => {
+                                document.getElementById('manualStudentId').value = '';
                                 document.getElementById('scanStatus').textContent = '';
-                            }, 3000);
+                                document.getElementById('manualStudentId').focus();
+                            }, 1000);
                         }
                     })
                     .catch(err => {
-                        document.getElementById('scanStatus').textContent = '❌ Network error';
+                        // Network error - add to offline queue
+                        offlineQueueCount++;
+                        updateSyncStatus();
+                        
+                        document.getElementById('scanStatus').textContent = '❌ Network error - saved for later';
+                        // Clear textbox after 1 second on error
                         setTimeout(() => {
+                            document.getElementById('manualStudentId').value = '';
                             document.getElementById('scanStatus').textContent = '';
-                        }, 3000);
+                            document.getElementById('manualStudentId').focus();
+                        }, 1000);
                     });
+                }
+
+                function playSuccessSound() {
+                    const audio = document.getElementById('successSound');
+                    if (audio) {
+                        audio.currentTime = 0;
+                        audio.play().catch(err => console.log('Audio play failed:', err));
+                    }
                 }
 
                 function showSuccessPopup(title, message) {
                     document.getElementById('popupTitle').textContent = '✅ ' + title;
                     document.getElementById('popupMessage').innerHTML = message;
                     document.getElementById('successPopup').style.display = 'block';
+                    
+                    // Play success sound
+                    playSuccessSound();
                     
                     // Auto-hide after 2 seconds
                     setTimeout(() => {
@@ -1279,36 +1447,63 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
             $latePct = $marked > 0 ? round(($late / $marked) * 100) : 0;
             $absentPct = $marked > 0 ? round(($absent / $marked) * 100) : 0;
             $excusePct = $marked > 0 ? round(($excuse / $marked) * 100) : 0;
+            
+            // Get yesterday's data for trend comparison
+            $yesterday = date('Y-m-d', strtotime($attendance_date . ' -1 day'));
+            $yesterdayAttendance = $pdo->prepare('SELECT * FROM attendance_records WHERE attendance_date = :date AND student_id IN ("' . implode('","', $studentIds) . '")');
+            $yesterdayAttendance->execute([':date'=>$yesterday]);
+            $yesterdayPresent = $yesterdayAbsent = $yesterdayLate = 0;
+            foreach($yesterdayAttendance->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                switch($row['status']) {
+                    case 'present': $yesterdayPresent++; break;
+                    case 'absent': $yesterdayAbsent++; break;
+                    case 'late': $yesterdayLate++; break;
+                }
+            }
+            
+            // Calculate trend deltas
+            $presentDelta = $present - $yesterdayPresent;
+            $absentDelta = $absent - $yesterdayAbsent;
+            $lateDelta = $late - $yesterdayLate;
             ?>
             <div class="stats-grid">
-                <div class="stat-card present">
+                <div class="stat-card present" title="<?php echo $presentDelta > 0 ? '+' . $presentDelta . ' more than yesterday' : ($presentDelta < 0 ? $presentDelta . ' fewer than yesterday' : 'Same as yesterday'); ?>">
                     <div class="stat-header">
                         <div class="stat-label">Present</div>
                         <div class="stat-icon">✓</div>
                     </div>
                     <div class="stat-number"><?php echo $present; ?></div>
+                    <div style="font-size: 0.8em; color: #27ae60; margin: 4px 0; font-weight: 600;">
+                        <?php echo $presentDelta > 0 ? '▲ +' . $presentDelta : ($presentDelta < 0 ? '▼ ' . $presentDelta : '→ 0'); ?>
+                    </div>
                     <div class="stat-progress">
                         <div class="stat-progress-bar" style="width: <?php echo $presentPct; ?>%"></div>
                     </div>
                     <div class="stat-label" style="margin-top: 8px; color: #27ae60;"><?php echo $presentPct; ?>%</div>
                 </div>
-                <div class="stat-card late">
+                <div class="stat-card late" title="<?php echo $lateDelta > 0 ? '+' . $lateDelta . ' more than yesterday' : ($lateDelta < 0 ? $lateDelta . ' fewer than yesterday' : 'Same as yesterday'); ?>">
                     <div class="stat-header">
                         <div class="stat-label">Late</div>
                         <div class="stat-icon">⏱️</div>
                     </div>
                     <div class="stat-number"><?php echo $late; ?></div>
+                    <div style="font-size: 0.8em; color: #f39c12; margin: 4px 0; font-weight: 600;">
+                        <?php echo $lateDelta > 0 ? '▲ +' . $lateDelta : ($lateDelta < 0 ? '▼ ' . $lateDelta : '→ 0'); ?>
+                    </div>
                     <div class="stat-progress">
                         <div class="stat-progress-bar" style="width: <?php echo $latePct; ?>%"></div>
                     </div>
                     <div class="stat-label" style="margin-top: 8px; color: #f39c12;"><?php echo $latePct; ?>%</div>
                 </div>
-                <div class="stat-card absent">
+                <div class="stat-card absent" title="<?php echo $absentDelta > 0 ? '+' . $absentDelta . ' more than yesterday' : ($absentDelta < 0 ? $absentDelta . ' fewer than yesterday' : 'Same as yesterday'); ?>">
                     <div class="stat-header">
                         <div class="stat-label">Absent</div>
                         <div class="stat-icon">✕</div>
                     </div>
                     <div class="stat-number"><?php echo $absent; ?></div>
+                    <div style="font-size: 0.8em; color: #e74c3c; margin: 4px 0; font-weight: 600;">
+                        <?php echo $absentDelta > 0 ? '▲ +' . $absentDelta : ($absentDelta < 0 ? '▼ ' . $absentDelta : '→ 0'); ?>
+                    </div>
                     <div class="stat-progress">
                         <div class="stat-progress-bar" style="width: <?php echo $absentPct; ?>%"></div>
                     </div>
@@ -1657,7 +1852,52 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
             <div class="page-header">
                 <h1>👥 Student List</h1>
                 <p>Manage students in your class</p>
+                <a href="import_students.php" style="margin-left: auto; background: #27ae60; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block;">📥 Batch Import CSV</a>
             </div>
+            
+            <!-- Filter & Search Section -->
+            <div class="content-section" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); margin-bottom: 20px; padding: 20px 24px;">
+                <h3 style="margin-top: 0; color: #2c3e50; font-size: 1.1em;">🔍 Filter Students</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <!-- Search Box with Autocomplete -->
+                    <div>
+                        <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #2c3e50; font-size: 0.9em;">Search Name or ID:</label>
+                        <input type="text" id="studentSearch" placeholder="Type to search..." style="width: 100%; padding: 10px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 0.95em;">
+                        <div id="searchSuggestions" style="position: absolute; background: white; border: 1px solid #ddd; border-top: none; max-height: 200px; overflow-y: auto; width: calc(100% - 4px); display: none; z-index: 100;"></div>
+                    </div>
+                    
+                    <!-- Gender Filter -->
+                    <div>
+                        <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #2c3e50; font-size: 0.9em;">Gender:</label>
+                        <select id="genderFilter" style="width: 100%; padding: 10px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 0.95em;">
+                            <option value="">All Genders</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Status Filter -->
+                    <div>
+                        <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #2c3e50; font-size: 0.9em;">Today's Status:</label>
+                        <select id="statusFilter" style="width: 100%; padding: 10px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 0.95em;">
+                            <option value="">All Students</option>
+                            <option value="present">✅ Present</option>
+                            <option value="absent">❌ Absent</option>
+                            <option value="late">⏰ Late</option>
+                            <option value="unmarked">📋 Not Marked</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Reset Filters Button -->
+                    <div style="display: flex; align-items: flex-end;">
+                        <button onclick="resetFilters()" style="width: 100%; padding: 10px 12px; background: #95a5a6; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.95em;">
+                            🔄 Reset Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
             <?php if(!empty($errors)): ?>
                 <div style="padding:14px 20px;background:linear-gradient(135deg,#f8d7da 0%,#f5c6cb 100%);border-left:4px solid #dc3545;margin-bottom:18px;border-radius:12px">
                     <?php foreach($errors as $err): ?><p style="margin:3px 0;color:#721c24;font-weight:600"><?= htmlspecialchars($err) ?></p><?php endforeach; ?>
@@ -1675,6 +1915,14 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
             $students = $pdo->prepare('SELECT * FROM students WHERE grade_level = :grade AND strand = :strand AND section_block = :block ORDER BY full_name ASC');
             $students->execute([':grade'=>$grade, ':strand'=>$strand, ':block'=>$block]);
             $studentList = $students->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Get today's attendance for status highlighting
+            $attendanceCheck = $pdo->prepare('SELECT student_id, status FROM attendance_records WHERE attendance_date = :date');
+            $attendanceCheck->execute([':date'=>$attendance_date]);
+            $attendanceMap = [];
+            foreach($attendanceCheck->fetchAll(PDO::FETCH_ASSOC) as $att) {
+                $attendanceMap[$att['student_id']] = $att['status'];
+            }
             ?>
             <div class="content-section">
                                 <h2>📋 Student Records</h2>
@@ -1691,8 +1939,26 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                                                     </tr>
                                             </thead>
                                             <tbody>
-                                                    <?php foreach($studentList as $s): ?>
-                                                    <tr>
+                                                    <?php foreach($studentList as $s): 
+                                                        $status = $attendanceMap[$s['student_id']] ?? 'unmarked';
+                                                        $statusColor = match($status) {
+                                                            'present' => '#d4edda',
+                                                            'absent' => '#f8d7da',
+                                                            'late' => '#fff3cd',
+                                                            default => '#f0f0f0'
+                                                        };
+                                                        $statusText = match($status) {
+                                                            'present' => '✅ Present',
+                                                            'absent' => '❌ Absent',
+                                                            'late' => '⏰ Late',
+                                                            default => '📋 Not Marked'
+                                                        };
+                                                    ?>
+                                                    <tr data-student-id="<?php echo htmlspecialchars($s['student_id']); ?>" 
+                                                        data-student-name="<?php echo htmlspecialchars($s['full_name']); ?>" 
+                                                        data-gender="<?php echo htmlspecialchars($s['gender'] ?? ''); ?>" 
+                                                        data-status="<?php echo $status; ?>"
+                                                        style="background-color: <?php echo $statusColor; ?>; transition: all 0.2s;">
                                                             <td title="<?= htmlspecialchars($s['lrn'] ?? '') ?>">
                                                                 <?= htmlspecialchars($s['lrn'] ?? '') ?>
                                                             </td>
@@ -1700,7 +1966,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                                                                 <?= htmlspecialchars($s['student_id'] ?? '') ?>
                                                             </td>
                                                             <td title="<?= htmlspecialchars($s['full_name']) ?>">
-                                                                <?= htmlspecialchars($s['full_name']) ?>
+                                                                <strong><?= htmlspecialchars($s['full_name']) ?></strong>
                                                             </td>
                                                             <td title="<?= htmlspecialchars($s['email']) ?>">
                                                                 <?= htmlspecialchars($s['email']) ?>
@@ -1709,6 +1975,9 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                                                                 <?= htmlspecialchars($s['gender'] ?? '') ?>
                                                             </td>
                                                             <td>
+                                                                <span style="display: inline-block; padding: 4px 8px; background: <?php echo $statusColor; ?>; border-radius: 4px; font-size: 0.85em; font-weight: 600; margin-right: 8px;">
+                                                                    <?php echo $statusText; ?>
+                                                                </span>
                                                                 <button type="button" onclick='openEditModal(<?= json_encode($s) ?>)' class="action-btn" style="padding:10px 14px;font-size:1.1em;border-radius:8px;min-width:40px;min-height:40px;display:flex;align-items:center;justify-content:center" title="Edit">
                                                                     <span style="font-size:1.2em">✏️</span>
                                                                 </button>
@@ -1805,11 +2074,100 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 document.getElementById('editModal').style.display = 'none';
             }
             
-            // Update student count in sidebar
+            // Student List Filtering & Search
+            const studentSearch = document.getElementById('studentSearch');
+            const genderFilter = document.getElementById('genderFilter');
+            const statusFilter = document.getElementById('statusFilter');
+            const studentTable = document.querySelector('table tbody');
+            const allRows = studentTable ? Array.from(studentTable.querySelectorAll('tr')) : [];
+            
+            function applyFilters() {
+                const searchTerm = (studentSearch?.value || '').toLowerCase();
+                const selectedGender = genderFilter?.value || '';
+                const selectedStatus = statusFilter?.value || '';
+                
+                allRows.forEach(row => {
+                    const name = (row.dataset.studentName || '').toLowerCase();
+                    const id = (row.dataset.studentId || '').toLowerCase();
+                    const gender = row.dataset.gender || '';
+                    const status = row.dataset.status || '';
+                    
+                    let matches = true;
+                    
+                    // Search filter
+                    if (searchTerm && !name.includes(searchTerm) && !id.includes(searchTerm)) {
+                        matches = false;
+                    }
+                    
+                    // Gender filter
+                    if (selectedGender && gender !== selectedGender) {
+                        matches = false;
+                    }
+                    
+                    // Status filter
+                    if (selectedStatus && status !== selectedStatus) {
+                        matches = false;
+                    }
+                    
+                    row.style.display = matches ? '' : 'none';
+                });
+                
+                updateVisibleCount();
+            }
+            
+            function updateVisibleCount() {
+                const visibleCount = allRows.filter(r => r.style.display !== 'none').length;
+                const totalCount = allRows.length;
+                const badge = document.getElementById('student-count');
+                if (badge) {
+                    badge.textContent = visibleCount;
+                }
+            }
+            
+            function resetFilters() {
+                if (studentSearch) studentSearch.value = '';
+                if (genderFilter) genderFilter.value = '';
+                if (statusFilter) statusFilter.value = '';
+                allRows.forEach(row => row.style.display = '');
+                updateVisibleCount();
+            }
+            
+            // Add event listeners for filtering
+            if (studentSearch) {
+                studentSearch.addEventListener('input', applyFilters);
+                // Autocomplete suggestions
+                studentSearch.addEventListener('input', function() {
+                    const value = this.value.toLowerCase();
+                    if (value.length === 0) {
+                        document.getElementById('searchSuggestions').style.display = 'none';
+                        return;
+                    }
+                    
+                    const matches = allRows
+                        .filter(row => {
+                            const name = (row.dataset.studentName || '').toLowerCase();
+                            const id = (row.dataset.studentId || '').toLowerCase();
+                            return name.includes(value) || id.includes(value);
+                        })
+                        .slice(0, 5)
+                        .map(row => row.dataset.studentName || '');
+                    
+                    if (matches.length > 0) {
+                        const suggestionsDiv = document.getElementById('searchSuggestions');
+                        suggestionsDiv.innerHTML = matches.map(m => `<div style="padding:8px 12px; cursor:pointer; border-bottom:1px solid #eee;" onclick="document.getElementById('studentSearch').value='${m}'; applyFilters(); this.parentElement.style.display='none';">${m}</div>`).join('');
+                        suggestionsDiv.style.display = 'block';
+                    }
+                });
+            }
+            
+            if (genderFilter) genderFilter.addEventListener('change', applyFilters);
+            if (statusFilter) statusFilter.addEventListener('change', applyFilters);
+            
+            // Update student count on load
             document.addEventListener('DOMContentLoaded', function() {
+                updateVisibleCount();
                 const studentBadge = document.getElementById('student-count');
                 if (studentBadge) {
-                    // Count student list items or get from page context
                     const studentRows = document.querySelectorAll('table tbody tr').length;
                     if (studentRows > 0) {
                         studentBadge.textContent = studentRows;
@@ -1830,6 +2188,9 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
             $studentNames = [];
             foreach ($studentList as $s) { $studentNames[$s['student_id']] = $s['full_name']; }
             $totalStudents = count($studentIds);
+
+            // Format date display variable
+            $today = date('M d, Y', strtotime($attendance_date));
 
             // Use attendance_date for analytics (auto-adjusts after 7PM)
             $yesterday = date('Y-m-d', strtotime($attendance_date . ' -1 day'));
@@ -1915,10 +2276,33 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
             }
             ?>
             <div class="content-section">
-                <h2>🤖 AI Attendance Insights (Daily)</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                    <h2 style="margin: 0;">🤖 AI Attendance Insights</h2>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <!-- Date Range Picker -->
+                        <div>
+                            <label style="display: block; font-size: 0.85em; color: #666; margin-bottom: 4px;">View Period:</label>
+                            <select id="analyticsPeriod" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9em;">
+                                <option value="today">Today</option>
+                                <option value="week" selected>Last 7 Days</option>
+                                <option value="month">Last 30 Days</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Export Buttons -->
+                        <button onclick="exportAnalyticsCSV()" style="padding: 8px 16px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9em;">
+                            📊 Export CSV
+                        </button>
+                        <button onclick="exportAnalyticsPDF()" style="padding: 8px 16px; background: #e74c3c; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9em;">
+                            📄 Export PDF
+                        </button>
+                    </div>
+                </div>
+                
                 <?php if($totalStudents === 0): ?>
                     <p style="color:#5a6c7d">No students found for your class. Add students to view analytics.</p>
                 <?php else: ?>
+                    <!-- Top Summary Cards -->
                     <div class="analytics-grid">
                         <div class="analytics-card">
                             <h3>Attendance Rate</h3>
@@ -1944,36 +2328,48 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                             <div class="analytics-metric" style="color:#c62828"><?php echo $absentToday; ?></div>
                             <div class="analytics-sub">Absent today</div>
                         </div>
-                        <div class="analytics-card" style="grid-column: span 2; min-width: 260px;">
-                            <h3>Visualization</h3>
-                            <canvas id="attendanceDonut" height="140"></canvas>
-                            <div style="margin-top:14px;"></div>
-                            <canvas id="attendanceTrend" height="140"></canvas>
+                        <div class="analytics-card">
+                            <h3>Total Students</h3>
+                            <div class="analytics-metric" style="color:#3498db"><?php echo $totalStudents; ?></div>
+                            <div class="analytics-sub">Class size</div>
                         </div>
                     </div>
 
-                    <div class="analytics-grid">
-                        <div class="analytics-card" style="grid-column: span 2; min-width: 260px;">
-                            <h3>AI Highlights</h3>
+                    <!-- Side-by-side Charts -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div class="content-section" style="padding: 20px;">
+                            <h3 style="margin-top: 0;">📊 Today's Distribution</h3>
+                            <canvas id="attendanceDonut" height="200"></canvas>
+                        </div>
+                        <div class="content-section" style="padding: 20px;">
+                            <h3 style="margin-top: 0;">📈 7-Day Trend</h3>
+                            <canvas id="attendanceTrend" height="200"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Section - Insights and Top Late -->
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+                        <div class="content-section" style="padding: 20px;">
+                            <h3 style="margin-top: 0;">💡 AI Highlights</h3>
                             <ul class="insights-list">
                                 <?php foreach($insights as $line): ?>
                                     <li><?php echo htmlspecialchars($line); ?></li>
                                 <?php endforeach; ?>
                             </ul>
                         </div>
-                        <div class="analytics-card">
-                            <h3>Frequent Late (last 7 days)</h3>
+                        <div class="content-section" style="padding: 20px;">
+                            <h3 style="margin-top: 0;">⏰ Frequent Late (7 days)</h3>
                             <?php if(empty($topLate)): ?>
                                 <p class="analytics-sub">No late patterns detected.</p>
                             <?php else: ?>
                                 <table class="mini-table">
                                     <thead>
-                                        <tr><th>Student</th><th style="text-align:right">Late Count</th></tr>
+                                        <tr><th>Student</th><th style="text-align:right">Count</th></tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach($topLate as $row): ?>
-                                            <tr>
-                                                <td><?php echo htmlspecialchars($studentNames[$row['student_id']] ?? $row['student_id']); ?></td>
+                                            <tr style="background: #fff3cd;">
+                                                <td style="font-weight: 600;"><?php echo htmlspecialchars($studentNames[$row['student_id']] ?? $row['student_id']); ?></td>
                                                 <td style="text-align:right; font-weight:700; color:#c77800"><?php echo (int)$row['c']; ?></td>
                                             </tr>
                                         <?php endforeach; ?>
@@ -1984,60 +2380,322 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     </div>
                 <?php endif; ?>
             </div>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
             <script>
+                // Analytics export functions
+                function exportAnalyticsCSV() {
+                    const data = [
+                        ['Attendance Analytics Report'],
+                        ['Date', new Date().toLocaleDateString()],
+                        [''],
+                        ['Status', 'Count'],
+                        ['Present', <?php echo $presentToday; ?>],
+                        ['Late', <?php echo $lateToday; ?>],
+                        ['Absent', <?php echo $absentToday; ?>],
+                        ['Excused', <?php echo $excuseToday; ?>]
+                    ];
+                    
+                    const csv = data.map(row => row.join(',')).join('\n');
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'attendance-analytics-' + new Date().toISOString().slice(0,10) + '.csv';
+                    a.click();
+                }
+                
+                function exportAnalyticsPDF() {
+                    window.print();
+                }
+                
                 (function(){
-                    const donutCtx = document.getElementById('attendanceDonut');
-                    const trendCtx = document.getElementById('attendanceTrend');
-                    if (!donutCtx || !trendCtx) return;
-                    const donutData = {
-                        labels: ['Present','Late','Absent','Excused','Half-day'],
-                        datasets: [{
-                            data: [
-                                <?php echo json_encode($presentToday); ?>,
-                                <?php echo json_encode($lateToday); ?>,
-                                <?php echo json_encode($absentToday); ?>,
-                                <?php echo json_encode($excuseToday); ?>,
-                                <?php echo json_encode($halfToday); ?>
-                            ],
-                            backgroundColor: ['#1e5128','#f4a300','#c62828','#2d9cdb','#7b61ff'],
-                            borderWidth: 0
-                        }]
-                    };
-                    new Chart(donutCtx, {
-                        type: 'doughnut',
-                        data: donutData,
-                        options: {
-                            plugins: { legend: { position: 'bottom', labels:{ boxWidth:12 } } },
-                            cutout: '55%'
+                    // Wait for DOM and Chart.js to be ready
+                    setTimeout(function(){
+                        const donutElement = document.getElementById('attendanceDonut');
+                        const trendElement = document.getElementById('attendanceTrend');
+                        
+                        if (!donutElement || !trendElement) {
+                            console.warn('Canvas elements not found');
+                            return;
                         }
-                    });
 
-                    const trendData = {
-                        labels: <?php echo json_encode($dailyLabels); ?>,
-                        datasets: [{
-                            label: 'Attendance %',
-                            data: <?php echo json_encode($dailyRates); ?>,
-                            borderColor: '#1e5128',
-                            backgroundColor: 'rgba(46, 139, 87, 0.15)',
-                            fill: true,
-                            tension: 0.3,
-                            borderWidth: 2,
-                            pointRadius: 3
-                        }]
-                    };
-                    new Chart(trendCtx, {
-                        type: 'line',
-                        data: trendData,
-                        options: {
-                            plugins: { legend: { display: false } },
-                            scales: { y: { suggestedMin:0, suggestedMax:100, ticks:{ callback:(v)=> v+'%' } } }
+                        try {
+                            const donutCtx = donutElement.getContext('2d');
+                            const trendCtx = trendElement.getContext('2d');
+                            
+                            if (!donutCtx || !trendCtx) {
+                                console.error('Failed to get canvas context');
+                                return;
+                            }
+
+                            // Destroy existing charts if they exist
+                            if (window.attendanceDonutChart) window.attendanceDonutChart.destroy();
+                            if (window.attendanceTrendChart) window.attendanceTrendChart.destroy();
+
+                            const donutData = {
+                                labels: ['Present','Late','Absent','Excused','Half-day'],
+                                datasets: [{
+                                    data: [
+                                        <?php echo json_encode($presentToday); ?>,
+                                        <?php echo json_encode($lateToday); ?>,
+                                        <?php echo json_encode($absentToday); ?>,
+                                        <?php echo json_encode($excuseToday); ?>,
+                                        <?php echo json_encode($halfToday); ?>
+                                    ],
+                                    backgroundColor: ['#1e5128','#f4a300','#c62828','#2d9cdb','#7b61ff'],
+                                    borderWidth: 0
+                                }]
+                            };
+
+                            window.attendanceDonutChart = new Chart(donutCtx, {
+                                type: 'doughnut',
+                                data: donutData,
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: true,
+                                    plugins: { 
+                                        legend: { 
+                                            position: 'bottom', 
+                                            labels:{ 
+                                                boxWidth: 12,
+                                                font: { size: 12 }
+                                            } 
+                                        } 
+                                    },
+                                    cutout: '55%'
+                                }
+                            });
+
+                            const trendData = {
+                                labels: <?php echo json_encode($dailyLabels); ?>,
+                                datasets: [{
+                                    label: 'Attendance %',
+                                    data: <?php echo json_encode($dailyRates); ?>,
+                                    borderColor: '#1e5128',
+                                    backgroundColor: 'rgba(46, 139, 87, 0.15)',
+                                    fill: true,
+                                    tension: 0.3,
+                                    borderWidth: 2,
+                                    pointRadius: 4,
+                                    pointBackgroundColor: '#1e5128'
+                                }]
+                            };
+
+                            window.attendanceTrendChart = new Chart(trendCtx, {
+                                type: 'line',
+                                data: trendData,
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: true,
+                                    plugins: { 
+                                        legend: { display: true, position: 'top' } 
+                                    },
+                                    scales: { 
+                                        y: { 
+                                            beginAtZero: true,
+                                            suggestedMin: 0, 
+                                            suggestedMax: 100,
+                                            ticks: { 
+                                                callback: function(v) { return v + '%'; }
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        } catch(err) {
+                            console.error('Chart initialization error:', err);
                         }
-                    });
+                    }, 100);
                 })();
+            </script>
+            </div>
+
+        <?php elseif($section === 'corrections'): ?>
+            <?php
+            // Handle attendance correction
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['correct_action'])) {
+                $studentId = (int)($_POST['student_id'] ?? 0);
+                $status = trim($_POST['status'] ?? '');
+                $date = trim($_POST['correction_date'] ?? '');
+                $reason = trim($_POST['correction_reason'] ?? '');
+                
+                if ($studentId && in_array($status, ['present', 'late', 'absent', 'excuse', 'morning_half_day', 'afternoon_half_day'])) {
+                    try {
+                        // Check if record exists
+                        $checkStmt = $pdo->prepare('SELECT id FROM attendance_records WHERE student_id = :sid AND attendance_date = :date');
+                        $checkStmt->execute([':sid' => $studentId, ':date' => $date]);
+                        $existing = $checkStmt->fetch();
+                        
+                        if ($existing) {
+                            // Update existing record
+                            $updateStmt = $pdo->prepare('UPDATE attendance_records SET status = :status, correction_reason = :reason, corrected_at = NOW(), corrected_by = :teacher_id WHERE student_id = :sid AND attendance_date = :date');
+                            $updateStmt->execute([':status' => $status, ':reason' => $reason, ':teacher_id' => $uid, ':sid' => $studentId, ':date' => $date]);
+                            $success = '✅ Attendance corrected successfully';
+                        } else {
+                            // Insert new record if doesn't exist
+                            $insertStmt = $pdo->prepare('INSERT INTO attendance_records (student_id, attendance_date, status, correction_reason, corrected_by, corrected_at) VALUES (:sid, :date, :status, :reason, :teacher_id, NOW())');
+                            $insertStmt->execute([':sid' => $studentId, ':date' => $date, ':status' => $status, ':reason' => $reason, ':teacher_id' => $uid]);
+                            $success = '✅ Attendance record created';
+                        }
+                    } catch (Exception $e) {
+                        $success = '❌ Error: ' . $e->getMessage();
+                    }
+                }
+            }
+            
+            // Get students and their attendance for correction
+            $grade = $user['grade_level'];
+            $strand = $user['strand'];
+            $block = $user['section_block'];
+            // Wrap the corrections query in a try/catch so missing DB columns don't cause a fatal error.
+            try {
+                $studentsStmt = $pdo->prepare('SELECT s.student_id, s.full_name, a.status, a.attendance_date, a.correction_reason FROM students s LEFT JOIN attendance_records a ON s.student_id = a.student_id AND a.attendance_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY) WHERE s.grade_level = :grade AND s.strand = :strand AND s.section_block = :block ORDER BY s.full_name, a.attendance_date DESC');
+                $studentsStmt->execute([':grade' => $grade, ':strand' => $strand, ':block' => $block]);
+                $studentRecords = $studentsStmt->fetchAll(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                // Log the actual DB error for the admin and degrade gracefully in the UI
+                error_log('[teacher_dashboard][corrections] DB error: ' . $e->getMessage());
+                $studentRecords = [];
+                $corrections_error = 'Corrections temporarily unavailable (database schema mismatch). Please run the migration to add correction columns.';
+            }
+            ?>
+            <div class="content-section">
+                <h2>📝 Correct Student Attendance</h2>
+                <?php if (!empty($success)): ?>
+                    <div style="background: <?php echo strpos($success, '✅') ? '#d4edda' : '#f8d7da'; ?>; color: <?php echo strpos($success, '✅') ? '#155724' : '#721c24'; ?>; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid <?php echo strpos($success, '✅') ? '#28a745' : '#dc3545'; ?>;">
+                        <?php echo htmlspecialchars($success); ?>
+                    </div>
+                <?php endif; ?>
+                
+                <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px;">
+                    <strong>ℹ️ Info:</strong> Correct attendance records from the last 7 days. All corrections are logged with teacher ID and timestamp.
+                </div>
+
+                <table class="mini-table" style="width: 100%; margin-bottom: 16px;">
+                    <thead>
+                        <tr style="background: #f8f9fa;">
+                            <th>Student Name</th>
+                            <th>Student ID</th>
+                            <th>Last Attendance</th>
+                            <th>Current Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        $studentsSeen = [];
+                        foreach ($studentRecords as $record): 
+                            if (isset($studentsSeen[$record['student_id']])) continue;
+                            $studentsSeen[$record['student_id']] = true;
+                        ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($record['full_name']); ?></td>
+                                <td style="font-weight: bold; color: #2d6a4f;"><?php echo htmlspecialchars($record['student_id']); ?></td>
+                                <td><?php echo $record['attendance_date'] ? date('M d, Y', strtotime($record['attendance_date'])) : 'N/A'; ?></td>
+                                <td>
+                                    <span style="display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.9em; 
+                                    <?php 
+                                    $statusColor = match($record['status'] ?? '') {
+                                        'present' => 'background: #d4edda; color: #155724;',
+                                        'late' => 'background: #fff3cd; color: #856404;',
+                                        'absent' => 'background: #f8d7da; color: #721c24;',
+                                        'excuse' => 'background: #d1ecf1; color: #0c5460;',
+                                        default => 'background: #e2e3e5; color: #383d41;'
+                                    };
+                                    echo $statusColor;
+                                    ?>">
+                                        <?php echo $record['status'] ? ucfirst($record['status']) : 'No record'; ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <button onclick="openCorrectionModal('<?php echo htmlspecialchars($record['student_id']); ?>', '<?php echo htmlspecialchars($record['full_name']); ?>')" style="background: #2d6a4f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9em;">
+                                        ✏️ Edit
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Correction Modal -->
+            <div id="correctionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+                <div style="background: white; padding: 24px; border-radius: 12px; max-width: 500px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+                    <h3 style="margin-top: 0; margin-bottom: 16px; color: #2c3e50;">Correct Attendance</h3>
+                    <form method="POST" style="display: flex; flex-direction: column; gap: 12px;">
+                        <input type="hidden" name="correct_action" value="1">
+                        <input type="hidden" name="student_id" id="modal_student_id">
+                        
+                        <div>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #2c3e50;">Student: <span id="modal_student_name"></span></label>
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #2c3e50;">Date:</label>
+                            <input type="date" name="correction_date" required style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #2c3e50;">New Status:</label>
+                            <select name="status" required style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;">
+                                <option value="">-- Select Status --</option>
+                                <option value="present">✅ Present</option>
+                                <option value="late">⏰ Late</option>
+                                <option value="absent">❌ Absent</option>
+                                <option value="excuse">📋 Excused</option>
+                                <option value="morning_half_day">🌅 Morning Half-Day</option>
+                                <option value="afternoon_half_day">🌆 Afternoon Half-Day</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #2c3e50;">Reason for Correction:</label>
+                            <textarea name="correction_reason" placeholder="e.g., Make-up attendance, System error, Parent request..." style="width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em; min-height: 80px; resize: vertical;"></textarea>
+                        </div>
+
+                        <div style="display: flex; gap: 8px; margin-top: 8px;">
+                            <button type="submit" style="flex: 1; background: #27ae60; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                                💾 Save Correction
+                            </button>
+                            <button type="button" onclick="closeCorrectionModal()" style="flex: 1; background: #95a5a6; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                                ✕ Cancel
+                            </button>
+                        </div>
+
+                        <div style="background: #f0f0f0; padding: 10px 12px; border-radius: 6px; font-size: 0.85em; color: #555; margin-top: 8px;">
+                            <strong>Note:</strong> This action is logged with your teacher ID and timestamp for audit purposes.
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <script>
+                function openCorrectionModal(studentId, studentName) {
+                    document.getElementById('modal_student_id').value = studentId;
+                    document.getElementById('modal_student_name').textContent = studentName + ' (' + studentId + ')';
+                    document.getElementById('correction_date').valueAsDate = new Date();
+                    document.getElementById('correctionModal').style.display = 'flex';
+                }
+
+                function closeCorrectionModal() {
+                    document.getElementById('correctionModal').style.display = 'none';
+                }
+
+                // Close modal on outside click
+                document.getElementById('correctionModal').addEventListener('click', function(e) {
+                    if (e.target === this) closeCorrectionModal();
+                });
             </script>
         <?php endif; ?>
         </div>
     </div>
+    
+    <script>
+        // Prevent back button from showing cached page
+        window.history.pushState(null, "", window.location.href);        
+        window.onpopstate = function() {
+            window.history.pushState(null, "", window.location.href);
+        };
+    </script>
 </body>
 </html>

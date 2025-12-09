@@ -111,7 +111,7 @@ foreach ($students as $student) {
 // Count totals (absences only)
 $totals = [];
 foreach ($attendance as $student_id => $marks) {
-    $totals[$student_id] = array_sum(array_map(function($x){ return $x === 'x' ? 1 : 0; }, $marks));
+    $totals[$student_id] = array_sum(array_map(function($x){ return $x === 'X' ? 1 : 0; }, $marks));
 }
 
 // Calculate daily totals by gender - count absences only

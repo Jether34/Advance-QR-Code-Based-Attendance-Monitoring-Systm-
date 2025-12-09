@@ -265,7 +265,7 @@
 <body>
     <div class="signup-container">
         <div class="logo-header">
-            <img src="uploads/OIP (1).webp" alt="Palawan National School Logo">
+            <img src="uploads/System logo.jpg" alt="QR Attendance System Logo">
             <div class="school-name">Palawan National School</div>
         </div>
         <div class="signup-header">
@@ -476,6 +476,16 @@
             if (role === 'student') {
                 html += `
                     <div class="form-group">
+                        <label>Faculty</label>
+                        <select name="faculty" id="studentFacultySelect" required>
+                            <option value="">Select Faculty</option>
+                            <option value="ABM">ABM</option>
+                            <option value="STEM">STEM</option>
+                            <option value="HUMSS">HUMSS</option>
+                            <option value="TVL">TVL</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Email Address</label>
                         <input name="email" type="email" placeholder="Enter your email" required />
                     </div>
@@ -499,19 +509,54 @@
                     <div class="col">
                         <div class="form-group">
                             <label>Grade</label>
-                            <input name="grade" type="text" placeholder="Grade" required />
+                            <select name="grade" required>
+                                <option value="">Select Grade</option>
+                                <option value="11">Grade 11</option>
+                                <option value="12">Grade 12</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="col">
+                    <div class="col" id="studentStrandCol">
                         <div class="form-group">
-                            <label>Strand <span title='If HUMSS, ABM, or STEM, this field will be auto-filled and disabled.'>(?)</span></label>
+                            <label>Strand</label>
                             <input name="strand" id="studentStrand" type="text" placeholder="Strand" required />
+                            <select name="strand" id="studentStrandSelect" style="display:none;" required>
+                                <option value="">Select TVL Strand</option>
+                                <option value="ICT - CSS">ICT - CSS</option>
+                                <option value="ICT - PROGRAMMING">ICT - PROGRAMMING</option>
+                                <option value="AFA">AFA</option>
+                                <option value="ARTS AND DESIGN">ARTS AND DESIGN</option>
+                                <option value="HE">HE (HOME ECONOMICS)</option>
+                                <option value="IA">IA (INDUSTRIAL ARTS)</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-group">
                             <label>Block/Section (1-20)</label>
-                            <input name="block_section" type="number" min="1" max="20" placeholder="Section" required />
+                            <select name="block_section" required>
+                                <option value="">Select Block</option>
+                                <option value="1">Block 1</option>
+                                <option value="2">Block 2</option>
+                                <option value="3">Block 3</option>
+                                <option value="4">Block 4</option>
+                                <option value="5">Block 5</option>
+                                <option value="6">Block 6</option>
+                                <option value="7">Block 7</option>
+                                <option value="8">Block 8</option>
+                                <option value="9">Block 9</option>
+                                <option value="10">Block 10</option>
+                                <option value="11">Block 11</option>
+                                <option value="12">Block 12</option>
+                                <option value="13">Block 13</option>
+                                <option value="14">Block 14</option>
+                                <option value="15">Block 15</option>
+                                <option value="16">Block 16</option>
+                                <option value="17">Block 17</option>
+                                <option value="18">Block 18</option>
+                                <option value="19">Block 19</option>
+                                <option value="20">Block 20</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -552,19 +597,54 @@
                     <div class="col">
                         <div class="form-group">
                             <label>Grade</label>
-                            <input name="grade" type="text" placeholder="Grade" required />
+                            <select name="grade" required>
+                                <option value="">Select Grade</option>
+                                <option value="11">Grade 11</option>
+                                <option value="12">Grade 12</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col" id="teacherStrandCol">
                         <div class="form-group">
-                            <label>Strand <span title='If HUMSS, ABM, or STEM, this field will be auto-filled and disabled.'>(?)</span></label>
+                            <label>Strand</label>
                             <input name="strand" id="teacherStrand" type="text" placeholder="Strand" required />
+                            <select name="strand" id="teacherStrandSelect" style="display:none;" required>
+                                <option value="">Select TVL Strand</option>
+                                <option value="ICT - CSS">ICT - CSS</option>
+                                <option value="ICT - PROGRAMMING">ICT - PROGRAMMING</option>
+                                <option value="AFA">AFA</option>
+                                <option value="ARTS AND DESIGN">ARTS AND DESIGN</option>
+                                <option value="HE">HE (HOME ECONOMICS)</option>
+                                <option value="IA">IA (INDUSTRIAL ARTS)</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-group">
-                            <label>Block/Section</label>
-                            <input name="block_section" type="number" min="1" max="20" placeholder="Section" required />
+                            <label>Block/Section (1-20)</label>
+                            <select name="block_section" required>
+                                <option value="">Select Block</option>
+                                <option value="1">Block 1</option>
+                                <option value="2">Block 2</option>
+                                <option value="3">Block 3</option>
+                                <option value="4">Block 4</option>
+                                <option value="5">Block 5</option>
+                                <option value="6">Block 6</option>
+                                <option value="7">Block 7</option>
+                                <option value="8">Block 8</option>
+                                <option value="9">Block 9</option>
+                                <option value="10">Block 10</option>
+                                <option value="11">Block 11</option>
+                                <option value="12">Block 12</option>
+                                <option value="13">Block 13</option>
+                                <option value="14">Block 14</option>
+                                <option value="15">Block 15</option>
+                                <option value="16">Block 16</option>
+                                <option value="17">Block 17</option>
+                                <option value="18">Block 18</option>
+                                <option value="19">Block 19</option>
+                                <option value="20">Block 20</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -574,34 +654,73 @@
 
         // After rendering, apply strand logic for the current role
         if (role === 'student') {
+            const studentFacultySel = document.getElementById('studentFacultySelect');
             const studentStrand = document.getElementById('studentStrand');
-            if (studentStrand) {
-                studentStrand.addEventListener('input', function() {
-                    const val = studentStrand.value.trim().toUpperCase();
-                    if (["HUMSS","ABM","STEM"].includes(val)) {
+            const studentStrandSelect = document.getElementById('studentStrandSelect');
+            const studentStrandCol = document.getElementById('studentStrandCol');
+            if (studentFacultySel && studentStrand && studentStrandSelect && studentStrandCol) {
+                function updateStudentStrand() {
+                    if (["ABM","STEM","HUMSS"].includes(studentFacultySel.value)) {
+                        // For ABM, STEM, HUMSS - auto-fill text input
+                        studentStrand.value = studentFacultySel.value;
                         studentStrand.disabled = true;
+                        studentStrand.style.display = '';
+                        studentStrandSelect.style.display = 'none';
+                        studentStrandSelect.removeAttribute('name');
+                        studentStrand.setAttribute('name', 'strand');
+                        studentStrandCol.style.display = '';
+                    } else if (studentFacultySel.value === "TVL") {
+                        // For TVL - show dropdown selection
+                        studentStrand.style.display = 'none';
+                        studentStrand.removeAttribute('name');
+                        studentStrandSelect.style.display = '';
+                        studentStrandSelect.setAttribute('name', 'strand');
+                        studentStrandSelect.required = true;
+                        studentStrandCol.style.display = '';
                     } else {
-                        studentStrand.disabled = false;
+                        // No faculty selected - hide both
+                        studentStrand.value = '';
+                        studentStrand.style.display = '';
+                        studentStrandSelect.style.display = 'none';
+                        studentStrandSelect.removeAttribute('name');
+                        studentStrand.setAttribute('name', 'strand');
+                        studentStrandCol.style.display = 'none';
                     }
-                });
+                }
+                studentFacultySel.addEventListener('change', updateStudentStrand);
+                updateStudentStrand();
             }
         } else if (role === 'teacher') {
             const facultySel = document.getElementById('facultySelect');
             const teacherStrand = document.getElementById('teacherStrand');
+            const teacherStrandSelect = document.getElementById('teacherStrandSelect');
             const teacherStrandCol = document.getElementById('teacherStrandCol');
-            if (facultySel && teacherStrand && teacherStrandCol) {
+            if (facultySel && teacherStrand && teacherStrandSelect && teacherStrandCol) {
                 function updateTeacherStrand() {
                     if (["ABM","STEM","HUMSS"].includes(facultySel.value)) {
+                        // For ABM, STEM, HUMSS - auto-fill text input
                         teacherStrand.value = facultySel.value;
                         teacherStrand.disabled = true;
+                        teacherStrand.style.display = '';
+                        teacherStrandSelect.style.display = 'none';
+                        teacherStrandSelect.removeAttribute('name');
+                        teacherStrand.setAttribute('name', 'strand');
                         teacherStrandCol.style.display = '';
                     } else if (facultySel.value === "TVL") {
-                        teacherStrand.value = '';
-                        teacherStrand.disabled = false;
+                        // For TVL - show dropdown selection
+                        teacherStrand.style.display = 'none';
+                        teacherStrand.removeAttribute('name');
+                        teacherStrandSelect.style.display = '';
+                        teacherStrandSelect.setAttribute('name', 'strand');
+                        teacherStrandSelect.required = true;
                         teacherStrandCol.style.display = '';
                     } else {
+                        // No faculty selected - hide both
                         teacherStrand.value = '';
-                        teacherStrand.disabled = true;
+                        teacherStrand.style.display = '';
+                        teacherStrandSelect.style.display = 'none';
+                        teacherStrandSelect.removeAttribute('name');
+                        teacherStrand.setAttribute('name', 'strand');
                         teacherStrandCol.style.display = 'none';
                     }
                 }

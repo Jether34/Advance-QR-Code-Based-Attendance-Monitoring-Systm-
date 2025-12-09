@@ -2,6 +2,11 @@
 // student_dashboard.php - shows stats for students with same grade, strand, block/section, and adviser
 session_start();
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/page_security.php';
+
+// Initialize page security
+init_page_security();
+
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
     header('Location: login.php');
     exit;
@@ -417,6 +422,12 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
         }
         setInterval(updateClock, 1000);
         updateClock();
+        
+        // Prevent back button from showing cached page
+        window.history.pushState(null, "", window.location.href);        
+        window.onpopstate = function() {
+            window.history.pushState(null, "", window.location.href);
+        };
         </script>
         
         <div class="stats-grid">

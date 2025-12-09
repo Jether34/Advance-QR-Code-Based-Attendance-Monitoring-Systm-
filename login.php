@@ -15,7 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($user && $user['password'] && password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
+            // Regenerate session ID on successful login to prevent session fixation
+            session_regenerate_id(true);
+            $_SESSION['user_id'] = (int)$user['id'];
             $_SESSION['role'] = 'teacher';
             // Log successful teacher login
             log_event($pdo, 'login_success', [
@@ -23,6 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'user_id'   => $user['id'],
                 'email'     => $email,
             ]);
+            // Bypass page security check on first login by not using page token
+            $_SESSION['skip_page_token_check'] = true;
             header('Location: teacher_dashboard.php');
             exit;
         }
@@ -31,7 +35,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($user && $user['password'] && password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
+            // Regenerate session ID on successful login to prevent session fixation
+            session_regenerate_id(true);
+            $_SESSION['user_id'] = (int)$user['id'];
             $_SESSION['role'] = 'student';
             // Log successful student login
             log_event($pdo, 'login_success', [
@@ -39,6 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'user_id'   => $user['id'],
                 'email'     => $email,
             ]);
+            // Bypass page security check on first login by not using page token
+            $_SESSION['skip_page_token_check'] = true;
             header('Location: student_dashboard.php');
             exit;
         }
@@ -174,7 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="login-container">
         <div class="logo-header">
-            <img src="uploads/OIP (1).webp" alt="Palawan National School Logo">
+            <img src="uploads/System logo.jpg" alt="QR Attendance System Logo">
             <div class="school-name">Palawan National School</div>
         </div>
         <div class="login-header">

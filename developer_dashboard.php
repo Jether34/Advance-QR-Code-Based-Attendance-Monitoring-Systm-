@@ -2,6 +2,10 @@
 // developer_dashboard.php - Main dashboard for developers/admins
 session_start();
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/page_security.php';
+
+// Initialize page security
+init_page_security();
 
 // Check if logged in as developer
 if (!isset($_SESSION['developer_id'])) {
@@ -586,5 +590,13 @@ Ask me about the system architecture, database schema, creator information, or a
             <?php endif; ?>
         </div>
     </div>
+    
+    <script>
+        // Prevent back button from showing cached page
+        window.history.pushState(null, "", window.location.href);        
+        window.onpopstate = function() {
+            window.history.pushState(null, "", window.location.href);
+        };
+    </script>
 </body>
 </html>

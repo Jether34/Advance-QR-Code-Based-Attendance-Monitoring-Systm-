@@ -28,28 +28,43 @@ $code = uniqid('u', true); // unique code used in QR/barcode
 
 
 $pdo = get_db();
-if ($role === 'teacher') {
-    $stmt = $pdo->prepare('INSERT INTO teachers (full_name, email, password, gender, grade_level, strand, section_block, faculty) VALUES (:full_name, :email, :password, :gender, :grade_level, :strand, :section_block, :faculty)');
-    $stmt->execute([
-        ':full_name' => $full_name,
-        ':email' => $email,
-        ':password' => $hash,
-        ':gender' => $gender,
-        ':grade_level' => $grade,
-        ':strand' => $strand,
-        ':section_block' => $block,
-        ':faculty' => $faculty
-    ]);
-    // Log signup success for teacher
-    $newId = $pdo->lastInsertId();
-    try {
-        log_event($pdo, 'signup_success', [
-            'user_role' => 'teacher',
-            'user_id'   => $newId,
-            'email'     => $email,
+try {
+    // Check for existing email in teachers and students
+    $check = $pdo->prepare('SELECT id FROM teachers WHERE email = :email LIMIT 1');
+    $check->execute([':email' => $email]);
+    if ($check->fetch()) {
+        header('Location: signup.php?error=' . urlencode('Email already registered (teacher)'));
+        exit;
+    }
+    $check = $pdo->prepare('SELECT id FROM students WHERE email = :email LIMIT 1');
+    $check->execute([':email' => $email]);
+    if ($check->fetch()) {
+        header('Location: signup.php?error=' . urlencode('Email already registered (student)'));
+        exit;
+    }
+
+    if ($role === 'teacher') {
+        $stmt = $pdo->prepare('INSERT INTO teachers (full_name, email, password, gender, grade_level, strand, section_block, faculty) VALUES (:full_name, :email, :password, :gender, :grade_level, :strand, :section_block, :faculty)');
+        $stmt->execute([
+            ':full_name' => $full_name,
+            ':email' => $email,
+            ':password' => $hash,
+            ':gender' => $gender,
+            ':grade_level' => $grade,
+            ':strand' => $strand,
+            ':section_block' => $block,
+            ':faculty' => $faculty
         ]);
-    } catch (Throwable $ignored) {}
-} else {
+        // Log signup success for teacher
+        $newId = $pdo->lastInsertId();
+        try {
+            log_event($pdo, 'signup_success', [
+                'user_role' => 'teacher',
+                'user_id'   => $newId,
+                'email'     => $email,
+            ]);
+        } catch (Throwable $ignored) {}
+    } else {
     // Generate random 6-character student_id with letters, numbers, and symbols
     function generateStudentId($length = 6) {
         $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
@@ -72,18 +87,24 @@ if ($role === 'teacher') {
         ':section_block' => $block
     ]);
     // Log signup success for student
-    $newId = $pdo->lastInsertId();
-    try {
-        log_event($pdo, 'signup_success', [
-            'user_role' => 'student',
-            'user_id'   => $newId,
-            'email'     => $email,
-        ]);
-    } catch (Throwable $ignored) {}
+        $newId = $pdo->lastInsertId();
+        try {
+            log_event($pdo, 'signup_success', [
+                'user_role' => 'student',
+                'user_id'   => $newId,
+                'email'     => $email,
+            ]);
+        } catch (Throwable $ignored) {}
+    }
+
+    $id = $pdo->lastInsertId();
+
+    // Redirect to login page after signup
+    header('Location: login.php?signup=1');
+    exit;
+} catch (PDOException $e) {
+    // Log and show friendly error
+    try { log_event($pdo, 'signup_failed', ['email' => $email, 'message' => $e->getMessage()]); } catch (Throwable $ignored) {}
+    header('Location: signup.php?error=' . urlencode('Unable to create account. Please try again later.'));
+    exit;
 }
-
-$id = $pdo->lastInsertId();
-
-// Redirect to login page after signup
-header('Location: login.php?signup=1');
-exit;

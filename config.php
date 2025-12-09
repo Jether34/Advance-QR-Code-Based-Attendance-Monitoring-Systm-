@@ -18,7 +18,7 @@ if (file_exists(__DIR__ . '/.env')) {
 }
 
 // Server Configuration (from environment or defaults)
-define('SERVER_IP', getenv('SERVER_IP') ?: '192.168.1.12');
+define('SERVER_IP', getenv('SERVER_IP') ?: '169.254.248.166');
 define('SERVER_PORT', getenv('SERVER_PORT') && getenv('SERVER_PORT') != '80' ? ':' . getenv('SERVER_PORT') : '');
 define('PROJECT_PATH', getenv('PROJECT_PATH') ?: '/puta');
 
@@ -40,6 +40,12 @@ date_default_timezone_set(APP_TIMEZONE);
 
 // Security Headers
 if (!headers_sent()) {
+    // Prevent page caching (force fresh page loads)
+    header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+    header("Cache-Control: post-check=0, pre-check=0", false);
+    header("Pragma: no-cache");
+    header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+    
     // Content Security Policy
     header("Content-Security-Policy: default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:;");
     

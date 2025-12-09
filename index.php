@@ -170,6 +170,7 @@
     <div class="home-container">
         <div class="logo-section">
             <img src="uploads/OIP (1).webp" alt="Palawan National School Logo" title="Palawan National School">
+            <img src="uploads/System logo.jpg" alt="QR Attendance System Logo" title="QR Attendance System" style="margin-left: 20px;">
         </div>
         <h1>Palawan National School</h1>
         <div class="subtitle">Hybrid QR Code Based Attendance Monitoring System<br>with AI-Powered Dashboards & Reviewing Center</div>

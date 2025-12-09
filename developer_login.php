@@ -6,7 +6,11 @@ require_once __DIR__ . '/logging.php';
 
 $error = '';
 
+// This page is only for developers/admins
+// Please ensure proper authentication
 // Redirect if already logged in as developer
+// Here, we check if the session variable for developer is set
+// let's assume it's 'developer_id'
 if (isset($_SESSION['developer_id'])) {
     header('Location: developer_dashboard.php');
     exit;
@@ -77,6 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             align-items: center;
             justify-content: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            margin: 0;
         }
         .dev-login-container {
             background: #fff;
@@ -85,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 50px 40px;
             max-width: 420px;
             width: 100%;
+            box-sizing: border-box;
         }
         .dev-header {
             text-align: center;
@@ -98,6 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             align-items: center;
             justify-content: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
         .dev-header p {
             color: #7f8c8d;
@@ -120,6 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 8px;
             font-size: 1em;
             transition: all 0.3s;
+            box-sizing: border-box;
         }
         .form-group input:focus {
             outline: none;
@@ -165,6 +174,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         .footer-link a:hover {
             color: #2d6a4f;
+        }
+        
+        /* Mobile Responsive Styles */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .dev-login-container {
+                padding: 30px 20px;
+                max-width: 100%;
+            }
+            .dev-header h1 {
+                font-size: 1.5em;
+            }
+            .dev-header p {
+                font-size: 0.85em;
+            }
+            .form-group input {
+                font-size: 16px; /* Prevent zoom on iOS */
+                padding: 14px 16px;
+            }
+            .btn-login {
+                padding: 16px;
+                font-size: 1em;
+            }
+            .footer-link a {
+                font-size: 0.85em;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .dev-login-container {
+                padding: 25px 15px;
+                border-radius: 12px;
+            }
+            .dev-header h1 {
+                font-size: 1.3em;
+            }
+            .dev-header {
+                margin-bottom: 24px;
+            }
+            .form-group {
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
