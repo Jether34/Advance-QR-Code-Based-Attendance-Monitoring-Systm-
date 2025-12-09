@@ -9,8 +9,10 @@
     <title>Palawan National School - Hybrid QR Code Based Attendance Monitoring System</title>
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="/puta/manifest.json">
-    <meta name="theme-color" content="#218c21">
+    <meta name="theme-color" content="#196619">
+    <link rel="apple-touch-icon" href="/puta/webapp/icons/apple-touch-180.webp" type="image/webp">
     <link rel="apple-touch-icon" href="/puta/webapp/icons/apple-touch-180.png">
+    <link rel="icon" type="image/webp" sizes="192x192" href="/puta/webapp/icons/icon-192.webp">
     <link rel="icon" sizes="192x192" href="/puta/webapp/icons/icon-192.png">
     <style>
         body {
