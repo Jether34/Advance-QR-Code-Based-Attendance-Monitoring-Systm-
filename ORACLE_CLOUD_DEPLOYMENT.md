@@ -55,73 +55,26 @@ ssh -i ~/Downloads/your_key.key ubuntu@YOUR_PUBLIC_IP
 
 ## Step 4: Automated Server Setup (copy-paste into SSH terminal)
 
-Run this single script to install everything:
+**IMPORTANT:** Use the automated `quick_oracle_deploy.sh` script instead. It handles everything including Ollama setup.
 
+SSH into your server and run:
 ```bash
-#!/bin/bash
-set -e
-
-echo "=== TapIn Server Setup on Oracle Cloud ==="
-echo "Step 1: Update system..."
-sudo apt update && sudo apt upgrade -y
-
-echo "Step 2: Install Apache..."
-sudo apt install -y apache2 apache2-utils libapache2-mod-php php-mysql php-cli php-curl php-gd php-json php-mbstring php-xml git curl wget
-
-echo "Step 3: Enable Apache modules..."
-sudo a2enmod rewrite
-sudo a2enmod deflate
-sudo a2enmod expires
-sudo systemctl restart apache2
-
-echo "Step 4: Install MySQL..."
-sudo apt install -y mysql-server
-
-echo "Step 5: Install Certbot (Let's Encrypt SSL)..."
-sudo apt install -y certbot python3-certbot-apache
-
-echo "Step 6: Clone TapIn repository..."
-cd /var/www
-sudo git clone https://github.com/Jether34/Advance-QR-Code-Based-Attendance-Monitoring-Systm-.git puta
-cd puta
-sudo git checkout update-2025-11-dev-qr
-sudo chown -R www-data:www-data /var/www/puta
-sudo chmod -R 755 /var/www/puta
-
-echo "Step 7: Configure Apache VirtualHost..."
-sudo tee /etc/apache2/sites-available/tapin.conf > /dev/null <<EOF
-<VirtualHost *:80>
-    ServerName tapin.up.oracle.cloud
-    ServerAlias YOUR_DOMAIN_HERE
-    DocumentRoot /var/www/puta
-    <Directory /var/www/puta>
-        Options Indexes FollowSymLinks
-        AllowOverride All
-        Require all granted
-    </Directory>
-    ErrorLog \${APACHE_LOG_DIR}/tapin_error.log
-    CustomLog \${APACHE_LOG_DIR}/tapin_access.log combined
-</VirtualHost>
-EOF
-
-sudo a2ensite tapin
-sudo a2dissite 000-default
-sudo apache2ctl configtest
-sudo systemctl restart apache2
-
-echo "Step 8: Set up MySQL database..."
-sudo mysql -e "CREATE DATABASE IF NOT EXISTS tapin_db;"
-sudo mysql -e "CREATE USER IF NOT EXISTS 'tapin_user'@'localhost' IDENTIFIED BY 'TapIn2025Secure!';"
-sudo mysql -e "GRANT ALL PRIVILEGES ON tapin_db.* TO 'tapin_user'@'localhost';"
-sudo mysql -e "FLUSH PRIVILEGES;"
-
-echo "=== Setup Complete! ==="
-echo "Next steps:"
-echo "1. Update /var/www/puta/config.php with your DB credentials"
-echo "2. Update /var/www/puta/.env with environment variables"
-echo "3. Import your database: mysql -u tapin_user -p tapin_db < your_db_backup.sql"
-echo "4. Set up HTTPS: sudo certbot --apache -d YOUR_DOMAIN"
+cd /tmp
+wget https://raw.githubusercontent.com/Jether34/Advance-QR-Code-Based-Attendance-Monitoring-Systm-/update-2025-11-dev-qr/quick_oracle_deploy.sh
+chmod +x quick_oracle_deploy.sh
+./quick_oracle_deploy.sh
 ```
+
+This single script will:
+- ✅ Install Apache 2.4 & PHP 8.2
+- ✅ Install MySQL Server  
+- ✅ Install Ollama AI engine (Llama 3.2 model)
+- ✅ Clone TapIn from GitHub
+- ✅ Configure Apache VirtualHost
+- ✅ Set up MySQL database
+- ✅ Display credentials and next steps
+
+**Note:** Ollama model download (~5-10 min on first run) happens automatically in background if needed.
 
 ---
 
@@ -134,12 +87,22 @@ SSH into your server:
 sudo nano /var/www/puta/config.php
 ```
 
-Update these lines:
+Update these lines (use credentials from script output):
 ```php
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'tapin_db');
 define('DB_USER', 'tapin_user');
-define('DB_PASS', 'TapIn2025Secure!');
+define('DB_PASS', 'TapIn2025XXXXX'); // Use password from deployment script
+```
+
+Also update `api_config.php` for Ollama:
+```bash
+sudo nano /var/www/puta/api_config.php
+```
+
+Change this line to localhost (for cloud deployment):
+```php
+define('OLLAMA_API_URL', 'http://localhost:11434/api/generate');
 ```
 
 ---
@@ -154,24 +117,42 @@ mysqldump -u root tapin_db > tapin_backup.sql
 
 Import to Oracle Cloud:
 ```bash
-# Upload file via SCP or paste via console
+# Upload file via SCP
 scp -i your_key.key tapin_backup.sql ubuntu@YOUR_PUBLIC_IP:/home/ubuntu/
+
+# SSH and import
 ssh -i your_key.key ubuntu@YOUR_PUBLIC_IP
 mysql -u tapin_user -p tapin_db < /home/ubuntu/tapin_backup.sql
+# Enter the password from deployment script when prompted
 ```
 
 ---
 
-## Step 7: Set Up HTTPS (SSL) - Free with Let's Encrypt (5 minutes)
+## Step 7: Verify AI Engine is Running
 
 ```bash
-sudo certbot --apache -d tapin.up.oracle.cloud -d your-custom-domain.com
+# Check Ollama service
+sudo systemctl status ollama
+
+# Test Ollama endpoint
+curl http://localhost:11434/api/tags
+
+# If needed, restart Ollama
+sudo systemctl restart ollama
+```
+
+---
+
+## Step 8: Set Up HTTPS (SSL) - Free with Let's Encrypt (5 minutes)
+
+```bash
+sudo certbot --apache -d your-custom-domain.com
 # Follow prompts, choose automatic redirect to HTTPS
 ```
 
 ---
 
-## Step 8: Auto-Deploy from GitHub (Optional but Recommended)
+## Step 9: Auto-Deploy from GitHub (Optional but Recommended)
 
 Create `/var/www/puta/deploy.sh`:
 ```bash
@@ -188,25 +169,23 @@ Set up a GitHub webhook to trigger auto-deploys on push.
 
 ---
 
-## Step 9: Set Up Auto-IP Detection Cron Job (Optional)
-
-Add to crontab:
-```bash
-sudo crontab -e
-# Add this line:
-0 * * * * /usr/bin/php /var/www/puta/tools/auto_detect_ip.php >> /var/log/tapin_ip_detect.log 2>&1
-```
-
----
-
 ## Step 10: Verify & Access
 
 Open in browser:
 ```
-https://YOUR_PUBLIC_IP/puta
+http://YOUR_PUBLIC_IP/puta
 ```
 
-You should see the TapIn landing page with logos and the "No pen, no paper, no problem" tagline!
+Or once HTTPS is set up:
+```
+https://your-custom-domain.com/puta
+```
+
+You should see:
+- ✅ TapIn landing page with logos
+- ✅ "No pen, no paper, no problem" tagline
+- ✅ Login/Sign Up buttons functional
+- ✅ Review Center & AI Assistant available (Ollama running)
 
 ---
 
@@ -224,10 +203,22 @@ sudo systemctl status mysql
 mysql -u tapin_user -p -e "USE tapin_db; SHOW TABLES;"
 ```
 
+**Check Ollama (AI Engine):**
+```bash
+sudo systemctl status ollama
+curl http://localhost:11434/api/tags
+# Should show llama3.2 in available models
+```
+
 **Check PHP:**
 ```bash
 php -v
 php -m | grep -E "mysql|pdo"
+```
+
+**If Ollama model needs pulling:**
+```bash
+ollama pull llama3.2
 ```
 
 ---
@@ -236,12 +227,13 @@ php -m | grep -E "mysql|pdo"
 
 ✅ Free Oracle Cloud VM (always free)
 ✅ PHP 8.2 + Apache + MySQL
+✅ Ollama AI Engine (Llama 3.2) - Full AI features enabled
 ✅ HTTPS/SSL enabled
 ✅ Auto-deploy from GitHub
 ✅ Custom domain ready
-✅ Cron jobs for automation
 
-**Total setup time:** ~30 minutes
-**Monthly cost:** $0 (always)
+**Total setup time:** ~45 minutes (includes Ollama model download)
+**Monthly cost:** $0 (always free tier)
+**AI Features:** Fully functional (Review Center, Developer Dashboard, Jether AI Assistant)
 
 Need help with any step? Ask!

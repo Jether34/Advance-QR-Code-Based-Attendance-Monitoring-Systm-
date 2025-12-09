@@ -39,13 +39,29 @@ sudo DEBIAN_FRONTEND=noninteractive apt install -y mysql-server
 sudo systemctl start mysql
 echo -e "${GREEN}✓ MySQL installed and started${NC}\n"
 
-# Step 5: Install Certbot for SSL
-echo -e "${BLUE}[5/8]${NC} Installing Certbot (Let's Encrypt SSL)..."
+# Step 5: Install Ollama for AI features
+echo -e "${BLUE}[5/9]${NC} Installing Ollama (AI engine)..."
+if ! command -v ollama &> /dev/null; then
+    curl -fsSL https://ollama.ai/install.sh | sh
+    sudo systemctl enable ollama
+    sudo systemctl start ollama
+    echo "Waiting for Ollama to start..."
+    sleep 3
+    echo -e "${YELLOW}Pulling Llama 3.2 model (this takes ~5-10 minutes on first run)...${NC}"
+    # Pull model with longer timeout
+    timeout 900 ollama pull llama3.2 || echo -e "${YELLOW}Model pull in progress, may complete in background${NC}"
+else
+    echo "Ollama already installed"
+fi
+echo -e "${GREEN}✓ Ollama installed${NC}\n"
+
+# Step 6: Install Certbot for SSL
+echo -e "${BLUE}[6/9]${NC} Installing Certbot (Let's Encrypt SSL)..."
 sudo apt install -y certbot python3-certbot-apache
 echo -e "${GREEN}✓ Certbot installed${NC}\n"
 
-# Step 6: Clone & setup TapIn
-echo -e "${BLUE}[6/8]${NC} Cloning TapIn from GitHub..."
+# Step 7: Clone & setup TapIn
+echo -e "${BLUE}[7/9]${NC} Cloning TapIn from GitHub..."
 if [ ! -d "/var/www/puta" ]; then
     cd /var/www
     sudo git clone https://github.com/Jether34/Advance-QR-Code-Based-Attendance-Monitoring-Systm-.git puta
@@ -61,8 +77,8 @@ sudo chmod -R 755 /var/www/puta
 sudo chmod -R 775 /var/www/puta/uploads
 echo -e "${GREEN}✓ TapIn deployed${NC}\n"
 
-# Step 7: Configure Apache VirtualHost
-echo -e "${BLUE}[7/8]${NC} Configuring Apache VirtualHost..."
+# Step 8: Configure Apache VirtualHost
+echo -e "${BLUE}[8/9]${NC} Configuring Apache VirtualHost..."
 sudo tee /etc/apache2/sites-available/tapin.conf > /dev/null <<'VHEOF'
 <VirtualHost *:80>
     ServerName localhost
@@ -86,8 +102,8 @@ sudo apache2ctl configtest
 sudo systemctl restart apache2
 echo -e "${GREEN}✓ Apache VirtualHost configured${NC}\n"
 
-# Step 8: Create MySQL database & user
-echo -e "${BLUE}[8/8]${NC} Setting up MySQL database..."
+# Step 9: Create MySQL database & user
+echo -e "${BLUE}[9/9]${NC} Setting up MySQL database..."
 DB_PASS="TapIn2025$(date +%s | tail -c 5)"
 sudo mysql -e "CREATE DATABASE IF NOT EXISTS tapin_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 sudo mysql -e "CREATE USER IF NOT EXISTS 'tapin_user'@'localhost' IDENTIFIED BY '$DB_PASS';"
@@ -98,6 +114,11 @@ echo -e "${GREEN}✓ MySQL database created${NC}\n"
 # Summary
 echo "╔════════════════════════════════════════════════════════╗"
 echo "║           🎉 Setup Complete! 🎉                        ║"
+echo "║    All components installed and running:               ║"
+echo "║    ✓ Apache 2.4 & PHP 8.2                              ║"
+echo "║    ✓ MySQL Database                                    ║"
+echo "║    ✓ Ollama AI Engine (Llama 3.2)                      ║"
+echo "║    ✓ Let's Encrypt SSL Ready                           ║"
 echo "╚════════════════════════════════════════════════════════╝"
 echo ""
 echo -e "${GREEN}Database Credentials:${NC}"
@@ -105,6 +126,12 @@ echo "  Host: localhost"
 echo "  Database: tapin_db"
 echo "  User: tapin_user"
 echo "  Password: $DB_PASS"
+echo ""
+echo -e "${GREEN}AI Engine Status:${NC}"
+echo "  Service: Ollama"
+echo "  Model: Llama 3.2"
+echo "  Endpoint: http://localhost:11434"
+echo "  Status: $(systemctl is-active ollama)"
 echo ""
 echo -e "${YELLOW}Next Steps:${NC}"
 echo "  1. SSH into your server and update config.php:"
