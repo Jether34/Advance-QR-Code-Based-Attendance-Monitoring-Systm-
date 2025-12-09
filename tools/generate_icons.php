@@ -2,7 +2,9 @@
 // generate_icons.php - create PNG app icons from uploads/System logo.jpg
 // Usage: php tools/generate_icons.php
 
-$src = __DIR__ . '/../uploads/System logo.jpg';
+$webp_src = __DIR__ . '/../uploads/System logo.webp';
+$jpg_src = __DIR__ . '/../uploads/System logo.jpg';
+$src = file_exists($webp_src) ? $webp_src : $jpg_src;
 $outDir = __DIR__ . '/../webapp/icons';
 $sizes = [
     192 => 'icon-192.png',
@@ -31,6 +33,15 @@ switch ($info[2]) {
     case IMAGETYPE_PNG:
         $img = imagecreatefrompng($src);
         break;
+    case defined('IMAGETYPE_WEBP') ? IMAGETYPE_WEBP : -1:
+        // imagecreatefromwebp available on PHP/GD builds with WebP support
+        if (function_exists('imagecreatefromwebp')) {
+            $img = imagecreatefromwebp($src);
+        } else {
+            fwrite(STDERR, "WebP source found but imagecreatefromwebp() not available.\n");
+            exit(3);
+        }
+        break;
     default:
         fwrite(STDERR, "Unsupported image type for $src\n");
         exit(3);
@@ -55,14 +66,29 @@ foreach ($sizes as $size => $filename) {
     $dy = (int)(($size - $nh) / 2);
 
     imagecopyresampled($dst, $img, $dx, $dy, 0, 0, $nw, $nh, $w, $h);
-    if (!imagepng($dst, $dstPath)) {
+
+    // write compressed PNG (level 6)
+    if (!imagepng($dst, $dstPath, 6)) {
         fwrite(STDERR, "Failed to write $dstPath\n");
     } else {
         echo "Created $dstPath\n";
     }
+
+    // also write a WebP version if supported
+    $webpPath = preg_replace('/\.png$/', '.webp', $dstPath);
+    if (function_exists('imagewebp')) {
+        // quality 80
+        if (imagewebp($dst, $webpPath, 80)) {
+            echo "Created $webpPath\n";
+        } else {
+            fwrite(STDERR, "Failed to write $webpPath\n");
+        }
+    }
+
     imagedestroy($dst);
 }
 
 imagedestroy($img);
 echo "Icon generation complete.\n";
 ?>
+

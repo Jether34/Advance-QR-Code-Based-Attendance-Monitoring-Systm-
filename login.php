@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-bottom: 12px;
         }
         .logo-header .school-name {
-            color: #218c21;
+            color: #196619;
             font-size: 1.2em;
             font-weight: 700;
             margin-bottom: 4px;
@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-bottom: 32px;
         }
         .login-header h1 {
-            color: #218c21;
+            color: #196619;
             font-size: 2em;
             margin-bottom: 8px;
         }
@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #218c21;
+            color: #196619;
             font-weight: 600;
         }
         .form-group input {
@@ -143,13 +143,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             box-sizing: border-box;
         }
         .form-group input:focus {
-            border-color: #218c21;
-            box-shadow: 0 0 0 3px rgba(33, 140, 33, 0.1);
+            border-color: #196619;
+            box-shadow: 0 0 0 3px rgba(25, 102, 25, 0.08);
         }
         .btn-login {
             width: 100%;
             padding: 14px;
-            background: #218c21;
+            background: #196619;
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -159,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             transition: all 0.3s;
         }
         .btn-login:hover {
-            background: #176617;
+            background: #155a15;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(33, 140, 33, 0.3);
         }
@@ -182,7 +182,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="login-container">
         <div class="logo-header">
-            <img src="uploads/System logo.jpg" alt="QR Attendance System Logo">
+            <picture>
+                <source srcset="uploads/System logo.webp" type="image/webp">
+                <img src="uploads/System logo.jpg" alt="QR Attendance System Logo" width="70" height="70" loading="eager">
+            </picture>
             <div class="school-name">Palawan National School</div>
         </div>
         <div class="login-header">

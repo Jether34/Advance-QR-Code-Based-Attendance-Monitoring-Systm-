@@ -2,7 +2,7 @@
 // Simple index with links
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -39,7 +39,7 @@
             margin-bottom: 16px;
         }
         .home-container h1 {
-            color: #218c21;
+            color: #196619;
             font-size: 2.5em;
             margin-bottom: 8px;
             line-height: 1.3;
@@ -63,7 +63,7 @@
         }
         .btn-home {
             padding: 16px 32px;
-            background: #218c21;
+            background: #196619;
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -75,14 +75,14 @@
             display: inline-block;
         }
         .btn-home:hover {
-            background: #176617;
+            background: #155a15;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(33, 140, 33, 0.3);
         }
         .btn-secondary {
             background: #fff;
-            color: #218c21;
-            border: 2px solid #218c21;
+            color: #196619;
+            border: 2px solid #196619;
         }
         .btn-secondary:hover {
             background: #eaffea;
@@ -173,8 +173,11 @@
 <body>
     <div class="home-container">
         <div class="logo-section">
-            <img src="uploads/OIP (1).webp" alt="Palawan National School Logo" title="Palawan National School">
-            <img src="uploads/System logo.jpg" alt="QR Attendance System Logo" title="QR Attendance System" style="margin-left: 20px;">
+            <img src="uploads/OIP (1).webp" alt="Palawan National School Logo" title="Palawan National School" width="70" height="70">
+            <picture>
+                <source srcset="uploads/System logo.webp" type="image/webp">
+                <img src="uploads/System logo.jpg" alt="QR Attendance System Logo" title="QR Attendance System" width="70" height="70" style="margin-left: 20px;" loading="eager">
+            </picture>
         </div>
         <h1>Palawan National School</h1>
         <div class="subtitle">Hybrid QR Code Based Attendance Monitoring System<br>with AI-Powered Dashboards & Reviewing Center</div>
@@ -206,7 +209,7 @@
         installBtn.style.position = 'fixed';
         installBtn.style.right = '18px';
         installBtn.style.bottom = '18px';
-        installBtn.style.background = '#218c21';
+        installBtn.style.background = '#196619';
         installBtn.style.color = '#fff';
         installBtn.style.border = 'none';
         installBtn.style.padding = '10px 14px';

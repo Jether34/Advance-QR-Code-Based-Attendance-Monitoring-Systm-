@@ -43,7 +43,10 @@ if (file_exists($school_logo)) {
 }
 
 // System Logo
-$system_logo = __DIR__ . '/../uploads/System logo.jpg';
+$system_logo = __DIR__ . '/../uploads/System logo.webp';
+if (!file_exists($system_logo)) {
+    $system_logo = __DIR__ . '/../uploads/System logo.jpg';
+}
 if (file_exists($system_logo)) {
     $pdf->Image($system_logo, 155, 20, 40, 40, '', '', '', false, 300, '', false, false, 0);
 }

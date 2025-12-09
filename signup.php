@@ -2,7 +2,7 @@
 // signup.php - renders signup form and handles role-specific fields client-side
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -34,7 +34,7 @@
             margin-bottom: 12px;
         }
         .logo-header .school-name {
-            color: #218c21;
+            color: #196619;
             font-size: 1.2em;
             font-weight: 700;
             margin-bottom: 4px;
@@ -44,7 +44,7 @@
             margin-bottom: 32px;
         }
         .signup-header h1 {
-            color: #218c21;
+            color: #196619;
             font-size: 2em;
             margin-bottom: 8px;
         }
@@ -58,7 +58,7 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #218c21;
+            color: #196619;
             font-weight: 600;
         }
         .form-group input, .form-group select {
@@ -71,8 +71,8 @@
             box-sizing: border-box;
         }
         .form-group input:focus, .form-group select:focus {
-            border-color: #218c21;
-            box-shadow: 0 0 0 3px rgba(33, 140, 33, 0.1);
+            border-color: #196619;
+            box-shadow: 0 0 0 3px rgba(25, 102, 25, 0.08);
         }
         .row {
             display: flex;
@@ -84,7 +84,7 @@
         .btn-signup {
             width: 100%;
             padding: 14px;
-            background: #218c21;
+            background: #196619;
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -95,7 +95,7 @@
             margin-top: 10px;
         }
         .btn-signup:hover {
-            background: #176617;
+            background: #155a15;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(33, 140, 33, 0.3);
         }
@@ -118,7 +118,7 @@
             padding: 16px;
             background: #f0f7f0;
             border-radius: 8px;
-            border-left: 4px solid #218c21;
+            border-left: 4px solid #196619;
         }
         .checkbox-label {
             display: flex;
@@ -134,7 +134,7 @@
             height: 20px;
             margin-top: 2px;
             cursor: pointer;
-            accent-color: #218c21;
+            accent-color: #196619;
             flex-shrink: 0;
         }
         .terms-links {
@@ -145,7 +145,7 @@
             flex-wrap: wrap;
         }
         .terms-links a {
-            color: #218c21;
+            color: #196619;
             text-decoration: none;
             font-weight: 600;
             border-bottom: 2px solid #b2e2b2;
@@ -190,7 +190,7 @@
             border-bottom: 2px solid #b2e2b2;
         }
         .modal-header h2 {
-            color: #218c21;
+            color: #196619;
             font-size: 1.6em;
             margin: 0;
         }
@@ -218,7 +218,7 @@
             line-height: 1.6;
         }
         .modal-body h3 {
-            color: #218c21;
+            color: #196619;
             margin-top: 20px;
             margin-bottom: 12px;
             font-size: 1.1em;
@@ -237,7 +237,7 @@
             border-top: 1px solid #b2e2b2;
         }
         .btn-modal {
-            background: #218c21;
+            background: #196619;
             color: #fff;
             border: none;
             padding: 12px 24px;
@@ -248,7 +248,7 @@
             transition: all 0.3s;
         }
         .btn-modal:hover {
-            background: #176617;
+            background: #155a15;
         }
         @media screen and (max-width: 768px) {
             .modal-content {
@@ -265,7 +265,10 @@
 <body>
     <div class="signup-container">
         <div class="logo-header">
-            <img src="uploads/System logo.jpg" alt="QR Attendance System Logo">
+            <picture>
+                <source srcset="uploads/System logo.webp" type="image/webp">
+                <img src="uploads/System logo.jpg" alt="QR Attendance System Logo" width="70" height="70" loading="eager">
+            </picture>
             <div class="school-name">Palawan National School</div>
         </div>
         <div class="signup-header">
