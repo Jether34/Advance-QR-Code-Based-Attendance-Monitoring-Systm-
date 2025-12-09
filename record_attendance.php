@@ -100,7 +100,12 @@ function calculateAttendanceStatus($record) {
         }
     }
     
-    // Full day present: both morning and afternoon sessions
+    // Perfect attendance: All 4 scans completed = PRESENT (regardless of late)
+    if ($morning_in && $morning_out && $afternoon_in && $afternoon_out) {
+        return 'present';
+    }
+    
+    // Full day with missing out scans: both morning and afternoon IN scans
     if ($morning_in && $afternoon_in) {
         if ($morning_late) {
             return 'late'; // Late if morning in was late

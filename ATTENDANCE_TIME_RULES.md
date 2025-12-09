@@ -62,19 +62,21 @@ The system enforces strict time-based scanning rules to ensure accurate attendan
 
 ### **Status Determination Logic**
 
-| Morning In | Afternoon In | Final Status | Explanation |
-|------------|--------------|--------------|-------------|
-| ✅ 6:00-9:00 | ✅ Yes | **PRESENT** | Full day attendance, on time |
-| ✅ 9:01-11:35 | ✅ Yes | **LATE** | Full day but arrived late |
-| ✅ Any time | ❌ No | **MORNING_HALF_DAY** | Only morning session |
-| ❌ No | ✅ Yes | **AFTERNOON_HALF_DAY** | Only afternoon session |
-| ❌ No | ❌ No | **ABSENT** | No scans recorded |
+| Morning In | Morning Out | Afternoon In | Afternoon Out | Final Status | Explanation |
+|------------|-------------|--------------|---------------|--------------|-------------|
+| ✅ Any time | ✅ Yes | ✅ Yes | ✅ Yes | **PRESENT** | All 4 scans completed (perfect attendance) |
+| ✅ 6:00-9:00 | ❌ No | ✅ Yes | ❌ No | **PRESENT** | Both IN scans, on time |
+| ✅ 9:01-11:35 | ❌ No | ✅ Yes | ❌ No | **LATE** | Both IN scans but arrived late |
+| ✅ Any time | ✅/❌ Any | ❌ No | ❌ No | **MORNING_HALF_DAY** | Only morning session |
+| ❌ No | ❌ No | ✅ Yes | ✅/❌ Any | **AFTERNOON_HALF_DAY** | Only afternoon session |
+| ❌ No | ❌ No | ❌ No | ❌ No | **ABSENT** | No scans recorded |
 
 ### **Detailed Status Definitions**
 
 **PRESENT** ✅
-- Scanned morning in (6:00-9:00 AM) AND afternoon in (12:46-3:45 PM)
-- Considered full day attendance
+- **PERFECT:** All 4 scans completed (morning in + out, afternoon in + out) = PRESENT
+- **MINIMUM:** Scanned morning in (6:00-9:00 AM) AND afternoon in (12:46-3:45 PM) = PRESENT
+- OUT scans are optional for PRESENT status, but recommended for complete tracking
 - Counts as 1.0 attendance day
 
 **LATE** ⚠️
@@ -168,27 +170,32 @@ The system enforces strict time-based scanning rules to ensure accurate attendan
 
 ### **Example Scanning Scenarios:**
 
-**Scenario 1: Full Day Present (On Time)**
+**Scenario 1: Perfect Attendance (All 4 Scans)**
 - 7:30 AM - Scan morning in ✅ → Status: morning_half_day
 - 12:30 PM - Scan morning out ✅ → Status: morning_half_day
-- 1:00 PM - Scan afternoon in ✅ → **Status: PRESENT**
-- 5:00 PM - Scan afternoon out ✅ → Status: PRESENT
+- 1:00 PM - Scan afternoon in ✅ → Status: present
+- 5:00 PM - Scan afternoon out ✅ → **Status: PRESENT** (Perfect - all 4 scans)
 
-**Scenario 2: Late Full Day**
+**Scenario 2: Full Day Present (Minimum Required)**
+- 8:00 AM - Scan morning in ✅ → Status: morning_half_day
+- 1:30 PM - Scan afternoon in ✅ → **Status: PRESENT** (Both IN scans completed)
+- (Morning out and afternoon out optional)
+
+**Scenario 3: Late Full Day**
 - 10:00 AM - Scan morning in ✅ → Status: morning_half_day (late)
 - 2:00 PM - Scan afternoon in ✅ → **Status: LATE**
 
-**Scenario 3: Morning Half Day**
+**Scenario 4: Morning Half Day**
 - 8:00 AM - Scan morning in ✅ → Status: morning_half_day
 - 12:15 PM - Scan morning out ✅ → **Status: MORNING_HALF_DAY**
 - (No afternoon scans)
 
-**Scenario 4: Afternoon Half Day**
+**Scenario 5: Afternoon Half Day**
 - (No morning scans)
 - 1:30 PM - Scan afternoon in ✅ → **Status: AFTERNOON_HALF_DAY**
 - 6:00 PM - Scan afternoon out ✅ → Status: AFTERNOON_HALF_DAY
 
-**Scenario 5: Absent**
+**Scenario 6: Absent**
 - (No scans all day)
 - 7:00 PM - System auto-marks → **Status: ABSENT**
 
