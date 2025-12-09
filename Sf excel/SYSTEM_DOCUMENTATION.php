@@ -680,21 +680,24 @@ $security_measures = [
     'Authentication and Authorization' => [
         'Session-based user authentication',
         'Role-based access control (teachers vs students)',
-        'Password hashing with PHP password_hash()',
+        'Password hashing with PHP password_hash() bcrypt algorithm',
         'Session timeout and regeneration',
-        'Login attempt monitoring',
+        'Login attempt monitoring and rate limiting',
     ],
     
     'Input Validation and Sanitization' => [
         'Parameterized SQL queries (PDO prepared statements)',
         'Input validation for all user-submitted data',
         'HTML special character escaping to prevent XSS',
+        'Output sanitization with sanitize_output() utility',
         'File upload validation and type checking',
         'Email format validation',
     ],
     
     'Database Security' => [
         'PDO with prepared statements prevents SQL injection',
+        'Environment variables for database credentials (.env file)',
+        'Database credentials never exposed in source code',
         'Minimal database user privileges (principle of least privilege)',
         'UTF-8 character encoding to prevent encoding attacks',
         'InnoDB engine with ACID compliance',
@@ -702,11 +705,14 @@ $security_measures = [
     ],
     
     'Network Security' => [
+        'SSL/TLS encryption (HTTPS) - fully implemented',
+        'TLS 1.2 and TLS 1.3 support (older protocols disabled)',
+        'Security headers (HSTS, X-Frame-Options, CSP, X-XSS-Protection)',
         'Local network deployment (no internet exposure)',
         'Apache HTTP Server with configured security modules',
         'Windows Firewall rules for controlled access',
         'IP-based access restriction capability',
-        'HTTPS recommendation for production deployment',
+        'Multi-network support with automatic detection',
     ],
     
     'Data Privacy' => [
@@ -715,14 +721,29 @@ $security_measures = [
         'Minimal data collection (only essential information)',
         'Profile edit logging for audit trail',
         'Attendance data retention policies',
+        'Data Privacy Act of 2012 compliance (Philippines)',
+        'No sensitive data visible in browser source code',
     ],
     
     'Application Security' => [
-        'CSRF token implementation (recommended)',
+        'CSRF token generation and validation (implemented)',
         'Session fixation prevention',
         'Error message sanitization (no sensitive data in errors)',
         'Secure configuration files (.env pattern)',
         'Version control with .gitignore for sensitive files',
+        'Console.log protection (disabled in production mode)',
+        'XSS protection with Content Security Policy',
+        'Rate limiting for brute force attack prevention',
+        'Secure session management with httponly cookies',
+    ],
+    
+    'Source Code Protection' => [
+        'Database credentials stored in .env file (not in code)',
+        'No sensitive data visible when viewing page source (Ctrl+U)',
+        'Console.log statements disabled in production mode',
+        'Developer comments removed from production output',
+        'Security utilities (config.php) with built-in protections',
+        'API endpoints protected with validation',
     ],
 ];
 
@@ -759,15 +780,15 @@ $pdf->Ln(3);
 
 $recommendations = [
     'HTTPS Implementation' => [
-        'priority' => 'HIGH',
-        'description' => 'Deploy SSL/TLS certificates for encrypted communication. Use Let\'s Encrypt for free SSL certificates or purchase commercial certificates for production.',
-        'implementation' => 'Configure Apache with mod_ssl, generate/obtain SSL certificates, update all URLs to HTTPS, implement HTTP to HTTPS redirection.',
+        'priority' => 'COMPLETED',
+        'description' => 'SSL/TLS encryption fully implemented with self-signed certificates. TLS 1.2/1.3 enabled, old protocols disabled. Security headers configured (HSTS, X-Frame-Options, CSP).',
+        'implementation' => 'Apache configured with mod_ssl, certificates generated for all network IPs, HTTPS active on port 443, HTTP to HTTPS redirection available. See SSL_TLS_GUIDE.md for details.',
     ],
     
     'CSRF Protection' => [
-        'priority' => 'HIGH',
-        'description' => 'Implement Cross-Site Request Forgery tokens for all state-changing operations (POST requests).',
-        'implementation' => 'Generate unique tokens per session, include in forms, validate on submission, reject requests with invalid/missing tokens.',
+        'priority' => 'COMPLETED',
+        'description' => 'Cross-Site Request Forgery protection implemented with token validation for all state-changing operations.',
+        'implementation' => 'CSRF tokens generated per session via config.php, included in all forms, validated on submission. Invalid/missing tokens result in request rejection.',
     ],
     
     'Password Policy Enhancement' => [
@@ -808,7 +829,14 @@ $recommendations = [
 ];
 
 foreach ($recommendations as $title => $rec) {
-    $priority_color = $rec['priority'] === 'HIGH' ? [255, 87, 34] : ($rec['priority'] === 'MEDIUM' ? [255, 152, 0] : [76, 175, 80]);
+    // Map priority to color - COMPLETED is green like LOW
+    $priority_colors = [
+        'COMPLETED' => [76, 175, 80],  // Green
+        'HIGH' => [255, 87, 34],       // Red
+        'MEDIUM' => [255, 152, 0],     // Orange
+        'LOW' => [76, 175, 80]         // Green
+    ];
+    $priority_color = $priority_colors[$rec['priority']] ?? [158, 158, 158];
     
     $pdf->SetFont('helvetica', 'B', 11);
     $pdf->Cell(0, 6, $title, 0, 1, 'L');
@@ -826,6 +854,81 @@ foreach ($recommendations as $title => $rec) {
     $pdf->MultiCell(0, 4, 'Implementation: ' . $rec['implementation'], 0, 'J');
     $pdf->Ln(3);
 }
+
+//=============================================================================
+// SECTION 10.5: VIEW SOURCE PROTECTION (Ctrl+U Security)
+//=============================================================================
+$pdf->AddPage();
+$pdf->SetFont('helvetica', 'B', 16);
+$pdf->Cell(0, 10, '10.5 View Source Protection (Ctrl+U Security)', 0, 1, 'L');
+$pdf->Ln(3);
+
+$pdf->SetFont('helvetica', '', 10);
+$view_source_intro = <<<EOD
+When users press Ctrl+U or right-click to "View Page Source", the system ensures no sensitive information is exposed in the HTML source code. The following protections are implemented:
+EOD;
+$pdf->MultiCell(0, 5, $view_source_intro, 0, 'J');
+$pdf->Ln(3);
+
+$pdf->SetFont('helvetica', 'B', 12);
+$pdf->SetFillColor(220, 237, 200);
+$pdf->Cell(0, 7, 'Protected Information', 0, 1, 'L', true);
+$pdf->Ln(2);
+
+$protected_info = [
+    'Database Credentials' => 'Stored in .env file, never hardcoded in PHP files. Environment variables loaded via config.php with secure access controls.',
+    
+    'API Keys and Secrets' => 'All sensitive keys stored in .env file. CSRF tokens dynamically generated per session. No API keys visible in JavaScript or HTML.',
+    
+    'Console.log Statements' => 'Production mode automatically disables console.log() statements. Debug information only visible in development mode.',
+    
+    'Developer Comments' => 'HTML comments containing sensitive information are removed in production. Only user-facing comments remain in source code.',
+    
+    'Session Data' => 'PHP session variables never exposed to client. User authentication handled entirely server-side.',
+    
+    'Database Queries' => 'SQL queries executed server-side only. No database structure or query logic visible in page source.',
+];
+
+$pdf->SetFont('helvetica', '', 9);
+foreach ($protected_info as $item => $description) {
+    $pdf->SetFont('helvetica', 'B', 10);
+    $pdf->Cell(5);
+    $pdf->Cell(5, 5, chr(0xE2).chr(0x9C).chr(0x93), 0, 0, 'L'); // checkmark
+    $pdf->Cell(0, 5, $item, 0, 1, 'L');
+    
+    $pdf->SetFont('helvetica', '', 9);
+    $pdf->Cell(10);
+    $pdf->MultiCell(0, 4, $description, 0, 'J');
+    $pdf->Ln(2);
+}
+
+$pdf->Ln(2);
+$pdf->SetFont('helvetica', 'B', 12);
+$pdf->SetFillColor(255, 243, 224);
+$pdf->Cell(0, 7, 'Security Implementation', 0, 1, 'L', true);
+$pdf->Ln(2);
+
+$pdf->SetFont('helvetica', '', 9);
+$implementation_text = <<<EOD
+Environment Variables (.env file):
+Database credentials, production mode flag, security keys stored outside version control.
+
+Configuration Security (config.php):
+sanitize_output() prevents XSS, generate_csrf_token() creates session tokens, validate_csrf_token() verifies forms.
+
+Production Mode Protection:
+Console.log disabled, error messages sanitized, debug information hidden.
+
+HTML Output Sanitization:
+All user input escaped with htmlspecialchars(), special characters converted to entities.
+
+Server-Side Processing:
+Authentication, database queries, and business logic run entirely in PHP, never exposed to client.
+
+Testing: Press Ctrl+U on any page and search for "password", "api_key", "database" - none should be visible.
+EOD;
+
+$pdf->MultiCell(0, 4, $implementation_text, 0, 'L');
 
 //=============================================================================
 // SECTION 11: FUTURE DEVELOPMENT
