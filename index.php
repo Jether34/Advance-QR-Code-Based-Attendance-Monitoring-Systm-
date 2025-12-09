@@ -197,6 +197,47 @@
                 });
             });
         }
+
+        // Install prompt handling
+        let deferredPrompt;
+        const installBtn = document.createElement('button');
+        installBtn.id = 'pwaInstallBtn';
+        installBtn.style.position = 'fixed';
+        installBtn.style.right = '18px';
+        installBtn.style.bottom = '18px';
+        installBtn.style.background = '#218c21';
+        installBtn.style.color = '#fff';
+        installBtn.style.border = 'none';
+        installBtn.style.padding = '10px 14px';
+        installBtn.style.borderRadius = '8px';
+        installBtn.style.boxShadow = '0 6px 18px rgba(0,0,0,0.12)';
+        installBtn.style.fontWeight = '700';
+        installBtn.style.display = 'none';
+        installBtn.textContent = 'Install App';
+        document.body.appendChild(installBtn);
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            deferredPrompt = e;
+            // Show the install button
+            installBtn.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            installBtn.style.display = 'none';
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log('PWA install outcome:', outcome);
+            deferredPrompt = null;
+        });
+
+        // Hide button if app already installed
+        window.addEventListener('appinstalled', () => {
+            installBtn.style.display = 'none';
+            console.log('PWA installed');
+        });
     </script>
 </body>
 </html>
