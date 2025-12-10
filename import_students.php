@@ -1,7 +1,10 @@
 <?php
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 date_default_timezone_set('Asia/Manila');
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/security_utils.php';
+
+$csrf_token = generate_csrf_token();
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
     header('Location: login.php');
@@ -23,73 +26,78 @@ $error_count = 0;
 
 // Handle CSV file upload
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
-    $file = $_FILES['csv_file'];
-    
-    if ($file['error'] === 0 && in_array(pathinfo($file['name'], PATHINFO_EXTENSION), ['csv', 'txt'])) {
-        $handle = fopen($file['tmp_name'], 'r');
-        
-        // Skip header row
-        $header = fgetcsv($handle);
-        $expectedHeaders = ['student_id', 'full_name', 'grade_level', 'strand', 'section_block'];
-        
-        if ($header !== $expectedHeaders) {
-            $messages[] = ['error' => '❌ CSV format invalid. Expected columns: ' . implode(', ', $expectedHeaders)];
-        } else {
-            $pdo->beginTransaction();
-            
-            while (($row = fgetcsv($handle)) !== false) {
-                if (count($row) < 5 || empty($row[0])) continue;
-                
-                $studentId = trim($row[0]);
-                $fullName = trim($row[1]);
-                $gradeLevel = trim($row[2]);
-                $strand = trim($row[3]);
-                $sectionBlock = trim($row[4]);
-                
-                // Validate data
-                if (!$studentId || !$fullName) {
-                    $error_count++;
-                    continue;
-                }
-                
-                try {
-                    // Check if exists
-                    $checkStmt = $pdo->prepare('SELECT id FROM students WHERE student_id = :sid');
-                    $checkStmt->execute([':sid' => $studentId]);
-                    
-                    if ($checkStmt->fetch()) {
-                        // Update existing
-                        $updateStmt = $pdo->prepare('UPDATE students SET full_name = :name, grade_level = :grade, strand = :strand, section_block = :block WHERE student_id = :sid');
-                        $updateStmt->execute([
-                            ':name' => $fullName,
-                            ':grade' => $gradeLevel,
-                            ':strand' => $strand,
-                            ':block' => $sectionBlock,
-                            ':sid' => $studentId
-                        ]);
-                    } else {
-                        // Insert new
-                        $insertStmt = $pdo->prepare('INSERT INTO students (student_id, full_name, grade_level, strand, section_block) VALUES (:sid, :name, :grade, :strand, :block)');
-                        $insertStmt->execute([
-                            ':sid' => $studentId,
-                            ':name' => $fullName,
-                            ':grade' => $gradeLevel,
-                            ':strand' => $strand,
-                            ':block' => $sectionBlock
-                        ]);
-                    }
-                    $uploaded_count++;
-                } catch (Exception $e) {
-                    $error_count++;
-                }
-            }
-            
-            $pdo->commit();
-            fclose($handle);
-            $messages[] = ['success' => "✅ Imported {$uploaded_count} students. Errors: {$error_count}"];
-        }
+    $token = $_POST['csrf_token'] ?? '';
+    if (!verify_csrf_token($token)) {
+        $messages[] = ['error' => '❌ Invalid CSRF token.'];
     } else {
-        $messages[] = ['error' => '❌ Invalid file. Please upload a CSV file.'];
+        $file = $_FILES['csv_file'];
+        
+        if ($file['error'] === 0 && in_array(pathinfo($file['name'], PATHINFO_EXTENSION), ['csv', 'txt'])) {
+            $handle = fopen($file['tmp_name'], 'r');
+            
+            // Skip header row
+            $header = fgetcsv($handle);
+            $expectedHeaders = ['student_id', 'full_name', 'grade_level', 'strand', 'section_block'];
+            
+            if ($header !== $expectedHeaders) {
+                $messages[] = ['error' => '❌ CSV format invalid. Expected columns: ' . implode(', ', $expectedHeaders)];
+            } else {
+                $pdo->beginTransaction();
+                
+                while (($row = fgetcsv($handle)) !== false) {
+                    if (count($row) < 5 || empty($row[0])) continue;
+                    
+                    $studentId = trim($row[0]);
+                    $fullName = trim($row[1]);
+                    $gradeLevel = trim($row[2]);
+                    $strand = trim($row[3]);
+                    $sectionBlock = trim($row[4]);
+                    
+                    // Validate data
+                    if (!$studentId || !$fullName) {
+                        $error_count++;
+                        continue;
+                    }
+                    
+                    try {
+                        // Check if exists
+                        $checkStmt = $pdo->prepare('SELECT id FROM students WHERE student_id = :sid');
+                        $checkStmt->execute([':sid' => $studentId]);
+                        
+                        if ($checkStmt->fetch()) {
+                            // Update existing
+                            $updateStmt = $pdo->prepare('UPDATE students SET full_name = :name, grade_level = :grade, strand = :strand, section_block = :block WHERE student_id = :sid');
+                            $updateStmt->execute([
+                                ':name' => $fullName,
+                                ':grade' => $gradeLevel,
+                                ':strand' => $strand,
+                                ':block' => $sectionBlock,
+                                ':sid' => $studentId
+                            ]);
+                        } else {
+                            // Insert new
+                            $insertStmt = $pdo->prepare('INSERT INTO students (student_id, full_name, grade_level, strand, section_block) VALUES (:sid, :name, :grade, :strand, :block)');
+                            $insertStmt->execute([
+                                ':sid' => $studentId,
+                                ':name' => $fullName,
+                                ':grade' => $gradeLevel,
+                                ':strand' => $strand,
+                                ':block' => $sectionBlock
+                            ]);
+                        }
+                        $uploaded_count++;
+                    } catch (Exception $e) {
+                        $error_count++;
+                    }
+                }
+                
+                $pdo->commit();
+                fclose($handle);
+                $messages[] = ['success' => "✅ Imported {$uploaded_count} students. Errors: {$error_count}"];
+            }
+        } else {
+            $messages[] = ['error' => '❌ Invalid file. Please upload a CSV file.'];
+        }
     }
 }
 
@@ -267,6 +275,7 @@ if (isset($_GET['download_template'])) {
         </div>
 
         <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
             <div class="upload-box" onclick="document.getElementById('csv_file').click()">
                 <div class="file-icon">📁</div>
                 <div class="upload-text">Click to select CSV file</div>

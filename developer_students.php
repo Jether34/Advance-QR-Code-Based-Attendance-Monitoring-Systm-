@@ -1,7 +1,10 @@
 <?php
 // developer_students.php - Developer-only comprehensive student directory with filters
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/security_utils.php';
+
+$csrf_token = generate_csrf_token();
 
 if(!isset($_SESSION['developer_id'])){ header('Location: developer_login.php'); exit; }
 
@@ -11,7 +14,10 @@ $success = '';
 
 // Handle UPDATE action
 if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['action']) && $_POST['action']==='update_student'){
-    $sid = (int)($_POST['student_id'] ?? 0);
+  $token = $_POST['csrf_token'] ?? '';
+  if (!verify_csrf_token($token)) { $errors[] = 'Invalid CSRF token'; }
+  else {
+  $sid = (int)($_POST['student_id'] ?? 0);
     $full_name = trim($_POST['full_name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $password = trim($_POST['password'] ?? '');
@@ -36,22 +42,32 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['action']) && $_POST['act
         $sql = 'UPDATE students SET '.implode(', ',$updates).' WHERE id = :id';
         try { $stmt=$pdo->prepare($sql); $stmt->execute($params); $success='Student updated successfully'; }
         catch(Exception $e){ $errors[]='Update failed: '.$e->getMessage(); }
+      }
     }
 }
 
 // Handle DELETE action
 if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['action']) && $_POST['action']==='delete_student'){
+  $token = $_POST['csrf_token'] ?? '';
+  if (!verify_csrf_token($token)) { $errors[] = 'Invalid CSRF token'; }
+  else {
     $sid = (int)($_POST['student_id'] ?? 0);
     try { $stmt=$pdo->prepare('DELETE FROM students WHERE id = :id'); $stmt->execute([':id'=>$sid]); $success='Student deleted successfully'; }
     catch(Exception $e){ $errors[]='Delete failed: '.$e->getMessage(); }
+  }
 }
 
 // Collect distinct values for filters
 $distinct = [
   'grades' => [], 'strands' => [], 'sections' => []
 ];
+// Collect distinct values for filters (validate column names before using in SQL)
+$allowedCols = ['grade_level','strand','section_block'];
 foreach(['grade_level'=>'grades','strand'=>'strands','section_block'=>'sections'] as $col=>$key){
-  $stmt = $pdo->query("SELECT DISTINCT $col AS v FROM students WHERE $col IS NOT NULL AND $col<>'' ORDER BY v");
+  if (!in_array($col, $allowedCols, true)) { $distinct[$key] = []; continue; }
+  $sql = "SELECT DISTINCT `$col` AS v FROM students WHERE `$col` IS NOT NULL AND `$col` <> '' ORDER BY v";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute();
   $distinct[$key] = $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
 }
 
@@ -237,6 +253,7 @@ foreach($students as $stu){
             <form method="post" style="display:inline;" onsubmit="return confirm('Delete this student?');">
               <input type="hidden" name="action" value="delete_student">
               <input type="hidden" name="student_id" value="<?php echo $stu['id']; ?>">
+              <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
               <button class="del-btn" type="submit">Delete</button>
             </form>
           </div>
@@ -303,6 +320,7 @@ foreach($students as $stu){
     <form method="post" action="">
       <input type="hidden" name="action" value="update_student">
       <input type="hidden" name="student_id" id="edit_id">
+      <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
       <div class="fg"><label for="edit_full_name">Full Name *</label><input type="text" id="edit_full_name" name="full_name" required /></div>
       <div class="fg"><label for="edit_email">Email *</label><input type="email" id="edit_email" name="email" required /></div>
       <div class="fg"><label for="edit_password">New Password (leave blank to keep)</label><input type="text" id="edit_password" name="password" placeholder="Leave blank to keep current" /></div>

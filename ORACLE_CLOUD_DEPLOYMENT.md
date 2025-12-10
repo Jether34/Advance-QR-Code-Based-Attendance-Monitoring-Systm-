@@ -92,7 +92,11 @@ Update these lines (use credentials from script output):
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'tapin_db');
 define('DB_USER', 'tapin_user');
-define('DB_PASS', 'TapIn2025XXXXX'); // Use password from deployment script
+// NOTE: Do NOT store real passwords in this file. Retrieve the generated password
+// from the deploy script's credentials file on the server:
+//   sudo cat /root/.tapin_credentials
+// and copy the value for DB_PASS into `config.php`, or fetch it from your secret store.
+define('DB_PASS', 'REPLACE_WITH_SECURE_PASSWORD_FROM_SERVER_OR_VAULT');
 ```
 
 Also update `api_config.php` for Ollama:

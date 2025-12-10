@@ -1,6 +1,6 @@
 <?php
 // developer_dashboard.php - Main dashboard for developers/admins
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/page_security.php';
 
@@ -40,7 +40,9 @@ try {
         $stmt = $pdo->query("SELECT COUNT(*) as total FROM system_events WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
         $stats['traffic_24h'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
         
-        $stmt = $pdo->query("SELECT COUNT(*) as total FROM system_events WHERE event_type LIKE '%login%' AND created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
+        // Use prepared statement for event_type filter (more efficient than LIKE)
+        $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM system_events WHERE event_type IN (:login_success, :login_failed) AND created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
+        $stmt->execute([':login_success' => 'login_success', ':login_failed' => 'login_failed']);
         $stats['logins_24h'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
         
         $stmt = $pdo->query("SELECT COUNT(*) as total FROM system_events WHERE success = 0 AND created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
@@ -75,6 +77,10 @@ try {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Prevent browser caching and back button exploitation -->
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Developer Dashboard - PNS</title>
     <link rel="stylesheet" href="style.css">
     <style>

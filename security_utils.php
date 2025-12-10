@@ -1,6 +1,3 @@
-# Security Utilities
-# Helper functions to remove console.log and debug code in production
-
 <?php
 // security_utils.php - Security helper functions
 

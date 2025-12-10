@@ -3,7 +3,7 @@ require_once 'db.php';
 require_once 'logging.php';
 
 $pdo = get_db();
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 
 $request_start = microtime(true);
 

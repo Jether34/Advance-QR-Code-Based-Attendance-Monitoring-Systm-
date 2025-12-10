@@ -1,0 +1,13 @@
+# mappings.txt for git-filter-repo --replace-text
+# Format: OLD_SECRET==>REPLACEMENT
+# Only include confirmed secrets to redact from history.
+
+# Seed script sample passwords (removed from current HEAD but may exist in history)
+student123==>REDACTED_SEED_PASSWORD
+teacher123==>REDACTED_SEED_PASSWORD
+
+# Deploy script password prefix and example literal seen in docs/history
+TapIn2025==>REDACTED_DEPLOY_PASSWORD
+TapIn2025XXXXX==>REDACTED_DEPLOY_PASSWORD
+
+# If you have other confirmed secrets, add lines here in the same format.

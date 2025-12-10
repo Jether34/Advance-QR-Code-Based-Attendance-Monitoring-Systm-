@@ -260,7 +260,7 @@ Before going to production:
 ### 1. Database Security
 ```sql
 -- Create dedicated database user (instead of root)
-CREATE USER 'attendance_user'@'localhost' IDENTIFIED BY 'strong_password_here';
+CREATE USER 'attendance_user'@'localhost' IDENTIFIED BY 'REPLACE_WITH_SECURE_PASSWORD_FROM_VAULT_OR_SCRIPT';
 GRANT SELECT, INSERT, UPDATE, DELETE ON attendance_qr_system.* TO 'attendance_user'@'localhost';
 FLUSH PRIVILEGES;
 ```
@@ -268,7 +268,8 @@ FLUSH PRIVILEGES;
 Then update `.env`:
 ```env
 DB_USER=attendance_user
-DB_PASS=strong_password_here
+# Replace with a secure password retrieved from your secret store or the deployment script
+DB_PASS=REPLACE_WITH_SECURE_PASSWORD
 ```
 
 ### 2. File Permissions

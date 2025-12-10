@@ -1,6 +1,6 @@
 <?php
 // recent_conversation.php - Show student's recent reviewer conversations
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/db.php';
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
     header('Location: login.php');

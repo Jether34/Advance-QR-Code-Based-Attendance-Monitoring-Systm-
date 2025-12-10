@@ -1,6 +1,6 @@
 <?php
 // export_conversation_pdf.php - Export conversation as printable page
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/db.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {

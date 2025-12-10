@@ -1,10 +1,14 @@
 <?php
 // teacher_dashboard.php - main dashboard for teachers with sidebar
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 date_default_timezone_set('Asia/Manila'); // Set Manila timezone
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/auto_reset_7pm.php'; // Auto-reset system
 require_once __DIR__ . '/page_security.php';
+
+require_once __DIR__ . '/security_utils.php';
+
+$csrf_token = generate_csrf_token();
 
 // Initialize page security
 init_page_security();
@@ -46,6 +50,9 @@ $success = '';
 
 // Handle student update
 if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['action']) && $_POST['action']==='update_student'){
+    $token = $_POST['csrf_token'] ?? '';
+    if (!verify_csrf_token($token)) { $errors[] = 'Invalid CSRF token'; }
+    else {
     $sid = (int)($_POST['student_id'] ?? 0);
     $full_name = trim($_POST['full_name'] ?? '');
     $email = trim($_POST['email'] ?? '');
@@ -69,8 +76,9 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['action']) && $_POST['act
             if($gender!==''){ $updates[]='gender = :gender'; $params[':gender']=$gender; }
             if($lrn!==''){ $updates[]='lrn = :lrn'; $params[':lrn']=$lrn; }
             $sql = 'UPDATE students SET '.implode(', ',$updates).' WHERE id = :id';
-            try { $stmt=$pdo->prepare($sql); $stmt->execute($params); $success='Student updated successfully'; }
-            catch(Exception $e){ $errors[]='Update failed: '.$e->getMessage(); }
+                try { $stmt=$pdo->prepare($sql); $stmt->execute($params); $success='Student updated successfully'; }
+                catch(Exception $e){ $errors[]='Update failed: '.$e->getMessage(); }
+            }
         }
     }
 }
@@ -84,6 +92,10 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Prevent browser caching and back button exploitation -->
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Teacher Dashboard - PNS</title>
     <link rel="stylesheet" href="style.css">
     <style>
@@ -2034,6 +2046,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     <form method="post" action="">
                         <input type="hidden" name="action" value="update_student">
                         <input type="hidden" name="student_id" id="edit_student_id">
+                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
                         
                         <label style="display:block;margin-bottom:6px;color:#1e5128;font-weight:700;font-size:0.8em;text-transform:uppercase;letter-spacing:0.5px">Full Name:</label>
                         <input type="text" name="full_name" id="edit_full_name" required style="width:100%;padding:12px 14px;margin-bottom:14px;border:2px solid #d8f3dc;border-radius:10px;background:#f6fff7;font-size:0.9em;transition:all 0.3s">

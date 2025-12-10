@@ -1,14 +1,17 @@
 <?php
 // chatroom.php - group chat for students/teachers with same grade, strand, block/section
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/db.php';
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
 $pdo = get_db();
-$uid = $_SESSION['user_id'];
-$user = $pdo->query("SELECT * FROM users WHERE id = $uid")->fetch(PDO::FETCH_ASSOC);
+$uid = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 0;
+// Use prepared statement to avoid any possibility of injection and enforce typed parameter
+$uStmt = $pdo->prepare('SELECT * FROM users WHERE id = :id LIMIT 1');
+$uStmt->execute([':id' => $uid]);
+$user = $uStmt->fetch(PDO::FETCH_ASSOC);
 if (!$user) { echo 'User not found'; exit; }
 
 // Group key: grade-strand-block

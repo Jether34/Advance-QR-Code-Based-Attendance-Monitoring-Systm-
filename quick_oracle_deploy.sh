@@ -109,7 +109,19 @@ sudo mysql -e "CREATE DATABASE IF NOT EXISTS tapin_db CHARACTER SET utf8mb4 COLL
 sudo mysql -e "CREATE USER IF NOT EXISTS 'tapin_user'@'localhost' IDENTIFIED BY '$DB_PASS';"
 sudo mysql -e "GRANT ALL PRIVILEGES ON tapin_db.* TO 'tapin_user'@'localhost';"
 sudo mysql -e "FLUSH PRIVILEGES;"
-echo -e "${GREEN}✓ MySQL database created${NC}\n"
+
+# Save credentials to a secure file instead of echoing them to stdout
+CRED_FILE="/root/.tapin_credentials"
+sudo tee "$CRED_FILE" > /dev/null <<EOF
+DB_HOST=localhost
+DB_NAME=tapin_db
+DB_USER=tapin_user
+DB_PASS=$DB_PASS
+EOF
+sudo chmod 600 "$CRED_FILE"
+sudo chown root:root "$CRED_FILE"
+
+echo -e "${GREEN}✓ MySQL database created and credentials saved to $CRED_FILE${NC}\n"
 
 # Summary
 echo "╔════════════════════════════════════════════════════════╗"
@@ -125,7 +137,8 @@ echo -e "${GREEN}Database Credentials:${NC}"
 echo "  Host: localhost"
 echo "  Database: tapin_db"
 echo "  User: tapin_user"
-echo "  Password: $DB_PASS"
+echo "  Credentials file: $CRED_FILE (permissions 600)"
+echo "  To view the password: sudo cat $CRED_FILE" 
 echo ""
 echo -e "${GREEN}AI Engine Status:${NC}"
 echo "  Service: Ollama"

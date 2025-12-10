@@ -3,7 +3,7 @@ require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/logging.php';
 require_once __DIR__ . '/auto_reset_7pm.php'; // Auto-reset system
 date_default_timezone_set('Asia/Manila');
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 
 $request_start = microtime(true);
 

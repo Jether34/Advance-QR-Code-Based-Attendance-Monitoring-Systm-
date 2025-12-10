@@ -1,7 +1,7 @@
 <?php
 // student_qr.php - Generate a REAL (standards-compliant) QR code that embeds ALL student database fields (except password).
 // Access: Only logged-in students. Uses session user_id (no trusting of query string) to prevent forging another student's QR.
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/config.php';
 

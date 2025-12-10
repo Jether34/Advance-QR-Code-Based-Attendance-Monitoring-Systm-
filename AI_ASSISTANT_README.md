@@ -78,7 +78,7 @@ try {
 
 3. **Add API key to `.env`**
 ```
-OPENAI_API_KEY=sk-...
+OPENAI_API_KEY=REPLACE_WITH_OPENAI_API_KEY
 ```
 
 ---

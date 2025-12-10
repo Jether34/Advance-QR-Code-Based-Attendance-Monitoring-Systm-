@@ -45,6 +45,25 @@ define('PASSWORD_MIN_LENGTH', getenv('PASSWORD_MIN_LENGTH') ?: 8);
 // Set timezone
 date_default_timezone_set(APP_TIMEZONE);
 
+// Harden session cookie settings and session behavior
+// Use strict mode and secure cookie flags where possible. These settings should be applied
+// before any session_start() calls elsewhere in the app.
+if (!headers_sent()) {
+    ini_set('session.use_strict_mode', '1');
+    ini_set('session.cookie_httponly', '1');
+    // Respect environment override to force secure cookies (useful when behind TLS)
+    $forceSecure = (getenv('FORCE_HTTPS') === 'true' || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on'));
+    if ($forceSecure) {
+        ini_set('session.cookie_secure', '1');
+    }
+    // Set SameSite attribute if supported
+    if (PHP_VERSION_ID >= 70300) {
+        ini_set('session.cookie_samesite', 'Lax');
+    }
+    // Set session cookie lifetime according to configuration
+    ini_set('session.cookie_lifetime', (string)SESSION_LIFETIME);
+}
+
 // Security Headers
 if (!headers_sent()) {
     // Prevent page caching (force fresh page loads)

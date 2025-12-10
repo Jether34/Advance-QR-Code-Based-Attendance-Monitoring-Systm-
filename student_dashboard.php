@@ -1,6 +1,6 @@
 <?php
 // student_dashboard.php - shows stats for students with same grade, strand, block/section, and adviser
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/page_security.php';
 
@@ -63,6 +63,10 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Prevent browser caching and back button exploitation -->
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Student Dashboard - PNS</title>
     <link rel="stylesheet" href="style.css">
     <style>

@@ -5,6 +5,13 @@ require_once __DIR__ . '/db.php';
 
 $pdo = get_db();
 
+// For safety this script should only be run from the command line
+if (PHP_SAPI !== 'cli') {
+    echo "This setup script must be run from the command line (CLI) for security.\n";
+    echo "If you need to run it on the web, copy the SQL to a secure client and run there.\n";
+    exit;
+}
+
 try {
     // Create admin_users table
     $pdo->exec("
@@ -25,19 +32,21 @@ try {
     $stmt->execute([':username' => 'pns']);
     
     if ($stmt->fetch()) {
-        echo "ℹ️ Developer account 'pns' already exists.<br>";
+        echo "Developer account 'pns' already exists.\n";
     } else {
-        // Insert default developer account with hashed password
-        $hashedPassword = password_hash('P@sEco123', PASSWORD_DEFAULT);
+        // Generate a secure random password for CLI output
+        $randomPassword = bin2hex(random_bytes(6)); // 12 hex chars (~48 bits)
+        $hashedPassword = password_hash($randomPassword, PASSWORD_DEFAULT);
         $stmt = $pdo->prepare("INSERT INTO admin_users (username, password, role) VALUES (:username, :password, :role)");
         $stmt->execute([
             ':username' => 'pns',
             ':password' => $hashedPassword,
             ':role' => 'developer'
         ]);
-        echo "✅ Developer account created successfully.<br>";
-        echo "Username: <strong>pns</strong><br>";
-        echo "Password: <strong>P@sEco123</strong><br>";
+        echo "Developer account created successfully.\n";
+        echo "Username: pns\n";
+        echo "Password (CLI only): $randomPassword\n";
+        echo "Please record the password securely and change it after first login.\n";
     }
     
     echo "<br><a href='index.php'>← Back to Home</a>";

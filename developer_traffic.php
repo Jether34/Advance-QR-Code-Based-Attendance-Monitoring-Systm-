@@ -1,6 +1,6 @@
 <?php
 // developer_traffic.php - Audit/traffic monitor for logins, signups, and key events
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/db.php';
 
 if (!isset($_SESSION['developer_id'])) {

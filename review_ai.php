@@ -1,6 +1,6 @@
 <?php
 // review_ai.php - AI Study Assistant Backend for Review Center
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/db.php';
 
 // Verify student is logged in

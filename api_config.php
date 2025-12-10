@@ -22,12 +22,12 @@ if (strpos($server_ip, '192.168.254.') === 0) {
     define('OLLAMA_API_URL', 'http://localhost:11434/api/generate');
 }
 
-// Database endpoint
-define('DB_HOST', 'localhost');
-define('DB_PORT', '3306');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'pns_attendance');
+// Database endpoint - use environment variables when possible to avoid committing secrets
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_PORT', getenv('DB_PORT') ?: '3306');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') ?: '');
+define('DB_NAME', getenv('DB_NAME') ?: 'pns_attendance');
 
 // Application endpoints
 define('APP_URL', $protocol . '://' . $host);

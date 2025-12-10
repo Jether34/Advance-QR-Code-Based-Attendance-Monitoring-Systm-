@@ -1,6 +1,6 @@
 <?php
 // developer_logout.php - Logout handler for developer dashboard
-session_start();
+require_once __DIR__ . '/bootstrap.php';
 
 // Clear developer session
 unset($_SESSION['developer_id']);
@@ -15,4 +15,5 @@ if (!isset($_SESSION['user_id'])) {
 // Redirect to index
 header('Location: index.php');
 exit;
+
 ?>

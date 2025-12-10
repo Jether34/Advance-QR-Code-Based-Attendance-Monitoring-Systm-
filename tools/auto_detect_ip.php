@@ -3,6 +3,12 @@
 // Usage: php tools/auto_detect_ip.php
 // Can be run periodically (e.g., via cron or Windows Task Scheduler) to keep SERVER_IP current
 
+// Prevent this utility from being executed via the web to avoid remote command execution
+if (PHP_SAPI !== 'cli') {
+    echo "This script is CLI-only. Do not run it via a web request.\n";
+    exit(1);
+}
+
 function get_lan_ip() {
     // Method 1: Try to get the primary IPv4 from ipconfig (Windows)
     if (PHP_OS_FAMILY === 'Windows') {
