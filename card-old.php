@@ -25,7 +25,7 @@ $code = $user['student_id'];
             padding: 20px;
             font-family: 'Segoe UI', Arial, sans-serif;
         }
-        
+
         .card-container {
             background: #fff;
             border-radius: 20px;
@@ -35,20 +35,20 @@ $code = $user['student_id'];
             margin: 0 auto;
             text-align: center;
         }
-        
+
         .student-header {
             border-bottom: 3px solid #218c21;
             padding-bottom: 20px;
             margin-bottom: 30px;
         }
-        
+
         .student-header h1 {
             color: #218c21;
             font-size: 2.2em;
             margin: 0 0 10px 0;
             font-weight: 700;
         }
-        
+
         .student-info {
             background: linear-gradient(135deg, #f0fff0 0%, #e8ffe8 100%);
             border-radius: 12px;
@@ -56,24 +56,24 @@ $code = $user['student_id'];
             margin: 20px 0;
             border-left: 5px solid #218c21;
         }
-        
+
         .student-info p {
             margin: 8px 0;
             color: #176617;
             font-weight: 600;
             font-size: 1.1em;
         }
-        
+
         .qr-section {
             margin: 30px 0;
         }
-        
+
         .qr-section h3 {
             color: #218c21;
             font-size: 1.5em;
             margin-bottom: 20px;
         }
-        
+
         #qrcode {
             margin: 20px auto;
             display: block;
@@ -83,7 +83,7 @@ $code = $user['student_id'];
             box-shadow: 0 5px 20px rgba(33, 140, 33, 0.15);
             border: 3px solid #f0fff0;
         }
-        
+
         .action-buttons {
             display: flex;
             gap: 15px;
@@ -91,7 +91,7 @@ $code = $user['student_id'];
             flex-wrap: wrap;
             margin: 30px 0;
         }
-        
+
         .btn {
             padding: 12px 25px;
             border: none;
@@ -103,29 +103,29 @@ $code = $user['student_id'];
             text-decoration: none;
             display: inline-block;
         }
-        
+
         .btn-primary {
             background: #218c21;
             color: white;
         }
-        
+
         .btn-primary:hover {
             background: #176617;
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(33, 140, 33, 0.3);
         }
-        
+
         .btn-secondary {
             background: #fff;
             color: #218c21;
             border: 2px solid #218c21;
         }
-        
+
         .btn-secondary:hover {
             background: #f0fff0;
             transform: translateY(-2px);
         }
-        
+
         .instructions {
             background: #fffacd;
             border: 1px solid #f0e68c;
@@ -136,40 +136,40 @@ $code = $user['student_id'];
             font-size: 0.9em;
             color: #8b7500;
         }
-        
+
         .instructions h4 {
             margin: 0 0 10px 0;
             color: #b8860b;
         }
-        
+
         .footer-links {
             margin-top: 30px;
             padding-top: 20px;
             border-top: 1px solid #e0e0e0;
         }
-        
+
         .footer-links a {
             color: #218c21;
             text-decoration: none;
             margin: 0 10px;
             font-weight: 600;
         }
-        
+
         .footer-links a:hover {
             text-decoration: underline;
         }
-        
+
         @media (max-width: 600px) {
             .card-container {
                 margin: 10px;
                 padding: 20px;
             }
-            
+
             .action-buttons {
                 flex-direction: column;
                 align-items: center;
             }
-            
+
             .btn {
                 width: 100%;
                 max-width: 250px;
@@ -183,20 +183,20 @@ $code = $user['student_id'];
             <h1><?php echo htmlspecialchars($user['full_name']); ?></h1>
             <p style="color: #666; font-size: 1.1em; margin: 0;">Student Identification Card</p>
         </div>
-        
+
         <div class="student-info">
             <p><strong>Student ID:</strong> <?php echo htmlspecialchars($user['student_id']); ?></p>
             <p><strong>Grade Level:</strong> <?php echo htmlspecialchars($user['grade_level']); ?></p>
             <p><strong>Strand:</strong> <?php echo htmlspecialchars($user['strand']); ?></p>
             <p><strong>Section:</strong> <?php echo htmlspecialchars($user['section_block']); ?></p>
         </div>
-        
+
         <div class="qr-section">
             <h3>🔳 Your QR Code</h3>
             <canvas id="studentQRCanvas" width="300" height="300" style="border: 3px solid #218c21; border-radius: 12px; background: white; box-shadow: 0 5px 20px rgba(33, 140, 33, 0.15);"></canvas>
             <div id="qrStatus" style="text-align: center; margin: 10px 0; padding: 10px; border-radius: 8px; font-weight: 600;"></div>
         </div>
-        
+
         <div class="instructions">
             <h4>📋 How to Use:</h4>
             <ul>
@@ -207,9 +207,9 @@ $code = $user['student_id'];
                 <li>📞 <strong>For Issues:</strong> Contact the school office if your card is lost or damaged</li>
                 <li>📱 <strong>Offline Ready:</strong> Your information is embedded directly in the QR code - works without internet!</li>
             </ul>
-            
+
             <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #218c21;">
-                <strong>🆕 ENHANCED QR CODE:</strong> This QR code now contains your complete student information embedded directly inside it! 
+                <strong>🆕 ENHANCED QR CODE:</strong> This QR code now contains your complete student information embedded directly inside it!
                 When scanned with any smartphone or QR scanner, it will instantly display your full profile including:
                 <ul style="margin: 10px 0; padding-left: 20px;">
                     <li>✅ Student ID, Name, and Contact Information</li>
@@ -219,17 +219,17 @@ $code = $user['student_id'];
                 </ul>
                 <strong>🔥 Best Feature:</strong> Works completely offline - no internet connection required!
             </div>
-            
+
             <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #f0ad4e;">
                 <strong>📱 QR Code Content:</strong> <em>Complete Student Information (Text Format)</em><br>
                 <small style="color: #856404;">
-                    <strong>ℹ️ Note:</strong> This QR code contains your full student details in text format. 
-                    When scanned, it displays beautifully formatted information that works on any device, 
+                    <strong>ℹ️ Note:</strong> This QR code contains your full student details in text format.
+                    When scanned, it displays beautifully formatted information that works on any device,
                     even without internet connection or network access!
                 </small>
             </div>
         </div>
-        
+
             <div class="action-buttons">
             <button onclick="generateStudentQR()" class="btn btn-primary">🔄 Regenerate QR</button>
             <button onclick="downloadQRCard()" class="btn btn-primary">📥 Download QR Card</button>
@@ -246,7 +246,7 @@ $code = $user['student_id'];
         <script>
         // Binary QR Generator Integration for Student Card
         // Uses complete student database information from PHP
-        
+
         const studentCardData = {
             id: <?php echo json_encode($user['id']); ?>,
             full_name: <?php echo json_encode($user['full_name']); ?>,
@@ -265,11 +265,11 @@ $code = $user['student_id'];
         function generateStudentQR() {
             const statusDiv = document.getElementById('qrStatus');
             statusDiv.innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">⏳ Generating QR Code with embedded student data...</span>';
-            
+
             try {
                 // Use the binary QR generator with complete student data
                 const result = generateStudentQR(studentCardData, 'studentQRCanvas');
-                
+
                 if (result.success) {
                     statusDiv.innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">✅ QR Code Generated! Contains complete student information.</span>';
                     console.log('QR Generated with data:', result.data);
@@ -289,26 +289,26 @@ $code = $user['student_id'];
         function generateFallbackQR() {
             const canvas = document.getElementById('studentQRCanvas');
             if (!canvas) return;
-            
+
             const ctx = canvas.getContext('2d');
             const size = canvas.width;
-            
+
             // Clear canvas
             ctx.fillStyle = '#FFFFFF';
             ctx.fillRect(0, 0, size, size);
-            
+
             // Create simple QR-like pattern with student data
             const moduleSize = Math.floor(size / 25);
-            
+
             // Add finder patterns
             ctx.fillStyle = '#000000';
             drawFinderPattern(ctx, 0, 0, moduleSize);
             drawFinderPattern(ctx, 18 * moduleSize, 0, moduleSize);
             drawFinderPattern(ctx, 0, 18 * moduleSize, moduleSize);
-            
+
             // Add student-specific data pattern
             const studentHash = hashString(studentCardData.student_id + studentCardData.full_name);
-            
+
             for (let i = 8; i < 17; i++) {
                 for (let j = 8; j < 17; j++) {
                     if ((i + j + studentHash + studentCardData.id) % 3 === 0) {
@@ -316,7 +316,7 @@ $code = $user['student_id'];
                     }
                 }
             }
-            
+
             // Add timing patterns
             for (let i = 7; i < 18; i++) {
                 if (i % 2 === 0) {
@@ -324,7 +324,7 @@ $code = $user['student_id'];
                     ctx.fillRect(6 * moduleSize, i * moduleSize, moduleSize, moduleSize);
                 }
             }
-            
+
             document.getElementById('qrStatus').innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">✅ Fallback QR Generated with student pattern</span>';
         }
 
@@ -353,31 +353,31 @@ $code = $user['student_id'];
                 alert('Please generate QR code first!');
                 return;
             }
-            
+
             // Check if canvas has content
             const ctx = canvas.getContext('2d');
             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
             let hasContent = false;
-            
+
             for (let i = 0; i < imageData.data.length; i += 4) {
                 if (imageData.data[i] !== 255 || imageData.data[i + 1] !== 255 || imageData.data[i + 2] !== 255) {
                     hasContent = true;
                     break;
                 }
             }
-            
+
             if (!hasContent) {
                 alert('Please generate QR code first!');
                 return;
             }
-            
+
             // Download the QR code
             const filename = `${studentCardData.student_id}-qr-card-${new Date().toISOString().split('T')[0]}.png`;
             const link = document.createElement('a');
             link.download = filename;
             link.href = canvas.toDataURL('image/png');
             link.click();
-            
+
             document.getElementById('qrStatus').innerHTML = '<span style="color: #218c21; background: #d4edda; padding: 8px; border-radius: 5px;">📥 QR Card Downloaded: ' + filename + '</span>';
         }
 
@@ -386,7 +386,7 @@ $code = $user['student_id'];
             console.log('Student Card Page Loaded');
             console.log('Binary QR Generator available:', typeof window.BinaryQRGenerator !== 'undefined');
             console.log('Student Data:', studentCardData);
-            
+
             // Auto-generate QR code after short delay
             setTimeout(generateStudentQR, 800);
         });
@@ -396,42 +396,42 @@ $code = $user['student_id'];
         console.table(studentCardData);
 
         </script>
-            
+
             // QR Code size (25x25 for better compatibility)
             var qrSize = 25;
             var cellSize = size / qrSize;
             var border = 2; // Quiet zone
-            
+
             // Clear with white background
             ctx.fillStyle = '#FFFFFF';
             ctx.fillRect(0, 0, size, size);
-            
+
             // Create matrix
             var matrix = [];
             for (var i = 0; i < qrSize; i++) {
                 matrix[i] = new Array(qrSize).fill(0);
             }
-            
+
             // Add finder patterns (position detection patterns)
             addFinderPattern(matrix, 0, 0);
             addFinderPattern(matrix, qrSize - 7, 0);
             addFinderPattern(matrix, 0, qrSize - 7);
-            
+
             // Add timing patterns
             for (var i = 8; i < qrSize - 8; i++) {
                 matrix[6][i] = (i % 2 === 0) ? 1 : 0;
                 matrix[i][6] = (i % 2 === 0) ? 1 : 0;
             }
-            
+
             // Add alignment pattern (for larger QR codes)
             if (qrSize > 21) {
                 addAlignmentPattern(matrix, qrSize - 7, qrSize - 7);
             }
-            
+
             // Encode data in a simple pattern based on text
             var hash = simpleHash(text);
             encodeData(matrix, text, hash, qrSize);
-            
+
             // Draw the QR code
             ctx.fillStyle = '#000000';
             for (var row = 0; row < qrSize; row++) {
@@ -441,17 +441,17 @@ $code = $user['student_id'];
                     }
                 }
             }
-            
+
             return canvas;
         }
-        
+
         function addFinderPattern(matrix, startRow, startCol) {
             // 7x7 finder pattern
             for (var i = 0; i < 7; i++) {
                 for (var j = 0; j < 7; j++) {
                     var row = startRow + i;
                     var col = startCol + j;
-                    
+
                     if (row >= 0 && row < matrix.length && col >= 0 && col < matrix[0].length) {
                         // Outer border (7x7)
                         if (i === 0 || i === 6 || j === 0 || j === 6) {
@@ -468,13 +468,13 @@ $code = $user['student_id'];
                     }
                 }
             }
-            
+
             // Add separators (white border around finder pattern)
             for (var i = -1; i <= 7; i++) {
                 for (var j = -1; j <= 7; j++) {
                     var row = startRow + i;
                     var col = startCol + j;
-                    
+
                     if (row >= 0 && row < matrix.length && col >= 0 && col < matrix[0].length) {
                         if (i === -1 || i === 7 || j === -1 || j === 7) {
                             if (matrix[row][col] !== 1) {
@@ -485,14 +485,14 @@ $code = $user['student_id'];
                 }
             }
         }
-        
+
         function addAlignmentPattern(matrix, centerRow, centerCol) {
             // 5x5 alignment pattern
             for (var i = -2; i <= 2; i++) {
                 for (var j = -2; j <= 2; j++) {
                     var row = centerRow + i;
                     var col = centerCol + j;
-                    
+
                     if (row >= 0 && row < matrix.length && col >= 0 && col < matrix[0].length) {
                         if (Math.abs(i) === 2 || Math.abs(j) === 2 || (i === 0 && j === 0)) {
                             matrix[row][col] = 1;
@@ -501,7 +501,7 @@ $code = $user['student_id'];
                 }
             }
         }
-        
+
         function simpleHash(str) {
             var hash = 0;
             for (var i = 0; i < str.length; i++) {
@@ -511,46 +511,46 @@ $code = $user['student_id'];
             }
             return Math.abs(hash);
         }
-        
+
         function encodeData(matrix, text, hash, size) {
             // Simple encoding: convert text to binary and place in available spots
             var binaryData = '';
-            
+
             // Add mode indicator (simple text mode)
             binaryData += '0100'; // Text mode
-            
+
             // Add character count
             var countBinary = text.length.toString(2).padStart(8, '0');
             binaryData += countBinary;
-            
+
             // Add text data
             for (var i = 0; i < text.length; i++) {
                 var charBinary = text.charCodeAt(i).toString(2).padStart(8, '0');
                 binaryData += charBinary;
             }
-            
+
             // Add terminator
             binaryData += '0000';
-            
+
             // Pad to make it longer if needed
             while (binaryData.length % 8 !== 0) {
                 binaryData += '0';
             }
-            
+
             // Place data in matrix (zigzag pattern from bottom-right)
             var dataIndex = 0;
             var up = true;
-            
+
             for (var col = size - 1; col >= 0; col -= 2) {
                 // Skip timing column
                 if (col === 6) col--;
-                
+
                 for (var i = 0; i < size; i++) {
                     var row = up ? size - 1 - i : i;
-                    
+
                     for (var c = 0; c < 2; c++) {
                         var currentCol = col - c;
-                        
+
                         if (currentCol >= 0 && !isReserved(matrix, row, currentCol, size)) {
                             if (dataIndex < binaryData.length) {
                                 matrix[row][currentCol] = parseInt(binaryData[dataIndex]);
@@ -565,31 +565,31 @@ $code = $user['student_id'];
                 up = !up;
             }
         }
-        
+
         function isReserved(matrix, row, col, size) {
             // Check if position is reserved for finder patterns
-            if ((row < 9 && col < 9) || 
-                (row < 9 && col >= size - 8) || 
+            if ((row < 9 && col < 9) ||
+                (row < 9 && col >= size - 8) ||
                 (row >= size - 8 && col < 9)) {
                 return true;
             }
-            
+
             // Timing patterns
             if (row === 6 || col === 6) {
                 return true;
             }
-            
+
             // Alignment pattern area (if exists)
-            if (size > 21 && row >= size - 9 && row <= size - 5 && 
+            if (size > 21 && row >= size - 9 && row <= size - 5 &&
                 col >= size - 9 && col <= size - 5) {
                 return true;
             }
-            
+
             return false;
         }
-        
 
-        
+
+
         // Alternative method: Create a simple barcode-style pattern
         // This is more reliable for basic scanning systems
         function createBarcodeStyle(text, size) {
@@ -597,20 +597,20 @@ $code = $user['student_id'];
             canvas.width = size;
             canvas.height = size / 4; // Make it rectangular like a barcode
             var ctx = canvas.getContext('2d');
-            
+
             // Clear with white
             ctx.fillStyle = '#FFFFFF';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
+
             // Convert text to simple barcode pattern
             var barWidth = Math.max(2, Math.floor(canvas.width / (text.length * 8)));
             var x = 10; // Start position
-            
+
             ctx.fillStyle = '#000000';
-            
+
             for (var i = 0; i < text.length; i++) {
                 var charCode = text.charCodeAt(i);
-                
+
                 // Convert character to 8-bit binary
                 for (var bit = 7; bit >= 0; bit--) {
                     if ((charCode >> bit) & 1) {
@@ -620,33 +620,33 @@ $code = $user['student_id'];
                 }
                 x += barWidth; // Space between characters
             }
-            
+
             return canvas;
         }
-        
+
         // Method to create a more reliable QR-style code using canvas patterns
         function createReliableQR(text, size) {
             var canvas = document.createElement('canvas');
             canvas.width = canvas.height = size;
             var ctx = canvas.getContext('2d');
-            
+
             // Use a smaller grid for better reliability
             var gridSize = 21;
             var cellSize = size / gridSize;
             var border = 2;
-            
+
             // Clear with white background
             ctx.fillStyle = '#FFFFFF';
             ctx.fillRect(0, 0, size, size);
-            
+
             // Create a simple but structured pattern
             ctx.fillStyle = '#000000';
-            
+
             // Add corner markers (finder patterns)
             drawCornerMarker(ctx, 0, 0, cellSize);
             drawCornerMarker(ctx, (gridSize - 7) * cellSize, 0, cellSize);
             drawCornerMarker(ctx, 0, (gridSize - 7) * cellSize, cellSize);
-            
+
             // Add timing lines
             for (var i = 8; i < gridSize - 8; i++) {
                 if (i % 2 === 0) {
@@ -654,11 +654,11 @@ $code = $user['student_id'];
                     ctx.fillRect(6 * cellSize, i * cellSize, cellSize, cellSize);
                 }
             }
-            
+
             // Encode the text data in the remaining space
             var dataArea = encodeTextToPattern(text);
             var dataIndex = 0;
-            
+
             for (var row = 9; row < gridSize - 9; row++) {
                 for (var col = 9; col < gridSize - 9; col++) {
                     if (dataIndex < dataArea.length) {
@@ -669,10 +669,10 @@ $code = $user['student_id'];
                     }
                 }
             }
-            
+
             return canvas;
         }
-        
+
         function drawCornerMarker(ctx, x, y, cellSize) {
             // 7x7 finder pattern
             ctx.fillRect(x, y, 7 * cellSize, 7 * cellSize); // Outer square
@@ -681,27 +681,27 @@ $code = $user['student_id'];
             ctx.fillStyle = '#000000';
             ctx.fillRect(x + 2 * cellSize, y + 2 * cellSize, 3 * cellSize, 3 * cellSize); // Center black
         }
-        
+
         function encodeTextToPattern(text) {
             var pattern = '';
-            
+
             // Simple encoding: convert each character to 8-bit binary
             for (var i = 0; i < text.length; i++) {
                 var binary = text.charCodeAt(i).toString(2).padStart(8, '0');
                 pattern += binary;
             }
-            
+
             // Add some padding and error correction simulation
             while (pattern.length < 100) {
                 pattern += (pattern.length % 2).toString();
             }
-            
+
             return pattern;
         }
-        
+
         // Global variables
         var currentQRCanvas;
-        
+
         // Create comprehensive student data for QR code
         var studentData = {
             student_id: '<?php echo htmlspecialchars($user['student_id']); ?>',
@@ -715,15 +715,15 @@ $code = $user['student_id'];
             created_at: '<?php echo htmlspecialchars($user['created_at']); ?>',
             scan_timestamp: new Date().toISOString()
         };
-        
+
         // Convert student data to formatted text for QR code
         var qrCodeData = formatStudentDataForQR(studentData);
-        
+
         // Initialize when page loads
         window.onload = function() {
             initializeQRCode();
         };
-        
+
         // Format student data for QR code embedding
         function formatStudentDataForQR(data) {
             // Create a structured text format that's readable when scanned
@@ -743,79 +743,79 @@ $code = $user['student_id'];
             qrText += "========================\n";
             qrText += "School Attendance System\n";
             qrText += "Scan this code for attendance";
-            
+
             return qrText;
         }
-        
+
         // Render QR code when page loads
         function initializeQRCode() {
             var qrDiv = document.getElementById('qrcode');
             qrDiv.innerHTML = '<p style="color: #666; margin: 20px;">Generating Offline QR Code...</p>';
-            
+
             // Generate completely offline QR code
             createOfflineQR(qrCodeData, 280, qrDiv);
         }
-        
+
         function createOfflineQR(text, size, container) {
             try {
                 // Use our enhanced robust QR generator
                 var canvas = RobustQRGenerator.generateQR(text, size);
-                
+
                 // Clear container and add QR code
                 container.innerHTML = '';
                 container.appendChild(canvas);
-                
+
                 // Store canvas reference for downloads
                 window.currentQRCanvas = canvas;
-                
+
                 // Add success message
                 var successDiv = document.createElement('div');
                 successDiv.style.cssText = 'font-size: 12px; color: #218c21; margin-top: 8px; text-align: center; font-weight: bold;';
                 successDiv.innerHTML = '✅ Enhanced Offline QR Code - Ready to Scan!';
                 container.appendChild(successDiv);
-                
+
                 console.log('Enhanced robust QR code generated successfully');
             } catch (error) {
                 console.log('Robust QR failed, using simple fallback:', error);
                 createFallbackQR(text, size, container);
             }
         }
-        
+
         function tryQRService1(text, size, container) {
             var img = new Image();
-            
+
             var encodedText = encodeURIComponent(text);
             // QR Server API (more reliable than Google Charts)
             var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=' + size + 'x' + size + '&data=' + encodedText;
-            
+
             img.onload = function() {
                 // Create canvas to hold the QR code
                 var canvas = document.createElement('canvas');
                 canvas.width = canvas.height = size;
                 var ctx = canvas.getContext('2d');
-                
+
                 // White background
                 ctx.fillStyle = '#FFFFFF';
                 ctx.fillRect(0, 0, size, size);
-                
+
                 // Draw the QR code
                 ctx.drawImage(img, 0, 0, size, size);
-                
+
                 // Clear container and add QR code
                 container.innerHTML = '';
                 container.appendChild(canvas);
-                
+
                 // Store canvas reference for downloads
                 window.currentQRCanvas = canvas;
-                
+
                 console.log('QR Code generated successfully using QR Server API');
             };
-            
+
             img.onerror = function() {
                 console.log('QR Server API failed, trying Google Charts');
                 tryQRService2(text, size, container);
             };
-            
+
             // Add timeout to prevent hanging
             setTimeout(function() {
                 if (container.innerHTML.includes('Generating')) {
@@ -823,71 +823,71 @@ $code = $user['student_id'];
                     tryQRService2(text, size, container);
                 }
             }, 3000);
-            
+
             img.src = qrUrl;
         }
-        
+
         function tryQRService2(text, size, container) {
             var img = new Image();
-            
+
             var encodedText = encodeURIComponent(text);
             // Google Charts API as backup
-            var googleUrl = 'https://chart.googleapis.com/chart?chs=' + size + 'x' + size + 
+            var googleUrl = 'https://chart.googleapis.com/chart?chs=' + size + 'x' + size +
                            '&cht=qr&chl=' + encodedText + '&choe=UTF-8&chld=M|0';
-            
+
             img.onload = function() {
                 var canvas = document.createElement('canvas');
                 canvas.width = canvas.height = size;
                 var ctx = canvas.getContext('2d');
-                
+
                 ctx.fillStyle = '#FFFFFF';
                 ctx.fillRect(0, 0, size, size);
                 ctx.drawImage(img, 0, 0, size, size);
-                
+
                 container.innerHTML = '';
                 container.appendChild(canvas);
                 window.currentQRCanvas = canvas;
-                
+
                 console.log('QR Code generated successfully using Google Charts API');
             };
-            
+
             img.onerror = function() {
                 console.log('Both QR services failed, using offline method');
                 createOfflineQR(text, size, container);
             };
-            
+
             setTimeout(function() {
                 if (container.innerHTML.includes('Generating')) {
                     console.log('QR Service 2 timeout, using offline method');
                     createOfflineQR(text, size, container);
                 }
             }, 3000);
-            
+
             img.src = googleUrl;
         }
-        
+
         function createOfflineQR(text, size, container) {
             // Create a proper offline QR code using canvas
             var canvas = document.createElement('canvas');
             canvas.width = canvas.height = size;
             var ctx = canvas.getContext('2d');
-            
+
             // Create a QR-like pattern that's more likely to scan
             var gridSize = 25;
             var cellSize = size / gridSize;
             var border = 2;
-            
+
             // White background
             ctx.fillStyle = '#FFFFFF';
             ctx.fillRect(0, 0, size, size);
-            
+
             ctx.fillStyle = '#000000';
-            
+
             // Draw finder patterns (position detection patterns)
             drawFinderPattern(ctx, 0, 0, cellSize);
             drawFinderPattern(ctx, gridSize - 7, 0, cellSize);
             drawFinderPattern(ctx, 0, gridSize - 7, cellSize);
-            
+
             // Draw timing patterns
             for (var i = 8; i < gridSize - 8; i++) {
                 if (i % 2 === 0) {
@@ -895,62 +895,62 @@ $code = $user['student_id'];
                     ctx.fillRect(6 * cellSize, i * cellSize, cellSize, cellSize);
                 }
             }
-            
+
             // Encode data in a simple pattern
             var hash = simpleHash(text);
             for (var row = 9; row < gridSize - 9; row++) {
                 for (var col = 9; col < gridSize - 9; col++) {
                     var shouldFill = false;
-                    
+
                     // Create pattern based on text and position
                     var charIndex = ((row - 9) * (gridSize - 18) + (col - 9)) % text.length;
                     var charCode = text.charCodeAt(charIndex);
                     var bitIndex = ((row - 9) * (gridSize - 18) + (col - 9)) % 8;
-                    
+
                     if ((charCode >> bitIndex) & 1) {
                         shouldFill = true;
                     }
-                    
+
                     // Add some randomization based on hash
                     if ((hash + row * col) % 3 === 0) {
                         shouldFill = !shouldFill;
                     }
-                    
+
                     if (shouldFill) {
                         ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
                     }
                 }
             }
-            
+
             container.innerHTML = '';
             container.appendChild(canvas);
             window.currentQRCanvas = canvas;
-            
+
             // Add a note about the offline QR
             var noteDiv = document.createElement('div');
             noteDiv.style.cssText = 'font-size: 11px; color: #666; margin-top: 8px; text-align: center;';
             noteDiv.textContent = 'Offline QR Code - May require QR scanner app';
             container.appendChild(noteDiv);
-            
+
             console.log('Offline QR code generated');
         }
-        
+
         function drawFinderPattern(ctx, startX, startY, cellSize) {
             // 7x7 finder pattern
             for (var i = 0; i < 7; i++) {
                 for (var j = 0; j < 7; j++) {
                     var x = (startX + j) * cellSize;
                     var y = (startY + i) * cellSize;
-                    
+
                     // Outer border and center square
-                    if ((i === 0 || i === 6 || j === 0 || j === 6) || 
+                    if ((i === 0 || i === 6 || j === 0 || j === 6) ||
                         (i >= 2 && i <= 4 && j >= 2 && j <= 4)) {
                         ctx.fillRect(x, y, cellSize, cellSize);
                     }
                 }
             }
         }
-        
+
         function simpleHash(str) {
             var hash = 0;
             for (var i = 0; i < str.length; i++) {
@@ -960,7 +960,7 @@ $code = $user['student_id'];
             }
             return Math.abs(hash);
         }
-        
+
 
 
         function downloadQRImage() {
@@ -968,7 +968,7 @@ $code = $user['student_id'];
                 alert('QR Code is still loading. Please wait a moment and try again.');
                 return;
             }
-            
+
             var link = document.createElement('a');
             link.href = currentQRCanvas.toDataURL('image/png');
             link.download = '<?php echo $user['student_id']; ?>_qr_code.png';
@@ -982,11 +982,11 @@ $code = $user['student_id'];
                 alert('QR Code is still loading. Please wait a moment and try again.');
                 return;
             }
-            
+
             // Create a print-friendly window with QR code and student info
             var win = window.open('', '_blank', 'width=600,height=800');
             var qrImageData = currentQRCanvas.toDataURL('image/png');
-            
+
             win.document.write('<html><head><title>Student QR Card - <?php echo htmlspecialchars($user['full_name']); ?></title>');
             win.document.write('<style>');
             win.document.write('body { font-family: Arial, sans-serif; text-align: center; padding: 40px; background: white; margin: 0; }');
@@ -1003,18 +1003,18 @@ $code = $user['student_id'];
             win.document.write('.barcode-info { font-size: 10px; color: #888; margin-top: 10px; }');
             win.document.write('@media print { .no-print { display: none; } body { margin: 0; } }');
             win.document.write('</style></head><body>');
-            
+
             win.document.write('<div class="student-card">');
             win.document.write('<div class="school-header">');
             win.document.write('<h1>🏫 School Attendance System</h1>');
             win.document.write('<p style="margin: 5px 0; color: #666; font-size: 16px;"><strong>Student Identification Card</strong></p>');
             win.document.write('</div>');
-            
+
             win.document.write('<div class="qr-container">');
             win.document.write('<img src="' + qrImageData + '" style="width:220px;height:220px;border:none;">');
             win.document.write('<div class="barcode-info">Scannable QR Code for Attendance</div>');
             win.document.write('</div>');
-            
+
             win.document.write('<div class="student-info">');
             win.document.write('<p><strong>📝 Full Name:</strong> <?php echo htmlspecialchars($user['full_name']); ?></p>');
             win.document.write('<p><strong>🆔 Student ID:</strong> <?php echo htmlspecialchars($user['student_id']); ?></p>');
@@ -1022,7 +1022,7 @@ $code = $user['student_id'];
             win.document.write('<p><strong>🎯 Strand:</strong> <?php echo htmlspecialchars($user['strand']); ?></p>');
             win.document.write('<p><strong>📋 Section:</strong> <?php echo htmlspecialchars($user['section_block']); ?></p>');
             win.document.write('</div>');
-            
+
             win.document.write('<div class="instructions">');
             win.document.write('<h3 style="color: #218c21; font-size: 14px; margin-bottom: 10px;">📋 Usage Instructions:</h3>');
             win.document.write('<ul>');
@@ -1039,18 +1039,18 @@ $code = $user['student_id'];
             win.document.write('<strong>System:</strong> School Attendance QR System');
             win.document.write('</div>');
             win.document.write('</div>');
-            
+
             win.document.write('</div>');
-            
+
             win.document.write('<div class="no-print" style="margin-top: 30px;">');
             win.document.write('<button onclick="window.print()">🖨️ Print This Card</button>');
             win.document.write('<button onclick="window.close()" style="background: #666;">❌ Close Window</button>');
             win.document.write('</div>');
-            
+
             win.document.write('</body></html>');
             win.document.close();
         }
-        
+
 
         </script>
 

@@ -24,13 +24,13 @@ try {
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     ");
-    
+
     echo "✅ admin_users table created successfully.<br>";
-    
+
     // Check if 'pns' user already exists
     $stmt = $pdo->prepare("SELECT id FROM admin_users WHERE username = :username");
     $stmt->execute([':username' => 'pns']);
-    
+
     if ($stmt->fetch()) {
         echo "Developer account 'pns' already exists.\n";
     } else {
@@ -48,9 +48,9 @@ try {
         echo "Password (CLI only): $randomPassword\n";
         echo "Please record the password securely and change it after first login.\n";
     }
-    
+
     echo "<br><a href='index.php'>← Back to Home</a>";
-    
+
 } catch (PDOException $e) {
     echo "❌ Error: " . htmlspecialchars($e->getMessage());
 }

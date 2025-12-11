@@ -39,7 +39,7 @@ function Write-Header { param($Message) Write-Host "`n🚀 $Message" -Foreground
 # Check prerequisites
 function Test-Prerequisites {
     Write-Header "Checking Prerequisites"
-    
+
     # Check if Git is installed
     try {
         $gitVersion = git --version
@@ -49,7 +49,7 @@ function Test-Prerequisites {
         Write-Error "Git is not installed. Please install Git and try again."
         exit 1
     }
-    
+
     # Check if XAMPP MySQL is running
     $mysqlProcess = Get-Process -Name "mysqld" -ErrorAction SilentlyContinue
     if (-not $mysqlProcess) {
@@ -59,7 +59,7 @@ function Test-Prerequisites {
     } else {
         Write-Success "MySQL service is running"
     }
-    
+
     # Check if PHP is available
     try {
         $phpPath = "c:\xampp\php\php.exe"
@@ -76,19 +76,19 @@ function Test-Prerequisites {
 # Setup environment configuration
 function Setup-Environment {
     Write-Header "Setting Up Environment Configuration"
-    
+
     if (-not (Test-Path ".env")) {
         if (Test-Path ".env.example") {
             Copy-Item ".env.example" ".env"
             Write-Success "Created .env file from template"
-            
+
             # Get current IP address
             $ipAddress = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -like "192.168.*" -or $_.IPAddress -like "10.*" }).IPAddress | Select-Object -First 1
             if ($ipAddress) {
                 (Get-Content ".env") -replace "SERVER_IP=192.168.1.XXX", "SERVER_IP=$ipAddress" | Set-Content ".env"
                 Write-Success "Updated SERVER_IP to: $ipAddress"
             }
-            
+
             Write-Info "Please edit .env file to configure your database credentials"
         } else {
             Write-Warning ".env.example not found. Creating basic .env file..."
@@ -113,37 +113,37 @@ SERVER_IP=localhost
 # Initialize Git repository
 function Initialize-Git {
     Write-Header "Initializing Git Repository"
-    
+
     if ($SkipGitInit) {
         Write-Info "Skipping Git initialization"
         return
     }
-    
+
     if (-not (Test-Path ".git")) {
         git init
         Write-Success "Initialized Git repository"
-        
+
         # Set up initial commit
         git add .
         $commitMessage = @"
 Initial commit: Smart Attendance System
 
 - Complete QR code attendance tracking system
-- Embedded student information in QR codes  
+- Embedded student information in QR codes
 - Automatic attendance recording
 - Teacher and student dashboards
 - Mobile-optimized scanning interface
 - Role-based access control
 "@
         git commit -m $commitMessage
-        
+
         Write-Success "Created initial commit"
-        
+
         # Create develop branch
         git checkout -b develop
         git checkout main
         Write-Success "Created develop branch"
-        
+
         if ($GitHubUsername) {
             $remoteUrl = "https://github.com/$GitHubUsername/$RepositoryName.git"
             git remote add origin $remoteUrl
@@ -161,42 +161,42 @@ Initial commit: Smart Attendance System
 # Setup database
 function Setup-Database {
     Write-Header "Setting Up Database"
-    
+
     if ($SkipDatabase) {
         Write-Info "Skipping database setup"
         return
     }
-    
+
     $mysqlPath = "c:\xampp\mysql\bin\mysql.exe"
-    
+
     if (-not (Test-Path $mysqlPath)) {
         Write-Error "MySQL not found at $mysqlPath"
         Write-Info "Please ensure XAMPP is installed and MySQL is in the correct path"
         return
     }
-    
+
     try {
         # Create database
         & $mysqlPath -u root -e "CREATE DATABASE IF NOT EXISTS attendance_qr_system CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
         Write-Success "Database 'attendance_qr_system' created or already exists"
-        
+
         # Run migrations if they exist
         if (Test-Path "database\migrations\001_initial_schema.sql") {
             & $mysqlPath -u root attendance_qr_system -e "source database/migrations/001_initial_schema.sql"
             Write-Success "Applied initial schema migration"
         }
-        
+
         if (Test-Path "database\migrations\002_default_data.sql") {
             & $mysqlPath -u root attendance_qr_system -e "source database/migrations/002_default_data.sql"
             Write-Success "Applied default data migration"
         }
-        
+
         # Import existing complete setup if migrations don't exist
         if (Test-Path "complete_database_setup.sql") {
             & $mysqlPath -u root attendance_qr_system -e "source complete_database_setup.sql"
             Write-Success "Imported complete database setup"
         }
-        
+
     }
     catch {
         Write-Error "Database setup failed: $($_.Exception.Message)"
@@ -207,16 +207,16 @@ function Setup-Database {
 # Create VS Code workspace configuration
 function Setup-VSCodeWorkspace {
     Write-Header "Setting Up VS Code Workspace"
-    
+
     if (-not (Test-Path ".vscode")) {
         New-Item -ItemType Directory -Path ".vscode" -Force | Out-Null
     }
-    
+
     # Extensions recommendations
     $extensions = @{
         "recommendations" = @(
             "ms-vscode.live-share",
-            "bmewburn.vscode-intelephense-client", 
+            "bmewburn.vscode-intelephense-client",
             "eamodio.gitlens",
             "ms-vscode.vscode-json",
             "formulahendry.auto-rename-tag",
@@ -227,10 +227,10 @@ function Setup-VSCodeWorkspace {
             "mtxr.sqltools-driver-mysql"
         )
     }
-    
+
     $extensions | ConvertTo-Json -Depth 3 | Out-File -FilePath ".vscode\extensions.json" -Encoding UTF8
     Write-Success "Created VS Code extensions recommendations"
-    
+
     # Workspace settings
     $settings = @{
         "php.suggest.basic" = $false
@@ -242,7 +242,7 @@ function Setup-VSCodeWorkspace {
             "php" = "html"
         }
     }
-    
+
     $settings | ConvertTo-Json -Depth 3 | Out-File -FilePath ".vscode\settings.json" -Encoding UTF8
     Write-Success "Created VS Code workspace settings"
 }
@@ -250,7 +250,7 @@ function Setup-VSCodeWorkspace {
 # Generate project summary
 function Generate-Summary {
     Write-Header "Project Setup Summary"
-    
+
     Write-Host ""
     Write-Host "📁 Project Structure:" -ForegroundColor Yellow
     Write-Host "   ├── 📄 README.md (Updated with team collaboration info)"
@@ -261,7 +261,7 @@ function Generate-Summary {
     Write-Host "   ├── 📁 database/migrations/ (Database setup scripts)"
     Write-Host "   └── 📁 .vscode/ (VS Code team settings)"
     Write-Host ""
-    
+
     Write-Host "🔧 Next Steps:" -ForegroundColor Yellow
     Write-Host "   1. Edit .env file with your database credentials"
     Write-Host "   2. Start XAMPP Apache and MySQL services"
@@ -276,14 +276,14 @@ function Generate-Summary {
     Write-Host "   6. Install recommended VS Code extensions"
     Write-Host "   7. Start Live Share session for team collaboration"
     Write-Host ""
-    
+
     Write-Host "🌐 Team Collaboration:" -ForegroundColor Yellow
     Write-Host "   • Use 'git checkout develop' for new features"
     Write-Host "   • Create feature branches: 'git checkout -b feature/feature-name'"
     Write-Host "   • Submit pull requests for code review"
     Write-Host "   • Use VS Code Live Share for real-time collaboration"
     Write-Host ""
-    
+
     $currentIP = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -like "192.168.*" -or $_.IPAddress -like "10.*" }).IPAddress | Select-Object -First 1
     if ($currentIP) {
         Write-Host "📱 Mobile Access:" -ForegroundColor Yellow
@@ -298,14 +298,14 @@ function Main {
     Write-Host "🎓 Smart Attendance System - Automated Setup" -ForegroundColor Green -BackgroundColor Black
     Write-Host "=============================================" -ForegroundColor Green
     Write-Host ""
-    
+
     Test-Prerequisites
     Setup-Environment
     Initialize-Git
-    Setup-Database  
+    Setup-Database
     Setup-VSCodeWorkspace
     Generate-Summary
-    
+
     Write-Host ""
     Write-Success "Project setup completed successfully! 🎉"
     Write-Host ""

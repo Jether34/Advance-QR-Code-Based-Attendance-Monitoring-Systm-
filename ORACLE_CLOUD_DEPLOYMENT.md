@@ -67,7 +67,7 @@ chmod +x quick_oracle_deploy.sh
 
 This single script will:
 - ✅ Install Apache 2.4 & PHP 8.2
-- ✅ Install MySQL Server  
+- ✅ Install MySQL Server
 - ✅ Install Ollama AI engine (Llama 3.2 model)
 - ✅ Clone TapIn from GitHub
 - ✅ Configure Apache VirtualHost

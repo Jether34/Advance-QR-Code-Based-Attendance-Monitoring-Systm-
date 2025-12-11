@@ -18,36 +18,36 @@ $pdo = get_db();
 // Fetch system statistics
 try {
     $stats = [];
-    
+
     // Total students
     $stmt = $pdo->query('SELECT COUNT(*) as total FROM students');
     $stats['students'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
-    
+
     // Total teachers
     $stmt = $pdo->query('SELECT COUNT(*) as total FROM teachers');
     $stats['teachers'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
-    
+
     // Total attendance records
     $stmt = $pdo->query('SELECT COUNT(*) as total FROM attendance_records');
     $stats['attendance'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
-    
+
     // Today's attendance
     $stmt = $pdo->query('SELECT COUNT(*) as total FROM attendance_records WHERE DATE(attendance_date) = CURDATE()');
     $stats['today_attendance'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
-    
+
     // Traffic analytics (last 24 hours)
     try {
         $stmt = $pdo->query("SELECT COUNT(*) as total FROM system_events WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
         $stats['traffic_24h'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
-        
+
         // Use prepared statement for event_type filter (more efficient than LIKE)
         $stmt = $pdo->prepare("SELECT COUNT(*) as total FROM system_events WHERE event_type IN (:login_success, :login_failed) AND created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
         $stmt->execute([':login_success' => 'login_success', ':login_failed' => 'login_failed']);
         $stats['logins_24h'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
-        
+
         $stmt = $pdo->query("SELECT COUNT(*) as total FROM system_events WHERE success = 0 AND created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
         $stats['failed_24h'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
-        
+
         // Recent system events (last 10)
         $stmt = $pdo->query("SELECT * FROM system_events ORDER BY created_at DESC LIMIT 10");
         $recent_events = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -57,17 +57,17 @@ try {
         $stats['failed_24h'] = 0;
         $recent_events = [];
     }
-    
+
     // Recent activity (last 10 attendance records)
     $stmt = $pdo->query('
-        SELECT ar.*, s.full_name, s.student_id 
+        SELECT ar.*, s.full_name, s.student_id
         FROM attendance_records ar
         LEFT JOIN students s ON ar.student_id = s.student_id
         ORDER BY ar.attendance_date DESC, ar.created_at DESC
         LIMIT 10
     ');
     $recent_activity = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
 } catch (PDOException $e) {
     $error = 'Database error: ' . $e->getMessage();
 }
@@ -293,7 +293,7 @@ try {
         .status-late { background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); color: #856404; border: 1px solid #ffe08a; }
         .status-absent { background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%); color: #721c24; border: 1px solid #f1aeb5; }
         .status-excuse { background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%); color: #0c5460; border: 1px solid #abdde5; }
-        
+
         /* AI Assistant Styles */
         .ai-container { background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%); border-radius: 20px; padding: 32px 40px; margin-bottom: 28px; box-shadow: 0 10px 40px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.05); border: 1px solid rgba(45, 106, 79, 0.08); }
         .ai-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
@@ -315,26 +315,26 @@ try {
     </style>
     <script>
         let chatHistory = [];
-        
+
         async function askAI(question) {
             if (!question.trim()) return;
-            
+
             const chatDiv = document.getElementById('ai-chat');
             const input = document.getElementById('ai-input');
             const btn = document.getElementById('ai-btn');
-            
+
             // Add user message
             const userMsg = document.createElement('div');
             userMsg.className = 'ai-message user';
             userMsg.innerHTML = '<strong>You:</strong> ' + escapeHtml(question);
             chatDiv.appendChild(userMsg);
-            
+
             // Disable input
             input.value = '';
             input.disabled = true;
             btn.disabled = true;
             btn.textContent = 'Thinking...';
-            
+
             // Add loading message
             const loadingMsg = document.createElement('div');
             loadingMsg.className = 'ai-message assistant';
@@ -342,25 +342,25 @@ try {
             loadingMsg.innerHTML = '<strong>Jether:</strong> Analyzing data...';
             chatDiv.appendChild(loadingMsg);
             chatDiv.scrollTop = chatDiv.scrollHeight;
-            
+
             try {
                 const response = await fetch('developer_ai_assistant.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ question: question })
                 });
-                
+
                 const data = await response.json();
-                
+
                 // Remove loading message
                 loadingMsg.remove();
-                
+
                 if (data.success) {
                     const assistantMsg = document.createElement('div');
                     assistantMsg.className = 'ai-message assistant';
                     assistantMsg.innerHTML = '<strong>Jether:</strong>\n' + escapeHtml(data.answer);
                     chatDiv.appendChild(assistantMsg);
-                    
+
                     chatHistory.push({ question, answer: data.answer });
                 } else {
                     const errorMsg = document.createElement('div');
@@ -380,7 +380,7 @@ try {
                                    '• PHP error logs for details';
                 chatDiv.appendChild(errorMsg);
             }
-            
+
             // Re-enable input
             input.disabled = false;
             btn.disabled = false;
@@ -388,22 +388,22 @@ try {
             input.focus();
             chatDiv.scrollTop = chatDiv.scrollHeight;
         }
-        
+
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
-        
+
         document.addEventListener('DOMContentLoaded', () => {
             const input = document.getElementById('ai-input');
             const btn = document.getElementById('ai-btn');
-            
+
             btn.addEventListener('click', () => askAI(input.value));
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') askAI(input.value);
             });
-            
+
             // Suggestion buttons
             document.querySelectorAll('.ai-suggestion').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -423,13 +423,13 @@ try {
                 <a href="developer_logout.php" class="btn btn-logout">Logout</a>
             </div>
         </div>
-        
+
         <div class="ai-container">
             <div class="ai-header">
                 <h2>🤖 Jether AI</h2>
                 <span class="ai-badge">LIVE</span>
             </div>
-            
+
             <div class="ai-suggestions">
                 <button class="ai-suggestion">Who created this system?</button>
                 <button class="ai-suggestion">Explain the database schema</button>
@@ -438,11 +438,11 @@ try {
                 <button class="ai-suggestion">Show attendance trends</button>
                 <button class="ai-suggestion">System overview</button>
             </div>
-            
+
             <div id="ai-chat" class="ai-chat">
                 <div class="ai-message assistant">
                     <strong>Jether:</strong> Hi! I'm Jether AI Assistant, powered by Llama 3.2. I have comprehensive knowledge of this QR-Based Attendance System including:
-                    
+
 • Frontend: HTML5, CSS3, JavaScript (QR scanning)
 • Backend: PHP files, database schema, system architecture
 • Database: All 8 tables (students, teachers, attendance_records, system_events, posts, etc.)
@@ -452,13 +452,13 @@ try {
 Ask me about the system architecture, database schema, creator information, or analyze live data!
                 </div>
             </div>
-            
+
             <div class="ai-input-group">
                 <input type="text" id="ai-input" class="ai-input" placeholder="Ask about system status, security, attendance patterns..." />
                 <button id="ai-btn" class="ai-btn">Ask</button>
             </div>
         </div>
-        
+
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon">👨‍🎓</div>
@@ -496,7 +496,7 @@ Ask me about the system architecture, database schema, creator information, or a
                 <div class="stat-label">Failed Events (24h)</div>
             </div>
         </div>
-        
+
         <div class="section">
             <h2>🚀 Quick Actions</h2>
             <div class="quick-links">
@@ -509,7 +509,7 @@ Ask me about the system architecture, database schema, creator information, or a
                 <a href="developer_traffic.php" class="quick-link">📈 Traffic Monitor</a>
             </div>
         </div>
-        
+
         <div class="section">
             <h2>🔔 Recent System Events</h2>
             <?php if (!empty($recent_events)): ?>
@@ -561,7 +561,7 @@ Ask me about the system architecture, database schema, creator information, or a
                 <p style="color: #7f8c8d; text-align: center; padding: 20px;">No recent system events found.</p>
             <?php endif; ?>
         </div>
-        
+
         <div class="section">
             <h2>📊 Recent Activity</h2>
             <?php if (!empty($recent_activity)): ?>
@@ -596,10 +596,10 @@ Ask me about the system architecture, database schema, creator information, or a
             <?php endif; ?>
         </div>
     </div>
-    
+
     <script>
         // Prevent back button from showing cached page
-        window.history.pushState(null, "", window.location.href);        
+        window.history.pushState(null, "", window.location.href);
         window.onpopstate = function() {
             window.history.pushState(null, "", window.location.href);
         };

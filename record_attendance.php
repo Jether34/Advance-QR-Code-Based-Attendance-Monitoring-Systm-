@@ -40,7 +40,7 @@ function determineAttendancePeriod() {
     $hour = (int)date('H');
     $minute = (int)date('i');
     $time_minutes = ($hour * 60) + $minute;
-    
+
     // Convert time boundaries to minutes
     $morning_in_start = 6 * 60;          // 6:00 AM = 360 minutes
     $morning_in_end = 11 * 60 + 35;      // 11:35 AM = 695 minutes
@@ -50,7 +50,7 @@ function determineAttendancePeriod() {
     $afternoon_in_end = 15 * 60 + 45;    // 3:45 PM = 945 minutes
     $afternoon_out_start = 15 * 60 + 46; // 3:46 PM = 946 minutes
     $afternoon_out_end = 19 * 60;        // 7:00 PM = 1140 minutes
-    
+
     // Morning In: 6:00 AM to 11:35 AM
     if ($time_minutes >= $morning_in_start && $time_minutes <= $morning_in_end) {
         // Check if it's half day present (6:00-9:00) or late (9:01-11:35)
@@ -61,22 +61,22 @@ function determineAttendancePeriod() {
             return ['period' => 'morning_in', 'sub_status' => 'late', 'description' => 'Morning In (Late)'];
         }
     }
-    
+
     // Morning Out: 11:36 AM to 12:45 PM
     if ($time_minutes >= $morning_out_start && $time_minutes <= $morning_out_end) {
         return ['period' => 'morning_out', 'sub_status' => 'present', 'description' => 'Morning Out'];
     }
-    
+
     // Afternoon In: 12:46 PM to 3:45 PM
     if ($time_minutes >= $afternoon_in_start && $time_minutes <= $afternoon_in_end) {
         return ['period' => 'afternoon_in', 'sub_status' => 'present', 'description' => 'Afternoon In'];
     }
-    
+
     // Afternoon Out: 3:46 PM to 7:00 PM
     if ($time_minutes >= $afternoon_out_start && $time_minutes <= $afternoon_out_end) {
         return ['period' => 'afternoon_out', 'sub_status' => 'present', 'description' => 'Afternoon Out'];
     }
-    
+
     // Outside valid scanning hours
     return ['period' => null, 'sub_status' => 'invalid', 'description' => 'Outside scanning hours'];
 }
@@ -87,7 +87,7 @@ function calculateAttendanceStatus($record) {
     $morning_out = !empty($record['morning_out']);
     $afternoon_in = !empty($record['afternoon_in']);
     $afternoon_out = !empty($record['afternoon_out']);
-    
+
     // Check if morning in was late (9:01 AM - 11:35 AM)
     $morning_late = false;
     if ($morning_in) {
@@ -99,12 +99,12 @@ function calculateAttendanceStatus($record) {
             $morning_late = true;
         }
     }
-    
+
     // Perfect attendance: All 4 scans completed = PRESENT (regardless of late)
     if ($morning_in && $morning_out && $afternoon_in && $afternoon_out) {
         return 'present';
     }
-    
+
     // Full day with missing out scans: both morning and afternoon IN scans
     if ($morning_in && $afternoon_in) {
         if ($morning_late) {
@@ -112,17 +112,17 @@ function calculateAttendanceStatus($record) {
         }
         return 'present';
     }
-    
+
     // Morning half day: only morning scans (in required, out optional)
     if ($morning_in && !$afternoon_in) {
         return 'morning_half_day';
     }
-    
+
     // Afternoon half day: only afternoon scans (in required, out optional)
     if (!$morning_in && $afternoon_in) {
         return 'afternoon_half_day';
     }
-    
+
     // No valid scans = absent
     return 'absent';
 }
@@ -140,7 +140,7 @@ try {
     exit;
 }
 
-// Validate student ID in students table 
+// Validate student ID in students table
 
 try {
     $stmt = $pdo->prepare('SELECT * FROM students WHERE student_id = :code LIMIT 1');
@@ -221,7 +221,7 @@ try {
                 'reason' => 'Already scanned for this period'
             ],
         ]);
-        
+
         echo json_encode([
             'success' => false,
             'error' => 'Already scanned for ' . str_replace('_', ' ', $period),
@@ -240,12 +240,12 @@ try {
             ':time'=>$now,
             ':id'=>$existing['id']
         ]);
-        
+
         // Get updated record to calculate status
         $check = $pdo->prepare('SELECT * FROM attendance_records WHERE id = :id');
         $check->execute([':id'=>$existing['id']]);
         $updated_record = $check->fetch(PDO::FETCH_ASSOC);
-        
+
     } else {
         // Insert new record
         $fields = 'student_id, attendance_date, attendance_time, ' . $period;
@@ -257,18 +257,18 @@ try {
             ':now'=>$now,
             ':time'=>$now
         ]);
-        
-        
+
+
         // Get the newly inserted record
         $record_id = $pdo->lastInsertId();
         $check = $pdo->prepare('SELECT * FROM attendance_records WHERE id = :id');
         $check->execute([':id'=>$record_id]);
         $updated_record = $check->fetch(PDO::FETCH_ASSOC);
     }
-    
+
     // Calculate attendance status based on scan pattern
     $status = calculateAttendanceStatus($updated_record);
-    
+
     // Update the status
     $status_update = $pdo->prepare("UPDATE attendance_records SET status = :status WHERE id = :id");
     $status_update->execute([

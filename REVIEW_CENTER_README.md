@@ -186,8 +186,8 @@ Includes lessons on:
 
 ## Creator
 
-**Jether Garque**  
-Grade 12 ICT Programming Student  
+**Jether Garque**
+Grade 12 ICT Programming Student
 Palawan National School
 
 Part of the QR-Based Attendance Monitoring System project.

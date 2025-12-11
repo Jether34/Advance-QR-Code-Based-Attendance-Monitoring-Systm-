@@ -13,7 +13,7 @@
             background: linear-gradient(135deg, #d6f5d6 0%, #eaffea 100%);
             min-height: 100vh;
         }
-        
+
         .container {
             background: white;
             padding: 40px;
@@ -21,12 +21,12 @@
             box-shadow: 0 8px 25px rgba(33, 140, 33, 0.2);
             text-align: center;
         }
-        
+
         h1 {
             color: #218c21;
             margin-bottom: 30px;
         }
-        
+
         .test-section {
             margin: 30px 0;
             padding: 20px;
@@ -34,7 +34,7 @@
             border-radius: 10px;
             background: #f9fff9;
         }
-        
+
         .qr-display {
             margin: 20px 0;
             display: inline-block;
@@ -43,7 +43,7 @@
             border: 2px solid #218c21;
             border-radius: 10px;
         }
-        
+
         input[type="text"] {
             padding: 12px;
             font-size: 16px;
@@ -52,7 +52,7 @@
             width: 250px;
             margin: 10px;
         }
-        
+
         button {
             padding: 12px 24px;
             background: #218c21;
@@ -64,21 +64,21 @@
             margin: 10px;
             transition: all 0.3s;
         }
-        
+
         button:hover {
             background: #176617;
             transform: translateY(-2px);
         }
-        
+
         .method-selector {
             margin: 20px 0;
         }
-        
+
         .method-selector label {
             margin: 0 15px;
             cursor: pointer;
         }
-        
+
         .info {
             background: #fffacd;
             border: 1px solid #f0e68c;
@@ -87,19 +87,19 @@
             margin: 20px 0;
             text-align: left;
         }
-        
+
         .success {
             background: #d4edda;
             border: 1px solid #c3e6cb;
             color: #155724;
         }
-        
+
         .error {
             background: #f8d7da;
             border: 1px solid #f5c6cb;
             color: #721c24;
         }
-        
+
         .test-results {
             margin-top: 30px;
             text-align: left;
@@ -110,25 +110,25 @@
     <div class="container">
         <h1>🔍 QR Code Verification System</h1>
         <p>Test different QR code generation methods to ensure compatibility with mobile scanners</p>
-        
+
         <div class="test-section">
             <h3>📱 Generate Test QR Code</h3>
             <input type="text" id="testText" placeholder="Enter Student ID (e.g., ABC123456)" value="TEST123456">
             <br>
-            
+
             <div class="method-selector">
                 <h4>Select QR Generation Method:</h4>
                 <label><input type="radio" name="method" value="google" checked> Google Charts API (Online)</label>
                 <label><input type="radio" name="method" value="simple"> Simple Canvas QR</label>
                 <label><input type="radio" name="method" value="both"> Both Methods</label>
             </div>
-            
+
             <button onclick="generateTestQR()">Generate QR Code</button>
             <button onclick="testWithScanner()">Test with Scanner</button>
         </div>
-        
+
         <div id="qrResults"></div>
-        
+
         <div class="test-section">
             <h3>🎯 Scanning Instructions</h3>
             <div class="info">
@@ -141,14 +141,14 @@
                 </ol>
             </div>
         </div>
-        
+
         <div class="test-section">
             <h3>📊 Test Results</h3>
             <div id="testResults" class="test-results">
                 <p>Generate a QR code above to see test results here.</p>
             </div>
         </div>
-        
+
         <div class="test-section">
             <h3>🔧 Troubleshooting</h3>
             <div class="info">
@@ -171,58 +171,58 @@
             var method = document.querySelector('input[name="method"]:checked').value;
             var resultsDiv = document.getElementById('qrResults');
             var testResultsDiv = document.getElementById('testResults');
-            
+
             if (!text) {
                 alert('Please enter some text to encode');
                 return;
             }
-            
+
             resultsDiv.innerHTML = '<p>Generating QR codes...</p>';
             testResultsDiv.innerHTML = '<h4>Test Results for: "' + text + '"</h4>';
-            
+
             if (method === 'google' || method === 'both') {
                 generateGoogleQR(text, resultsDiv, method === 'both');
             }
-            
+
             if (method === 'simple' || method === 'both') {
                 generateSimpleQR(text, resultsDiv, method === 'both');
             }
         }
-        
+
         function generateGoogleQR(text, container, showBoth) {
             var section = document.createElement('div');
             section.className = 'test-section';
             section.innerHTML = '<h4>📡 Google Charts API QR Code</h4>';
-            
+
             var img = new Image();
             img.crossOrigin = 'anonymous';
-            
+
             var size = 250;
             var encodedText = encodeURIComponent(text);
-            var googleUrl = 'https://chart.googleapis.com/chart?chs=' + size + 'x' + size + 
+            var googleUrl = 'https://chart.googleapis.com/chart?chs=' + size + 'x' + size +
                            '&cht=qr&chl=' + encodedText + '&choe=UTF-8&chld=M|2';
-            
+
             var qrDiv = document.createElement('div');
             qrDiv.className = 'qr-display';
-            
+
             img.onload = function() {
                 qrDiv.appendChild(img);
                 section.appendChild(qrDiv);
-                
+
                 var info = document.createElement('div');
                 info.className = 'info success';
                 info.innerHTML = '<strong>✅ Google QR Generated Successfully</strong><br>' +
                                'This method uses Google\'s QR API and should be highly compatible with all scanners.';
                 section.appendChild(info);
-                
+
                 if (!showBoth) {
                     container.innerHTML = '';
                 }
                 container.appendChild(section);
-                
+
                 updateTestResults('Google Charts API', true, 'High compatibility - should work with all mobile scanners');
             };
-            
+
             img.onerror = function() {
                 var errorDiv = document.createElement('div');
                 errorDiv.className = 'info error';
@@ -230,72 +230,72 @@
                                    'Internet connection required. Using fallback method.';
                 section.appendChild(errorDiv);
                 container.appendChild(section);
-                
+
                 updateTestResults('Google Charts API', false, 'Failed - No internet connection or API error');
             };
-            
+
             img.src = googleUrl;
             img.style.width = img.style.height = size + 'px';
         }
-        
+
         function generateSimpleQR(text, container, showBoth) {
             var section = document.createElement('div');
             section.className = 'test-section';
             section.innerHTML = '<h4>🎨 Canvas-based QR Code</h4>';
-            
+
             try {
                 var canvas = createBasicQR(text, 250);
-                
+
                 var qrDiv = document.createElement('div');
                 qrDiv.className = 'qr-display';
                 qrDiv.appendChild(canvas);
                 section.appendChild(qrDiv);
-                
+
                 var info = document.createElement('div');
                 info.className = 'info';
                 info.innerHTML = '<strong>⚠️ Canvas QR Generated</strong><br>' +
                                'This is a basic pattern. May have limited compatibility with some scanners.';
                 section.appendChild(info);
-                
+
                 if (!showBoth) {
                     container.innerHTML = '';
                 }
                 container.appendChild(section);
-                
+
                 updateTestResults('Canvas-based QR', true, 'Basic compatibility - may not work with all scanners');
-                
+
             } catch (e) {
                 var errorDiv = document.createElement('div');
                 errorDiv.className = 'info error';
                 errorDiv.innerHTML = '<strong>❌ Canvas QR Failed</strong><br>Error: ' + e.message;
                 section.appendChild(errorDiv);
                 container.appendChild(section);
-                
+
                 updateTestResults('Canvas-based QR', false, 'Failed - ' + e.message);
             }
         }
-        
+
         function createBasicQR(text, size) {
             var canvas = document.createElement('canvas');
             canvas.width = canvas.height = size;
             var ctx = canvas.getContext('2d');
-            
+
             // Simple QR-like pattern for demonstration
             var gridSize = 25;
             var cellSize = size / gridSize;
-            
+
             // White background
             ctx.fillStyle = '#FFFFFF';
             ctx.fillRect(0, 0, size, size);
-            
+
             // Create pattern based on text
             ctx.fillStyle = '#000000';
-            
+
             // Add corner markers
             drawCornerMarker(ctx, 0, 0, cellSize);
             drawCornerMarker(ctx, (gridSize - 7) * cellSize, 0, cellSize);
             drawCornerMarker(ctx, 0, (gridSize - 7) * cellSize, cellSize);
-            
+
             // Add timing patterns
             for (var i = 8; i < gridSize - 8; i++) {
                 if (i % 2 === 0) {
@@ -303,7 +303,7 @@
                     ctx.fillRect(6 * cellSize, i * cellSize, cellSize, cellSize);
                 }
             }
-            
+
             // Encode text as pattern
             var hash = simpleHash(text);
             for (var row = 9; row < gridSize - 9; row++) {
@@ -313,10 +313,10 @@
                     }
                 }
             }
-            
+
             return canvas;
         }
-        
+
         function drawCornerMarker(ctx, x, y, cellSize) {
             // 7x7 finder pattern
             ctx.fillRect(x, y, 7 * cellSize, 7 * cellSize);
@@ -325,7 +325,7 @@
             ctx.fillStyle = '#000000';
             ctx.fillRect(x + 2 * cellSize, y + 2 * cellSize, 3 * cellSize, 3 * cellSize);
         }
-        
+
         function simpleHash(str) {
             var hash = 0;
             for (var i = 0; i < str.length; i++) {
@@ -335,9 +335,9 @@
             }
             return Math.abs(hash);
         }
-        
+
         var testResults = [];
-        
+
         function updateTestResults(method, success, note) {
             testResults.push({
                 method: method,
@@ -345,18 +345,18 @@
                 note: note,
                 timestamp: new Date().toLocaleTimeString()
             });
-            
+
             var resultsHtml = '<h4>📊 Test Summary</h4>';
             testResults.forEach(function(result) {
                 var statusIcon = result.success ? '✅' : '❌';
                 var statusClass = result.success ? 'success' : 'error';
-                
+
                 resultsHtml += '<div class="info ' + statusClass + '" style="margin: 10px 0;">';
                 resultsHtml += '<strong>' + statusIcon + ' ' + result.method + '</strong> (' + result.timestamp + ')<br>';
                 resultsHtml += result.note;
                 resultsHtml += '</div>';
             });
-            
+
             resultsHtml += '<div class="info">';
             resultsHtml += '<strong>💡 Recommendation:</strong> ';
             if (testResults.some(r => r.method.includes('Google') && r.success)) {
@@ -367,10 +367,10 @@
                 resultsHtml += 'No working QR generation method found. Check internet connection and try again.';
             }
             resultsHtml += '</div>';
-            
+
             document.getElementById('testResults').innerHTML = resultsHtml;
         }
-        
+
         function testWithScanner() {
             window.open('scan.php', '_blank', 'width=800,height=600');
         }

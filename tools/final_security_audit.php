@@ -37,14 +37,14 @@ $files_to_check = [
 foreach ($files_to_check as $file) {
     $total_tests++;
     $content = file_get_contents(__DIR__ . "/../$file");
-    
+
     // Check for prepared statements
     $has_prepare = strpos($content, '$pdo->prepare') !== false;
     $has_execute = strpos($content, '->execute') !== false;
-    
+
     // Check for dangerous patterns
     $has_string_concat_query = preg_match('/\$\w+\s*=\s*["\']SELECT.*\$/', $content) > 0;
-    
+
     if ($has_prepare && $has_execute && !$has_string_concat_query) {
         echo "│ ✓ $file: PASS (uses prepared statements)\n";
         $passed_tests++;
@@ -68,14 +68,14 @@ $csrf_files = [
 foreach ($csrf_files as $file => $checks) {
     $total_tests++;
     $content = file_get_contents(__DIR__ . "/../$file");
-    
+
     $all_found = true;
     foreach ($checks as $check) {
         if (stripos($content, $check) === false) {
             $all_found = false;
         }
     }
-    
+
     if ($all_found) {
         echo "│ ✓ $file: PASS (CSRF protection present)\n";
         $passed_tests++;
@@ -184,10 +184,10 @@ $dashboards = [
 foreach ($dashboards as $file) {
     $total_tests++;
     $content = file_get_contents(__DIR__ . "/../$file");
-    
+
     $has_meta_cache = strpos($content, 'http-equiv="Cache-Control"') !== false;
     $has_auth_check = (strpos($content, '$_SESSION') !== false && strpos($content, 'header(') !== false);
-    
+
     if ($has_meta_cache && $has_auth_check) {
         echo "│ ✓ $file: PASS (cache prevention + auth check)\n";
         $passed_tests++;
@@ -282,18 +282,18 @@ $total_tests++;
 if (file_exists(__DIR__ . '/../db.php')) {
     $db_content = file_get_contents(__DIR__ . '/../db.php');
     $config_content = file_get_contents(__DIR__ . '/../config.php');
-    
+
     $db_checks = [
         'PDO connection' => strpos($db_content, 'PDO') !== false,
         'prepared statements' => preg_match('/prepare|execute/', $db_content) > 0,
         '.env usage' => strpos($config_content, '.env') !== false,
     ];
-    
+
     $all_passed = true;
     foreach ($db_checks as $result) {
         if (!$result) $all_passed = false;
     }
-    
+
     if ($all_passed) {
         echo "│ ✓ db.php & config.php: PASS (secure DB configuration)\n";
         $passed_tests++;
@@ -328,7 +328,7 @@ $critical_files = [
 foreach ($critical_files as $file) {
     $total_tests++;
     $path = __DIR__ . "/../$file";
-    
+
     if (file_exists($path)) {
         $output = shell_exec("php -l '$path' 2>&1");
         if (strpos($output, 'No syntax errors') !== false || strpos($output, 'Errors parsing') === false) {

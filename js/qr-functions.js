@@ -3,24 +3,24 @@ function createFallbackQR(text, size, container) {
     // Use the simple QR generator as fallback
     try {
         var canvas = SimplePatternGenerator.generate(text, size);
-        
+
         // Clear container and add QR code
         container.innerHTML = '';
         container.appendChild(canvas);
-        
+
         // Store canvas reference for downloads
         window.currentQRCanvas = canvas;
-        
+
         // Add fallback message
         var fallbackDiv = document.createElement('div');
         fallbackDiv.style.cssText = 'font-size: 11px; color: #f0ad4e; margin-top: 8px; text-align: center; font-weight: bold;';
         fallbackDiv.innerHTML = '⚡ Simple QR Code (Offline Mode)';
         container.appendChild(fallbackDiv);
-        
+
         console.log('Fallback QR code generated successfully');
     } catch (error) {
         console.error('All QR generation methods failed:', error);
-        
+
         // Last resort: show the text directly
         container.innerHTML = `
             <div style="background: #f8f9fa; border: 2px dashed #6c757d; padding: 20px; border-radius: 8px; text-align: center;">
@@ -49,7 +49,7 @@ function downloadPDF() {
         // Create a new window for printing
         var printWindow = window.open('', '_blank');
         var qrDataURL = window.currentQRCanvas.toDataURL();
-        
+
         printWindow.document.write(`
             <html>
             <head>
@@ -79,7 +79,7 @@ function downloadPDF() {
             </body>
             </html>
         `);
-        
+
         printWindow.document.close();
         setTimeout(() => {
             printWindow.print();

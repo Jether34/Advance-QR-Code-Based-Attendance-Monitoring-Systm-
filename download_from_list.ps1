@@ -40,10 +40,10 @@ foreach ($url in $urls) {
         $fileName = [System.IO.Path]::GetFileName($url.Split('?')[0])
         $fileName = $fileName -replace '[^\w\-\.]', '_'
         $filePath = Join-Path $dataDir $fileName
-        
+
         Write-Host "Downloading: $fileName" -ForegroundColor Cyan
         Invoke-WebRequest -Uri $url -OutFile $filePath -TimeoutSec 120 -UserAgent "Mozilla/5.0"
-        
+
         if (Test-Path $filePath) {
             $sizeKB = [math]::Round((Get-Item $filePath).Length / 1KB, 2)
             Write-Host "  ✓ Saved ($sizeKB KB)" -ForegroundColor Green
@@ -54,7 +54,7 @@ foreach ($url in $urls) {
         Write-Host "  ✗ Failed: $($_.Exception.Message)" -ForegroundColor Red
         $failed++
     }
-    
+
     Start-Sleep -Milliseconds 500
 }
 

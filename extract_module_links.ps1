@@ -13,7 +13,7 @@ Write-Host @"
 // Extract all PDF links
 const links = Array.from(document.querySelectorAll('a[href*=".pdf"]'))
     .map(a => a.href)
-    .filter(href => href.includes('grade-11') || href.includes('grade-12') || 
+    .filter(href => href.includes('grade-11') || href.includes('grade-12') ||
                     href.includes('Grade 11') || href.includes('Grade 12'));
 console.log(links.join('\n'));
 copy(links.join('\n'));

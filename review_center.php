@@ -193,10 +193,10 @@ if ($currentConvoId) {
         const res = await fetch('reviewer_ai.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            question, 
-            grade: studentGrade, 
-            strand: studentStrand, 
+          body: JSON.stringify({
+            question,
+            grade: studentGrade,
+            strand: studentStrand,
             user_id: <?php echo (int)$uid; ?>,
             conversation_id: currentConvoId
           })
@@ -208,9 +208,9 @@ if ($currentConvoId) {
           const saveRes = await fetch('save_conversation.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-              question, 
-              response: data.response, 
+            body: JSON.stringify({
+              question,
+              response: data.response,
               user_id: <?php echo (int)$uid; ?>,
               conversation_id: currentConvoId
             })
@@ -250,21 +250,21 @@ if ($currentConvoId) {
         status.innerHTML = '<strong style="color:#d32f2f">⚠️ Please select a PDF module first</strong>';
         return;
       }
-      
+
       const fileName = fileInput.files[0].name;
       status.innerHTML = `<div style="color:#1e5128;font-weight:600">🤖 AI is extracting ALL text content from "${fileName}"...</div>` +
                         `<div style="color:#5a6c7d;margin-top:8px">📖 Reading module content...<br>🧠 Identifying lessons...<br>⏳ This may take 30-90 seconds</div>`;
-      
+
       const formData = new FormData();
       formData.append('pdf_file', fileInput.files[0]);
-      
+
       try {
         const res = await fetch('pdf_to_csv_converter.php', {
           method: 'POST',
           body: formData
         });
         const data = await res.json();
-        
+
         if (data.success) {
           lessonsData = parseCSV(data.csv_content);
           status.innerHTML = `<div style="color:#1e5128;font-weight:700;font-size:18px">✅ Success!</div>` +

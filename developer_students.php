@@ -26,7 +26,7 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['action']) && $_POST['act
     $strand = trim($_POST['strand'] ?? '');
     $section = trim($_POST['section_block'] ?? '');
     $lrn = trim($_POST['lrn'] ?? '');
-    
+
     foreach(['full_name','email'] as $req){ if(empty($$req)) $errors[] = "$req is required"; }
     if($email && !filter_var($email,FILTER_VALIDATE_EMAIL)) $errors[]='Invalid email format';
     if(!$errors){

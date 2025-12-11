@@ -10,7 +10,7 @@ function init_page_security() {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
-    
+
     // Set cache control headers to prevent page caching
     if (!headers_sent()) {
         header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
@@ -18,7 +18,7 @@ function init_page_security() {
         header("Pragma: no-cache");
         header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
     }
-    
+
     // Generate a unique page token for this request if not present
     $current_page = basename($_SERVER['PHP_SELF']);
     if (empty($_SESSION['current_page_token']) || ($_SESSION['current_page'] ?? '') !== $current_page) {
@@ -42,38 +42,38 @@ function validate_page_token() {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
-    
+
     // Skip validation for login, logout, and index pages
     $current_page = $_SERVER['PHP_SELF'];
     $exempt_pages = ['login.php', 'logout.php', 'index.php', 'signup.php', 'process_signup.php', 'developer_login.php', 'developer_logout.php'];
-    
+
     foreach ($exempt_pages as $exempt) {
         if (strpos($current_page, $exempt) !== false) {
             return true;
         }
     }
-    
+
     // Check if user is logged in
     if (!isset($_SESSION['user_id'])) {
         return true; // Let auth system handle this
     }
-    
+
     // Skip token check on first login (allow the redirect to work)
     if (isset($_SESSION['skip_page_token_check']) && $_SESSION['skip_page_token_check']) {
         unset($_SESSION['skip_page_token_check']);
         init_page_security();
         return true;
     }
-    
+
     // Check if this is a POST request (form submission)
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         return true; // Allow POST requests
     }
-    
+
     // Check if page token exists and matches
     $expected_token = isset($_SESSION['current_page_token']) ? $_SESSION['current_page_token'] : null;
     $page_token = isset($_GET['_pt']) ? $_GET['_pt'] : null;
-    
+
     // For the first visit to a page, initialize the token
     if ($expected_token === null) {
         init_page_security();
@@ -90,7 +90,7 @@ function validate_page_token() {
         }
         // Otherwise allow short mismatches (race conditions during redirect/navigation)
     }
-    
+
     return true;
 }
 
@@ -108,10 +108,10 @@ function secure_url($url) {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
-    
+
     $token = isset($_SESSION['current_page_token']) ? $_SESSION['current_page_token'] : '';
     $separator = (strpos($url, '?') !== false) ? '&' : '?';
-    
+
     return $url . $separator . '_pt=' . urlencode($token);
 }
 
@@ -223,10 +223,10 @@ function show_page_expired() {
                 <a href="logout.php" class="btn-action btn-secondary">Logout</a>
             </div>
         </div>
-        
+
         <script>
             // Prevent going back to this expired page
-            window.history.pushState(null, "", window.location.href);        
+            window.history.pushState(null, "", window.location.href);
             window.onpopstate = function() {
                 window.history.pushState(null, "", window.location.href);
             };
@@ -244,11 +244,11 @@ function add_back_button_prevention_script() {
     <script>
         // Prevent page caching and back button
         (function() {
-            window.history.pushState(null, "", window.location.href);        
+            window.history.pushState(null, "", window.location.href);
             window.onpopstate = function() {
                 window.history.pushState(null, "", window.location.href);
             };
-            
+
             // Disable browser cache
             window.onload = function() {
                 if (performance.navigation.type === 2) {

@@ -1,6 +1,6 @@
 ### PSR-7 Usage
 
-All PSR-7 applications comply with these interfaces 
+All PSR-7 applications comply with these interfaces
 They were created to establish a standard between middleware implementations.
 
 > `RequestInterface`, `ServerRequestInterface`, `ResponseInterface` extend `MessageInterface`  because the `Request` and the `Response` are `HTTP Messages`.
@@ -15,7 +15,7 @@ The following examples will illustrate how basic operations are done in PSR-7.
 For this examples to work (at least) a PSR-7 implementation package is required. (eg: zendframework/zend-diactoros, guzzlehttp/psr7, slim/slim, etc)
 All PSR-7 implementations should have the same behaviour.
 
-The following will be assumed: 
+The following will be assumed:
 `$request` is an object of `Psr\Http\Message\RequestInterface` and
 
 `$response` is an object implementing `Psr\Http\Message\RequestInterface`
@@ -64,7 +64,7 @@ $response->getHeader('My-Custom-Header'); // will return:  ["My Custom Message",
 #### Removing headers from HTTP Messages
 ```php
 // removing a header from Request, removing deprecated "Content-MD5" header
-$request->withoutHeader('Content-MD5'); 
+$request->withoutHeader('Content-MD5');
 
 // removing a header from Response
 // effect: the browser won't know the size of the stream
@@ -84,7 +84,7 @@ $body = $response->getBody();
 // operations on body, eg. read, write, seek
 // ...
 // replacing the old body
-$response->withBody($body); 
+$response->withBody($body);
 // this last statement is optional as we working with objects
 // in this case the "new" body is same with the "old" one
 // the $body variable has the same value as the one in $request, only the reference is passed
@@ -102,7 +102,7 @@ $response->getBody()->write('hello');
 
 The following snippet gets the contents of a stream contents.
 > Note: Streams must be rewinded, if content was written into streams, it will be ignored when calling `getContents()` because the stream pointer is set to the last character, which is `\0` - meaning end of stream.
-```php 
+```php
 $body = $response->getBody();
 $body->rewind(); // or $body->seek(0);
 $bodyText = $body->getContents();

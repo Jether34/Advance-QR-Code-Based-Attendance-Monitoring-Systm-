@@ -35,7 +35,7 @@
       },
       {
         "label": "Setup Database",
-        "type": "shell", 
+        "type": "shell",
         "command": "powershell",
         "args": ["-File", ".\\setup_project.ps1", "-SkipGitInit"],
         "group": "build",

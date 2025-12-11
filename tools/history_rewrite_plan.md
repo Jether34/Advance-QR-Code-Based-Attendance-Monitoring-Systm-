@@ -57,4 +57,3 @@ Recommendations & safe-guards:
 If you'd like, I can:
 - (1) run `detect-secrets audit` interactively to help verify each finding, or
 - (2) prepare `mappings.txt` for `git filter-repo` for any confirmed leaked secrets found in the baseline.
-

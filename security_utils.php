@@ -67,12 +67,12 @@ function secure_redirect($url) {
         '127.0.0.1',
         SERVER_IP
     ];
-    
+
     $parsed = parse_url($url);
     if (isset($parsed['host']) && !in_array($parsed['host'], $allowed_hosts)) {
         $url = '/';
     }
-    
+
     header('Location: ' . $url, true, 302);
     exit;
 }
@@ -84,26 +84,26 @@ function check_rate_limit($key, $max_attempts = 5, $time_window = 300) {
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
-    
+
     $rate_key = 'rate_limit_' . $key;
     $now = time();
-    
+
     if (!isset($_SESSION[$rate_key])) {
         $_SESSION[$rate_key] = ['count' => 1, 'start' => $now];
         return true;
     }
-    
+
     $data = $_SESSION[$rate_key];
-    
+
     if ($now - $data['start'] > $time_window) {
         $_SESSION[$rate_key] = ['count' => 1, 'start' => $now];
         return true;
     }
-    
+
     if ($data['count'] >= $max_attempts) {
         return false;
     }
-    
+
     $_SESSION[$rate_key]['count']++;
     return true;
 }

@@ -96,7 +96,7 @@ required for locally stored files on you server you intend to stream via
 ``ZipStream``.
 
 See official Symfony documentation for details on
-`Symfony's StreamedResponse <https://symfony.com/doc/current/components/http_foundation.html#streaming-a-response>`_ 
+`Symfony's StreamedResponse <https://symfony.com/doc/current/components/http_foundation.html#streaming-a-response>`_
 ``Symfony\Component\HttpFoundation\StreamedResponse``.
 
 Note from `S3 documentation <https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/s3-stream-wrapper.html>`_:

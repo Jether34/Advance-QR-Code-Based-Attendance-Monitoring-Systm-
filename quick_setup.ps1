@@ -27,16 +27,16 @@ Write-Host "`n🔧 Initializing Git repository..." -ForegroundColor Cyan
 if (-not (Test-Path ".git")) {
     git init
     Write-Host "✅ Git repository initialized" -ForegroundColor Green
-    
+
     git add .
     git commit -m "Initial commit: Smart Attendance System with team collaboration setup"
     Write-Host "✅ Initial commit created" -ForegroundColor Green
-    
+
     # Create develop branch
     git checkout -b develop
     git checkout master
     Write-Host "✅ Created develop branch" -ForegroundColor Green
-    
+
     # Add remote
     $remoteUrl = "https://github.com/$GitHubUsername/smart-attendance-system.git"
     git remote add origin $remoteUrl
@@ -52,7 +52,7 @@ if (Test-Path $mysqlPath) {
     try {
         & $mysqlPath -u root -e "CREATE DATABASE IF NOT EXISTS attendance_qr_system;"
         Write-Host "✅ Database created" -ForegroundColor Green
-        
+
         if (Test-Path "complete_database_setup.sql") {
             & $mysqlPath -u root attendance_qr_system -e "source complete_database_setup.sql"
             Write-Host "✅ Database schema imported" -ForegroundColor Green
@@ -77,7 +77,7 @@ Write-Host "=================" -ForegroundColor Green
 Write-Host ""
 Write-Host "📁 Files Created:" -ForegroundColor Yellow
 Write-Host "   ✅ .gitignore (PHP exclusions)"
-Write-Host "   ✅ README.md (Team documentation)"  
+Write-Host "   ✅ README.md (Team documentation)"
 Write-Host "   ✅ CONTRIBUTING.md (Workflow guidelines)"
 Write-Host "   ✅ .env.example (Environment template)"
 Write-Host "   ✅ .vscode/ (Team VS Code settings)"

@@ -56,4 +56,3 @@ class HTMLPurifier_Node_Element extends HTMLPurifier_Node
         }
     }
 }
-

@@ -28,11 +28,11 @@ This guide provides complete instructions for enabling SSL/TLS encryption to sec
 
 ### Why Use HTTPS?
 
-✅ **Data Encryption**: All data transmitted between server and clients is encrypted  
-✅ **Authentication**: Verifies the server identity  
-✅ **Data Integrity**: Prevents data tampering during transmission  
-✅ **Privacy Protection**: Protects sensitive student/teacher information  
-✅ **Compliance**: Meets Data Privacy Act requirements for educational data  
+✅ **Data Encryption**: All data transmitted between server and clients is encrypted
+✅ **Authentication**: Verifies the server identity
+✅ **Data Integrity**: Prevents data tampering during transmission
+✅ **Privacy Protection**: Protects sensitive student/teacher information
+✅ **Compliance**: Meets Data Privacy Act requirements for educational data
 
 ### Certificate Type
 
@@ -109,20 +109,20 @@ Listen 443
     ServerName localhost:443
     ServerAlias 192.168.1.12:443
     ServerAlias 192.168.254.254:443
-    
+
     SSLEngine on
     SSLCertificateFile "conf/ssl.crt/server.crt"
     SSLCertificateKeyFile "conf/ssl.key/server.key"
-    
+
     # Security configuration
     SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1
     SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5
-    
+
     # Security headers
     Header always set Strict-Transport-Security "max-age=31536000"
     Header always set X-Frame-Options "SAMEORIGIN"
     Header always set X-Content-Type-Options "nosniff"
-    
+
     <Directory "C:/xampp/htdocs">
         AllowOverride All
         Require all granted
@@ -698,7 +698,7 @@ Get-NetFirewallRule -DisplayName "*HTTPS*"
 
 ---
 
-**Last Updated:** December 9, 2025  
-**System Version:** 2025.12  
-**SSL/TLS Version:** TLS 1.2/1.3  
+**Last Updated:** December 9, 2025
+**System Version:** 2025.12
+**SSL/TLS Version:** TLS 1.2/1.3
 **Certificate Validity:** 365 days

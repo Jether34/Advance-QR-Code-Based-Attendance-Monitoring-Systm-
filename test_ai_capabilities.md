@@ -8,7 +8,7 @@ The AI has been transformed from a **simple reviewer maker** into a **comprehens
 
 #### 1️⃣ **Answer ANY Question**
 - General knowledge questions
-- Subject-specific queries  
+- Subject-specific queries
 - Homework help
 - Concept explanations
 - Real-world applications
@@ -83,7 +83,7 @@ The AI has been transformed from a **simple reviewer maker** into a **comprehens
 **Input:** "Create a reviewer about proper exercise etiquette"
 **Expected:** Detailed reviewer using `PEandHealth11_q2_week 3-4_Proper Exeecise Etiquettwe and Safety_v5RO-QA - XANDRA MAY ENCIERTO.csv`
 
-### Test 2: Direct Question (CSV Available)  
+### Test 2: Direct Question (CSV Available)
 **Input:** "What are the Filipino registers in media?"
 **Expected:** Direct answer using Filipino CSV data
 
@@ -112,7 +112,7 @@ All responses follow the **OUTLINED PARAGRAPH FORMAT**:
 Detailed paragraph explaining the first concept...
 More explanation with examples...
 
-## [Section 2: Related Ideas]  
+## [Section 2: Related Ideas]
 Another comprehensive paragraph...
 Real-life applications...
 
@@ -173,9 +173,9 @@ The AI chat interface automatically:
 
 **Before:** "Create reviewer for [topic]" → AI makes reviewer from CSV
 
-**Now:** 
+**Now:**
 - ✅ "Create reviewer for [topic]" → AI makes reviewer from CSV
-- ✅ "What is [concept]?" → AI explains using CSV or general knowledge  
+- ✅ "What is [concept]?" → AI explains using CSV or general knowledge
 - ✅ "How do I [task]?" → AI teaches step-by-step
 - ✅ "Explain [anything]" → AI provides thorough explanation
 - ✅ Follow-up questions → AI continues conversation naturally

@@ -23265,7 +23265,7 @@ class TCPDF {
 			$error_message = sprintf('SVG Error: %s at line %d', xml_error_string(xml_get_error_code($parser)), xml_get_current_line_number($parser));
 			$this->Error($error_message);
 		}
-		
+
 		// free this XML parser (does nothing in PHP >= 8.0)
 		if (function_exists('xml_parser_free') && PHP_VERSION_ID < 80000) {
 		    xml_parser_free($parser);

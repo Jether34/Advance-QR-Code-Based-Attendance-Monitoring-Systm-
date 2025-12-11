@@ -35,30 +35,30 @@ function update_config_ip($new_ip) {
     }
 
     $content = file_get_contents($config_file);
-    
+
     // Pattern to match: define('SERVER_IP', getenv('SERVER_IP') ?: 'xxx.xxx.xxx.xxx');
     $pattern = "/define\('SERVER_IP',\s*getenv\('SERVER_IP'\)\s*\?:\s*'[0-9.]+'\)/";
     $replacement = "define('SERVER_IP', getenv('SERVER_IP') ?: '" . addslashes($new_ip) . "')";
-    
+
     $new_content = preg_replace($pattern, $replacement, $content);
-    
+
     if ($new_content === $content) {
         echo "Warning: Could not find SERVER_IP pattern in config.php. Trying alternative pattern...\n";
         // Try alternative without comment
         $pattern = "/define\('SERVER_IP',\s*getenv\('SERVER_IP'\)\s*\?:\s*'[0-9.]+'\);/";
         $new_content = preg_replace($pattern, $replacement . ';', $content);
     }
-    
+
     if ($new_content === $content) {
         echo "Error: Could not update SERVER_IP in config.php\n";
         return false;
     }
-    
+
     if (file_put_contents($config_file, $new_content) === false) {
         echo "Error: Could not write to config.php\n";
         return false;
     }
-    
+
     return true;
 }
 

@@ -28,17 +28,17 @@ Write-Host "Press Ctrl+C to stop" -ForegroundColor Cyan
 
 while ($true) {
     $currentIp = Get-CurrentLanIp
-    
+
     if (Is-ValidIp $currentIp) {
         if ($currentIp -ne $lastKnownIp) {
             Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Network change detected: $lastKnownIp -> $currentIp" -ForegroundColor Yellow
-            
+
             # Run auto_detect_ip.php
             $phpScript = Join-Path $scriptDir "auto_detect_ip.php"
             Write-Host "Updating config.php..." -ForegroundColor Cyan
-            
+
             & $PhpExe $phpScript 2>&1
-            
+
             if ($LASTEXITCODE -eq 0) {
                 Write-Host "✓ Config updated successfully" -ForegroundColor Green
                 $lastKnownIp = $currentIp
@@ -49,6 +49,6 @@ while ($true) {
     } else {
         Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Could not detect valid IP" -ForegroundColor Red
     }
-    
+
     Start-Sleep -Seconds $CheckIntervalSeconds
 }

@@ -26,7 +26,7 @@ if (empty($content)) {
 // Call Ollama AI with lesson content
 function callOllamaForStudy($task, $content, $grade, $strand) {
     $ollamaUrl = 'http://localhost:11434/api/generate';
-    
+
     // Build task-specific prompts
     $prompts = [
         'generate_questions' => "You are Jether, an AI tutor for Grade $grade $strand students at Palawan National School.
@@ -61,7 +61,7 @@ LESSON CONTENT:
 $content
 
 TASK: Identify and explain the 5 most important concepts from this lesson. For each concept:
-1. Define it 
+1. Define it
 2. Explain why it's important
 3. Give a real-world example
 4. Provide a memory tip or mnemonic
@@ -80,9 +80,9 @@ TASK: Create 15 flashcards for studying this content. Format:
 
 Include key terms, concepts, formulas, and important facts. Make them suitable for Grade $grade level."
     ];
-    
+
     $prompt = $prompts[$task] ?? $prompts['summarize'];
-    
+
     $data = [
         'model' => 'llama3.2',
         'prompt' => $prompt,
@@ -92,33 +92,33 @@ Include key terms, concepts, formulas, and important facts. Make them suitable f
             'num_predict' => 800
         ]
     ];
-    
+
     $ch = curl_init($ollamaUrl);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
     curl_setopt($ch, CURLOPT_TIMEOUT, 60); // Longer timeout for study content
-    
+
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $curlError = curl_error($ch);
     curl_close($ch);
-    
+
     if ($curlError) {
         return ['success' => false, 'error' => 'Failed to connect to Ollama: ' . $curlError];
     }
-    
+
     if ($httpCode !== 200) {
         return ['success' => false, 'error' => "Ollama error (HTTP {$httpCode}). Make sure Ollama is running."];
     }
-    
+
     $result = json_decode($response, true);
-    
+
     if (isset($result['response'])) {
         return ['success' => true, 'response' => trim($result['response'])];
     }
-    
+
     return ['success' => false, 'error' => 'No response from Ollama'];
 }
 

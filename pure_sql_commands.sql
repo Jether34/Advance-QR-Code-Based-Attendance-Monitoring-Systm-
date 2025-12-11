@@ -4,7 +4,7 @@
 -- ============================================
 
 -- Step 1: Create the database
-CREATE DATABASE IF NOT EXISTS attendance_qr_system 
+CREATE DATABASE IF NOT EXISTS attendance_qr_system
 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Step 2: Use the database
@@ -122,12 +122,12 @@ SHOW TABLES;
 
 SELECT 'Database setup completed successfully!' as Status;
 
-SELECT 
-    'teachers' as table_name, 
-    COUNT(*) as record_count 
+SELECT
+    'teachers' as table_name,
+    COUNT(*) as record_count
 FROM teachers
 UNION ALL
-SELECT 
-    'students' as table_name, 
-    COUNT(*) as record_count 
+SELECT
+    'students' as table_name,
+    COUNT(*) as record_count
 FROM students;

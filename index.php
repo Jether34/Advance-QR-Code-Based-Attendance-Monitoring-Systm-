@@ -101,70 +101,70 @@
         .home-footer a:hover {
             text-decoration: underline;
         }
-        
+
         /* Mobile responsive styles */
         @media screen and (max-width: 768px) {
             body {
                 padding: 12px;
             }
-            
+
             .home-container {
                 padding: 40px 20px;
                 border-radius: 12px;
                 max-width: 100%;
             }
-            
+
             .logo-section img {
                 max-width: 80px;
             }
-            
+
             .home-container h1 {
                 font-size: 1.8em;
                 margin-bottom: 8px;
             }
-            
+
             .subtitle {
                 font-size: 0.95em;
                 margin-bottom: 24px;
             }
-            
+
             .btn-group {
                 flex-direction: column;
                 gap: 12px;
                 width: 100%;
             }
-            
+
             .btn-home {
                 width: 100%;
                 padding: 14px 20px;
                 font-size: 1em;
                 box-sizing: border-box;
             }
-            
+
             .home-footer {
                 margin-top: 32px;
                 padding-top: 20px;
             }
-            
+
             .home-footer a {
                 font-size: 0.85em;
             }
         }
-        
+
         /* Small mobile devices */
         @media screen and (max-width: 480px) {
             .home-container {
                 padding: 32px 20px;
             }
-            
+
             .logo-section img {
                 max-width: 70px;
             }
-            
+
             .home-container h1 {
                 font-size: 1.5em;
             }
-            
+
             .subtitle {
                 font-size: 0.9em;
             }
@@ -194,7 +194,7 @@
             <a href="login.php" class="btn-home">Login</a>
             <a href="signup.php" class="btn-home btn-secondary">Sign Up</a>
         </div>
-        
+
         <div class="home-footer">
             <a href="developer_login.php"> Developer Dashboard</a>
         </div>

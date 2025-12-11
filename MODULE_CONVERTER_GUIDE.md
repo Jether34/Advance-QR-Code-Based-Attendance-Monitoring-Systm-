@@ -198,8 +198,8 @@ Auto-load to Review Center
 
 ## Creator
 
-**Jether Garque**  
-Grade 12 ICT Programming Student  
+**Jether Garque**
+Grade 12 ICT Programming Student
 Palawan National School
 
 Making study smarter with AI! 📚🤖

@@ -18,17 +18,17 @@ foreach ($testFiles as $file) {
     if (file_exists($path)) {
         echo "Testing file: $file\n";
         echo str_repeat('-', 50) . "\n";
-        
+
         try {
             $parser = new Parser();
             $pdf = $parser->parseFile($path);
             $text = $pdf->getText();
-            
+
             echo "Extracted length: " . strlen($text) . " characters\n";
             echo "First 500 characters:\n";
             echo substr($text, 0, 500) . "\n";
             echo str_repeat('=', 50) . "\n\n";
-            
+
             break; // Just test one file
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage() . "\n\n";

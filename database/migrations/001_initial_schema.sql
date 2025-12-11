@@ -4,7 +4,7 @@
 -- Description: Initial setup for Smart Attendance System
 
 -- Create database if it doesn't exist
-CREATE DATABASE IF NOT EXISTS attendance_qr_system 
+CREATE DATABASE IF NOT EXISTS attendance_qr_system
 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE attendance_qr_system;

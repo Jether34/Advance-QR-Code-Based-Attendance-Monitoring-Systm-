@@ -269,7 +269,7 @@ $summaryRows = [
     ['Late enrolment during the month', 0, 0, 0],
     ['Registered Learners as of end of month', $male_count, $female_count, $total_students],
     ['Percentage of Enrolment as of end of month', 100, 100, 100],
-    ['Average Daily Attendance', 
+    ['Average Daily Attendance',
         round($male_count > 0 ? 1 - ($male_total_abs / ($male_count * count($dates))) : 0, 2),
         round($female_count > 0 ? 1 - ($female_total_abs / ($female_count * count($dates))) : 0, 2),
         round($total_students > 0 ? 1 - (($male_total_abs + $female_total_abs) / ($total_students * count($dates))) : 0, 2)

@@ -62,7 +62,7 @@ EXIT;
 The system uses MySQL with the following tables:
 - `teachers` — Teacher accounts with grade/strand assignments
 - `students` — Student accounts with unique IDs
-- `attendance_records` — Daily attendance with morning/afternoon tracking  
+- `attendance_records` — Daily attendance with morning/afternoon tracking
 - `profile_edits` — User profile modification history
 - `posts` — Community wall posts
 - `post_likes` — Post like system

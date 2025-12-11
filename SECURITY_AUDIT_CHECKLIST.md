@@ -1,7 +1,7 @@
 # Pre-Deployment Security Hardening Checklist
 
-**Repository:** Advance-QR-Code-Based-Attendance-Monitoring-Systm-  
-**Branch:** update-2025-11-dev-qr  
+**Repository:** Advance-QR-Code-Based-Attendance-Monitoring-Systm-
+**Branch:** update-2025-11-dev-qr
 **Date:** December 10, 2025
 
 ---
@@ -168,10 +168,10 @@
 
 ## ✅ Sign-Off
 
-**Developer:** [Security Hardening Complete]  
-**QA Lead:** [ ] Tested and verified  
-**DevOps Lead:** [ ] Infrastructure ready  
-**Product Owner:** [ ] Approved for production  
+**Developer:** [Security Hardening Complete]
+**QA Lead:** [ ] Tested and verified
+**DevOps Lead:** [ ] Infrastructure ready
+**Product Owner:** [ ] Approved for production
 
 ---
 

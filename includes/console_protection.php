@@ -1,4 +1,4 @@
-<!-- 
+<!--
     JavaScript Production Wrapper
     This file provides a way to conditionally include console.log statements
     In production, console.log is disabled
@@ -10,7 +10,7 @@
     const noop = function() {};
     const methods = ['log', 'debug', 'info', 'warn', 'error', 'trace', 'dir', 'group', 'groupCollapsed', 'groupEnd', 'time', 'timeEnd', 'profile', 'profileEnd', 'dirxml', 'assert', 'count', 'markTimeline', 'timeStamp', 'clear'];
     const console = window.console = window.console || {};
-    
+
     for (let i = 0; i < methods.length; i++) {
         console[methods[i]] = noop;
     }

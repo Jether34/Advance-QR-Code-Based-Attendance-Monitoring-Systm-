@@ -55,7 +55,7 @@ $query = "SELECT s.student_id,
           WHERE (? = '' OR s.grade_level = ?)
             AND (? = '' OR s.strand = ?)
             AND (? = '' OR s.section_block = ?)
-          ORDER BY 
+          ORDER BY
             CASE WHEN LOWER(s.gender) = 'female' THEN 1 ELSE 0 END,
             s.full_name ASC";
 $stmt = $pdo->prepare($query);
@@ -79,7 +79,7 @@ foreach ($students as $student) {
         $stmt2 = $pdo->prepare("SELECT status FROM attendance_records WHERE student_id = ? AND attendance_date = ?");
         $stmt2->execute([$student['student_id'], $d]);
         $row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
-        
+
         if (!$row2) {
             // No record = Absent
             $marks[] = 'X';
@@ -177,7 +177,7 @@ for ($r = 47; $r <= 55; $r++) {
 }
 // DON'T TOUCH rows 46, 56, 57 - they have COUNTIF formulas that auto-calculate daily absence totals
 // Row 46: Male total per day (counts X's in rows 18-45)
-// Row 56: Female total per day (counts X's in rows 47-52) 
+// Row 56: Female total per day (counts X's in rows 47-52)
 // Row 57: Combined total per day (sums row 46 + row 56)
 
 // Set header info - following exact SF2 format structure
@@ -259,11 +259,11 @@ $studentNum = 1;
 $lastMaleRow = 17; // Track the last row with a male student
 foreach ($maleStudents as $student) {
     if ($row > 45) break; // Don't exceed male section
-    
+
     $sheet->setCellValue('A' . $row, $studentNum);
     $sheet->setCellValue($nameCol . $row, $student['name']);
     $lastMaleRow = $row; // Update last male row
-    
+
     // Write attendance marks (X for absent, / for half-day, blank for present)
     foreach ($dates as $j => $d) {
         $colIndex = $firstDayColIndex + $j;
@@ -272,7 +272,7 @@ foreach ($maleStudents as $student) {
         // Write the mark as-is (X, /, or blank)
         $sheet->setCellValue($col . $row, $mark);
     }
-    
+
     $row++;
     $studentNum++;
 }
@@ -283,11 +283,11 @@ $studentNum = 1;
 $lastFemaleRow = 46; // Track the last row with a female student
 foreach ($femaleStudents as $student) {
     if ($row > 55) break; // Don't exceed female section
-    
+
     $sheet->setCellValue('A' . $row, $studentNum);
     $sheet->setCellValue($nameCol . $row, $student['name']);
     $lastFemaleRow = $row; // Update last female row
-    
+
     // Write attendance marks (X for absent, / for half-day, blank for present)
     foreach ($dates as $j => $d) {
         $colIndex = $firstDayColIndex + $j;
@@ -296,7 +296,7 @@ foreach ($femaleStudents as $student) {
         // Write the mark as-is (X, /, or blank)
         $sheet->setCellValue($col . $row, $mark);
     }
-    
+
     $row++;
     $studentNum++;
 }

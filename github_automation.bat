@@ -16,7 +16,7 @@ echo 2. Repository name: Palawan National School QR Code Attendance Monitoring S
 echo 3. Description: Modern QR code-based attendance tracking system for Palawan National School
 echo 4. Set to PUBLIC (so team members can access)
 echo 5. DON'T check "Add a README file" (we already have one)
-echo 6. DON'T check "Add .gitignore" (we already have one)  
+echo 6. DON'T check "Add .gitignore" (we already have one)
 echo 7. DON'T check "Choose a license" (we can add later)
 echo 8. Click "Create repository"
 echo.
@@ -43,7 +43,7 @@ if %errorlevel% equ 0 (
     exit /b 1
 )
 
-REM Push develop branch  
+REM Push develop branch
 echo Pushing develop branch...
 git checkout develop >nul 2>&1
 git push -u origin develop >nul 2>&1
@@ -58,7 +58,7 @@ echo.
 echo [STEP 3] Repository Setup Complete!
 echo.
 echo ========================================================
-echo                   SUCCESS! 
+echo                   SUCCESS!
 echo ========================================================
 echo.
 echo Your repository is now live at:
@@ -68,7 +68,7 @@ echo NEXT STEPS FOR TEAM COLLABORATION:
 echo.
 echo 1. ADD TEAM MEMBERS:
 echo    - Go to: https://github.com/Jether34/Palawan-National-School-QR-Code-Attendance-Monitoring-System/settings/access
-echo    - Click "Add people" 
+echo    - Click "Add people"
 echo    - Enter their GitHub usernames or email addresses
 echo    - Give them "Write" permission for full collaboration
 echo.
@@ -81,7 +81,7 @@ echo.
 echo 3. START VS CODE LIVE SHARE:
 echo    - Open VS Code in this project folder
 echo    - Install "Live Share" extension
-echo    - Click "Live Share" in bottom status bar  
+echo    - Click "Live Share" in bottom status bar
 echo    - Share the invitation link with your team
 echo    - Code together in real-time!
 echo.

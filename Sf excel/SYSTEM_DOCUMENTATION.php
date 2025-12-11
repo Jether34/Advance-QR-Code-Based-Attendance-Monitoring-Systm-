@@ -602,12 +602,12 @@ $challenges = [
 foreach ($challenges as $c) {
     $pdf->SetFont('helvetica', 'B', 12);
     $pdf->Cell(0, 6, $c['challenge'], 0, 1, 'L');
-    
+
     $pdf->SetFont('helvetica', 'B', 10);
     $pdf->Cell(0, 5, 'Challenge:', 0, 1, 'L');
     $pdf->SetFont('helvetica', '', 10);
     $pdf->MultiCell(0, 4, $c['problem'], 0, 'J');
-    
+
     $pdf->SetFont('helvetica', 'B', 10);
     $pdf->Cell(0, 5, 'Solution:', 0, 1, 'L');
     $pdf->SetFont('helvetica', '', 10);
@@ -632,23 +632,23 @@ $pdf->Ln(3);
 
 $achievements = [
     'Successful QR Code Implementation' => 'Developed a robust QR code generation and scanning system that works reliably across multiple devices and browsers. Supports embedded text, URL-based, and barcode formats.',
-    
+
     'Real-Time Attendance Tracking' => 'Implemented instant attendance recording with automatic status calculation, eliminating manual data entry and reducing teacher workload by approximately 70%.',
-    
+
     'DepEd SF2 Compliance' => 'Created fully automated SF2 form generation that meets Department of Education requirements, with proper formatting, gender separation, and accurate calculations.',
-    
+
     'Smart Status Algorithm' => 'Developed intelligent attendance status calculation that automatically determines present/absent/late/half-day based on scanning patterns, improving accuracy and consistency.',
-    
+
     'Cross-Platform Compatibility' => 'Achieved seamless operation across desktop and mobile devices with responsive design, allowing teachers and students to access the system from any device.',
-    
+
     'Local Network Deployment' => 'Successfully deployed the system on local school network, ensuring data privacy and reducing dependency on internet connectivity.',
-    
+
     'Time Zone Implementation' => 'Integrated Manila timezone across all components with 7PM auto-reset functionality, ensuring accurate date tracking and next-day preparation.',
-    
+
     'Comprehensive Documentation' => 'Created detailed technical documentation, user guides, and setup instructions for easy deployment and maintenance.',
-    
+
     'Security Implementation' => 'Implemented multiple security layers including session management, SQL injection prevention, XSS protection, and role-based access control.',
-    
+
     'Version Control Integration' => 'Established Git workflow with GitHub repository for collaborative development and code versioning.',
 ];
 
@@ -657,7 +657,7 @@ foreach ($achievements as $title => $description) {
     $pdf->SetFillColor(76, 175, 80);
     $pdf->SetTextColor(255, 255, 255);
     $pdf->Cell(0, 6, '✓ ' . $title, 0, 1, 'L', true);
-    
+
     $pdf->SetTextColor(0, 0, 0);
     $pdf->SetFont('helvetica', '', 10);
     $pdf->MultiCell(0, 4, $description, 0, 'J');
@@ -687,7 +687,7 @@ $security_measures = [
         'Session timeout and regeneration',
         'Login attempt monitoring and rate limiting',
     ],
-    
+
     'Input Validation and Sanitization' => [
         'Parameterized SQL queries (PDO prepared statements)',
         'Input validation for all user-submitted data',
@@ -696,7 +696,7 @@ $security_measures = [
         'File upload validation and type checking',
         'Email format validation',
     ],
-    
+
     'Database Security' => [
         'PDO with prepared statements prevents SQL injection',
         'Environment variables for database credentials (.env file)',
@@ -706,7 +706,7 @@ $security_measures = [
         'InnoDB engine with ACID compliance',
         'Foreign key constraints for data integrity',
     ],
-    
+
     'Network Security' => [
         'SSL/TLS encryption (HTTPS) - fully implemented',
         'TLS 1.2 and TLS 1.3 support (older protocols disabled)',
@@ -717,7 +717,7 @@ $security_measures = [
         'IP-based access restriction capability',
         'Multi-network support with automatic detection',
     ],
-    
+
     'Data Privacy' => [
         'Student data limited to school network only',
         'No third-party data sharing',
@@ -727,7 +727,7 @@ $security_measures = [
         'Data Privacy Act of 2012 compliance (Philippines)',
         'No sensitive data visible in browser source code',
     ],
-    
+
     'Application Security' => [
         'CSRF token generation and validation (implemented)',
         'Session fixation prevention',
@@ -739,7 +739,7 @@ $security_measures = [
         'Rate limiting for brute force attack prevention',
         'Secure session management with httponly cookies',
     ],
-    
+
     'Source Code Protection' => [
         'Database credentials stored in .env file (not in code)',
         'No sensitive data visible when viewing page source (Ctrl+U)',
@@ -756,7 +756,7 @@ foreach ($security_measures as $category => $measures) {
     $pdf->SetTextColor(255, 255, 255);
     $pdf->Cell(0, 6, $category, 0, 1, 'L', true);
     $pdf->SetTextColor(0, 0, 0);
-    
+
     $pdf->SetFont('helvetica', '', 10);
     foreach ($measures as $measure) {
         $pdf->Cell(5);
@@ -787,43 +787,43 @@ $recommendations = [
         'description' => 'SSL/TLS encryption fully implemented with self-signed certificates. TLS 1.2/1.3 enabled, old protocols disabled. Security headers configured (HSTS, X-Frame-Options, CSP).',
         'implementation' => 'Apache configured with mod_ssl, certificates generated for all network IPs, HTTPS active on port 443, HTTP to HTTPS redirection available. See SSL_TLS_GUIDE.md for details.',
     ],
-    
+
     'CSRF Protection' => [
         'priority' => 'COMPLETED',
         'description' => 'Cross-Site Request Forgery protection implemented with token validation for all state-changing operations.',
         'implementation' => 'CSRF tokens generated per session via config.php, included in all forms, validated on submission. Invalid/missing tokens result in request rejection.',
     ],
-    
+
     'Password Policy Enhancement' => [
         'priority' => 'MEDIUM',
         'description' => 'Enforce strong password requirements including minimum length, character diversity, and periodic password changes.',
         'implementation' => 'Add password strength validation, implement password expiry, require mix of uppercase, lowercase, numbers, and special characters.',
     ],
-    
+
     'Database Backups' => [
         'priority' => 'HIGH',
         'description' => 'Implement automated daily database backups with off-site storage for disaster recovery.',
         'implementation' => 'Configure MySQL automated backups, store backups on separate server/drive, test restoration procedures quarterly.',
     ],
-    
+
     'Rate Limiting' => [
         'priority' => 'MEDIUM',
         'description' => 'Implement rate limiting on login attempts and API endpoints to prevent brute force attacks.',
         'implementation' => 'Track login attempts per IP/user, implement temporary lockouts after failed attempts, add CAPTCHA after multiple failures.',
     ],
-    
+
     'Security Audits' => [
         'priority' => 'MEDIUM',
         'description' => 'Conduct regular security audits and penetration testing to identify vulnerabilities.',
         'implementation' => 'Schedule quarterly security reviews, use automated vulnerability scanners, engage external security consultants for annual penetration testing.',
     ],
-    
+
     'File Upload Restrictions' => [
         'priority' => 'MEDIUM',
         'description' => 'Implement stricter file upload validation including file type verification, size limits, and malware scanning.',
         'implementation' => 'Validate file extensions and MIME types, limit file sizes, store uploads outside web root, implement virus scanning.',
     ],
-    
+
     'Activity Logging' => [
         'priority' => 'LOW',
         'description' => 'Expand event logging to capture all security-relevant activities for audit trail and incident response.',
@@ -840,19 +840,19 @@ foreach ($recommendations as $title => $rec) {
         'LOW' => [76, 175, 80]         // Green
     ];
     $priority_color = $priority_colors[$rec['priority']] ?? [158, 158, 158];
-    
+
     $pdf->SetFont('helvetica', 'B', 11);
     $pdf->Cell(0, 6, $title, 0, 1, 'L');
-    
+
     $pdf->SetFont('helvetica', 'B', 9);
     $pdf->SetFillColor($priority_color[0], $priority_color[1], $priority_color[2]);
     $pdf->SetTextColor(255, 255, 255);
     $pdf->Cell(30, 5, 'Priority: ' . $rec['priority'], 0, 1, 'L', true);
     $pdf->SetTextColor(0, 0, 0);
-    
+
     $pdf->SetFont('helvetica', '', 9);
     $pdf->MultiCell(0, 4, $rec['description'], 0, 'J');
-    
+
     $pdf->SetFont('helvetica', 'I', 9);
     $pdf->MultiCell(0, 4, 'Implementation: ' . $rec['implementation'], 0, 'J');
     $pdf->Ln(3);
@@ -880,15 +880,15 @@ $pdf->Ln(2);
 
 $protected_info = [
     'Database Credentials' => 'Stored in .env file, never hardcoded in PHP files. Environment variables loaded via config.php with secure access controls.',
-    
+
     'API Keys and Secrets' => 'All sensitive keys stored in .env file. CSRF tokens dynamically generated per session. No API keys visible in JavaScript or HTML.',
-    
+
     'Console.log Statements' => 'Production mode automatically disables console.log() statements. Debug information only visible in development mode.',
-    
+
     'Developer Comments' => 'HTML comments containing sensitive information are removed in production. Only user-facing comments remain in source code.',
-    
+
     'Session Data' => 'PHP session variables never exposed to client. User authentication handled entirely server-side.',
-    
+
     'Database Queries' => 'SQL queries executed server-side only. No database structure or query logic visible in page source.',
 ];
 
@@ -898,7 +898,7 @@ foreach ($protected_info as $item => $description) {
     $pdf->Cell(5);
     $pdf->Cell(5, 5, chr(0xE2).chr(0x9C).chr(0x93), 0, 0, 'L'); // checkmark
     $pdf->Cell(0, 5, $item, 0, 1, 'L');
-    
+
     $pdf->SetFont('helvetica', '', 9);
     $pdf->Cell(10);
     $pdf->MultiCell(0, 4, $description, 0, 'J');
@@ -959,7 +959,7 @@ $future_features = [
             'Grade viewing integration',
         ],
     ],
-    
+
     'Advanced Analytics' => [
         'timeframe' => 'Q2 2025',
         'features' => [
@@ -970,7 +970,7 @@ $future_features = [
             'Customizable report templates',
         ],
     ],
-    
+
     'Mobile Application' => [
         'timeframe' => 'Q2-Q3 2025',
         'features' => [
@@ -981,7 +981,7 @@ $future_features = [
             'Biometric authentication support',
         ],
     ],
-    
+
     'Integration Features' => [
         'timeframe' => 'Q3 2025',
         'features' => [
@@ -992,7 +992,7 @@ $future_features = [
             'SMS gateway for notifications',
         ],
     ],
-    
+
     'Enhanced Security' => [
         'timeframe' => 'Q1 2025',
         'features' => [
@@ -1003,7 +1003,7 @@ $future_features = [
             'Automated security scanning',
         ],
     ],
-    
+
     'AI-Powered Features' => [
         'timeframe' => 'Q4 2025',
         'features' => [
@@ -1022,7 +1022,7 @@ foreach ($future_features as $category => $info) {
     $pdf->SetTextColor(255, 255, 255);
     $pdf->Cell(0, 6, $category . ' - ' . $info['timeframe'], 0, 1, 'L', true);
     $pdf->SetTextColor(0, 0, 0);
-    
+
     $pdf->SetFont('helvetica', '', 9);
     foreach ($info['features'] as $feature) {
         $pdf->Cell(5);
@@ -1515,12 +1515,12 @@ JavaScript Components:
   - Cross-browser compatibility (Chrome, Firefox, Safari, Edge)
   - Real-time code detection with configurable FPS
   - Error correction and validation
-  
+
 • JsBarcode - Barcode generation library
   - CODE128, EAN13, UPC support
   - SVG-based rendering for scalability
   - Customizable dimensions and styling
-  
+
 • Custom JavaScript modules:
   - Attendance recording logic
   - Real-time form validation
@@ -1764,19 +1764,19 @@ Pseudocode Implementation:
 function calculateAttendanceStatus(record):
     morning_complete = (record.morning_in != null AND record.morning_out != null)
     afternoon_complete = (record.afternoon_in != null AND record.afternoon_out != null)
-    
+
     if morning_complete AND afternoon_complete:
         return "present"
-    
+
     if morning_complete AND NOT afternoon_complete:
         return "morning_half_day"
-    
+
     if afternoon_complete AND NOT morning_complete:
         return "afternoon_half_day"
-    
+
     if any_timestamp_exists(record):
         return "late"
-    
+
     return "absent"
 ```
 
@@ -2225,7 +2225,7 @@ STEP 4: WEIGHTED SUM OF VALUES (Attention × V)
 ═══════════════════════════════════════════════════════════════════════════════════
 
 For token "QR":
-Output = 0.01×V[The] + 0.02×V[student] + 0.06×V[scanned] + 0.42×V[QR] + 
+Output = 0.01×V[The] + 0.02×V[student] + 0.06×V[scanned] + 0.42×V[QR] +
          0.38×V[code] + 0.01×V[for] + 0.03×V[attendance]
 
 Result: New representation of "QR" enriched with context from "code"
@@ -2287,7 +2287,7 @@ INTERNATIONAL STUDIES:
    • Error rate decreased from 12% to <1%
    • Student satisfaction increased by 68%
    • Cost-effective implementation (<\$500 USD)
-   
+
    Relevance: Validates our approach of using QR codes for attendance tracking
    in resource-constrained educational environments.
 
@@ -2298,7 +2298,7 @@ INTERNATIONAL STUDIES:
    • Scalability tested up to 1,000 students
    • Integration with existing student information systems
    • Mobile compatibility crucial for adoption
-   
+
    Relevance: Confirms our mobile-responsive design decision and validates
    scalability for school-wide deployment.
 
@@ -2309,7 +2309,7 @@ INTERNATIONAL STUDIES:
    • QR codes more hygienic than biometric systems
    • Teacher workload reduction: 3.2 hours/week
    • Student privacy concerns addressed through local storage
-   
+
    Relevance: Supports our local network deployment strategy and privacy-first
    approach during post-pandemic educational environment.
 
@@ -2322,7 +2322,7 @@ LOCAL PHILIPPINE STUDIES:
    • Budget constraints primary barrier to technology adoption
    • Open-source solutions preferred over proprietary systems
    • Teacher training critical for successful implementation
-   
+
    Relevance: Informs our decision to use free, open-source technologies
    and emphasizes need for comprehensive documentation.
 
@@ -2333,7 +2333,7 @@ LOCAL PHILIPPINE STUDIES:
    • 23% error rate in manual attendance transcription
    • Automated systems save 85% of administrative time
    • DepEd receptive to innovative local solutions
-   
+
    Relevance: Validates our automated SF2 generation feature and potential
    impact on teacher administrative burden.
 
@@ -2422,27 +2422,27 @@ ATTENDANCE SYSTEM RESEARCH:
 9. "Comparative Study of Attendance Systems" (Garcia, 2024)
    Published: International Journal of Computer Applications
    System Comparison:
-   
+
    Manual Paper-Based:
    Advantages: No technology required, familiar to all
    Disadvantages: Time-consuming, error-prone, no real-time data
    Average Time: 5 minutes per class (300 seconds)
-   
+
    Barcode Scanning:
    Advantages: Fast, accurate, low cost
    Disadvantages: Requires printed cards, scanner hardware
    Average Time: 2 minutes per class (120 seconds)
-   
+
    QR Code (Our System):
    Advantages: Contactless, mobile-friendly, real-time, no hardware
    Disadvantages: Requires smartphone/camera, network dependency
    Average Time: 30 seconds per class
-   
+
    Biometric (Fingerprint):
    Advantages: Highly secure, no credentials needed
    Disadvantages: Expensive, hygiene concerns, privacy issues
    Average Time: 3 minutes per class (180 seconds)
-   
+
    Our system achieved 90% time reduction compared to manual attendance.
 
 10. "Real-Time Data in Educational Decision Making" (Thompson, 2023)
@@ -2452,7 +2452,7 @@ ATTENDANCE SYSTEM RESEARCH:
     • Parent notification within same day: 78% response rate
     • Administrative decision-making efficiency: 56% faster
     • Correlation with academic performance: r=0.82
-    
+
     Our Implementation:
     • Real-time dashboard updates ✓
     • Instant attendance status calculation ✓
@@ -2662,61 +2662,61 @@ $pdf->Cell(0, 6, '20.1 Academic Publications', 0, 1, 'L');
 $pdf->SetFont('helvetica', '', 9);
 
 $references = <<<EOD
-Anderson, J., & Kim, S. (2023). Security in Educational Portals: Best Practices and 
-Implementation Strategies. IEEE Security & Privacy, 21(4), 45-58. 
+Anderson, J., & Kim, S. (2023). Security in Educational Portals: Best Practices and
+Implementation Strategies. IEEE Security & Privacy, 21(4), 45-58.
 https://doi.org/10.1109/MSEC.2023.1234567
 
-Atkinson, R. C., & Shiffrin, R. M. (1968). Human memory: A proposed system and its 
-control processes. In K. W. Spence & J. T. Spence (Eds.), The psychology of learning 
+Atkinson, R. C., & Shiffrin, R. M. (1968). Human memory: A proposed system and its
+control processes. In K. W. Spence & J. T. Spence (Eds.), The psychology of learning
 and motivation (Vol. 2, pp. 89-195). Academic Press.
 
-Bertalanffy, L. von. (1968). General System Theory: Foundations, Development, 
+Bertalanffy, L. von. (1968). General System Theory: Foundations, Development,
 Applications. George Braziller.
 
-Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance 
+Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance
 of information technology. MIS Quarterly, 13(3), 319-340. https://doi.org/10.2307/249008
 
-Garcia, M. (2024). Comparative Study of Attendance Systems in Educational Institutions: 
+Garcia, M. (2024). Comparative Study of Attendance Systems in Educational Institutions:
 A Quantitative Analysis. International Journal of Computer Applications, 186(12), 22-29.
 
-Johnson, R. (2022). Best Practices in Educational Web Applications: A Comprehensive 
-Review. ACM Transactions on Computing Education, 22(3), Article 28. 
+Johnson, R. (2022). Best Practices in Educational Web Applications: A Comprehensive
+Review. ACM Transactions on Computing Education, 22(3), Article 28.
 https://doi.org/10.1145/3501234
 
-Kumar, S., Patel, R., & Singh, A. (2020). QR Code Based Attendance Management System: 
-Design and Implementation. International Journal of Engineering Research & Technology, 
+Kumar, S., Patel, R., & Singh, A. (2020). QR Code Based Attendance Management System:
+Design and Implementation. International Journal of Engineering Research & Technology,
 9(5), 789-795.
 
-Liu, X., Chen, Y., & Wang, Z. (2021). Contactless Attendance System during COVID-19: 
-Design, Implementation, and Evaluation. Journal of Educational Technology & Society, 
+Liu, X., Chen, Y., & Wang, Z. (2021). Contactless Attendance System during COVID-19:
+Design, Implementation, and Evaluation. Journal of Educational Technology & Society,
 24(3), 112-125.
 
-Patel, D., & Shah, M. (2019). Automated Attendance System Using QR Code: A Feasibility 
-Study. In 2019 IEEE Conference on Information and Communication Technology (pp. 234-239). 
+Patel, D., & Shah, M. (2019). Automated Attendance System Using QR Code: A Feasibility
+Study. In 2019 IEEE Conference on Information and Communication Technology (pp. 234-239).
 IEEE. https://doi.org/10.1109/ICT.2019.8901234
 
-Piaget, J. (1952). The Origins of Intelligence in Children. International Universities 
+Piaget, J. (1952). The Origins of Intelligence in Children. International Universities
 Press.
 
-Reyes, A. B., & Cruz, M. L. (2024). Student Information Systems in DepEd: Current State 
+Reyes, A. B., & Cruz, M. L. (2024). Student Information Systems in DepEd: Current State
 and Future Directions. ASEAN Journal of Education, 8(2), 145-162.
 
 Rogers, E. M. (1962). Diffusion of Innovations. Free Press of Glencoe.
 
-Santos, J. P. (2023). Implementation of ICT in Philippine Public High Schools: 
+Santos, J. P. (2023). Implementation of ICT in Philippine Public High Schools:
 Challenges and Opportunities. Philippine Journal of Education, 98(1), 56-73.
 
-Sweller, J. (1988). Cognitive load during problem solving: Effects on learning. 
+Sweller, J. (1988). Cognitive load during problem solving: Effects on learning.
 Cognitive Science, 12(2), 257-285. https://doi.org/10.1207/s15516709cog1202_4
 
-Thompson, L. (2023). Real-Time Data in Educational Decision Making: Impact on Student 
-Outcomes. Educational Technology Research and Development, 71(4), 1523-1540. 
+Thompson, L. (2023). Real-Time Data in Educational Decision Making: Impact on Student
+Outcomes. Educational Technology Research and Development, 71(4), 1523-1540.
 https://doi.org/10.1007/s11423-023-10234-5
 
-Vygotsky, L. S. (1978). Mind in Society: The Development of Higher Psychological 
+Vygotsky, L. S. (1978). Mind in Society: The Development of Higher Psychological
 Processes. Harvard University Press.
 
-Wong, K., Zhang, L., & Liu, H. (2021). Database Design for School Information Systems: 
+Wong, K., Zhang, L., & Liu, H. (2021). Database Design for School Information Systems:
 Best Practices and Performance Optimization. Database Systems Journal, 12(3), 34-48.
 EOD;
 $pdf->MultiCell(0, 4, $references, 0, 'L');
@@ -2727,38 +2727,38 @@ $pdf->Cell(0, 6, '20.2 Technical Documentation', 0, 1, 'L');
 $pdf->SetFont('helvetica', '', 9);
 
 $tech_refs = <<<EOD
-MDN Web Docs. (2025). HTML5 Reference. Mozilla Developer Network. 
+MDN Web Docs. (2025). HTML5 Reference. Mozilla Developer Network.
 https://developer.mozilla.org/en-US/docs/Web/HTML
 
-MDN Web Docs. (2025). CSS Reference. Mozilla Developer Network. 
+MDN Web Docs. (2025). CSS Reference. Mozilla Developer Network.
 https://developer.mozilla.org/en-US/docs/Web/CSS
 
-MDN Web Docs. (2025). JavaScript Reference. Mozilla Developer Network. 
+MDN Web Docs. (2025). JavaScript Reference. Mozilla Developer Network.
 https://developer.mozilla.org/en-US/docs/Web/JavaScript
 
 PHP Documentation Group. (2025). PHP Manual. The PHP Group. https://www.php.net/manual/
 
-MySQL AB. (2025). MySQL 5.7 Reference Manual. Oracle Corporation. 
+MySQL AB. (2025). MySQL 5.7 Reference Manual. Oracle Corporation.
 https://dev.mysql.com/doc/refman/5.7/en/
 
-Scanapp. (2025). html5-qrcode: HTML5 QR Code Scanner Library. GitHub Repository. 
+Scanapp. (2025). html5-qrcode: HTML5 QR Code Scanner Library. GitHub Repository.
 https://github.com/mebjas/html5-qrcode
 
-Lindell, J. (2025). JsBarcode: Barcode Generation Library for JavaScript. GitHub 
+Lindell, J. (2025). JsBarcode: Barcode Generation Library for JavaScript. GitHub
 Repository. https://github.com/lindell/JsBarcode
 
-PHPOffice. (2025). PhpSpreadsheet: Pure PHP Library for Reading and Writing 
+PHPOffice. (2025). PhpSpreadsheet: Pure PHP Library for Reading and Writing
 Spreadsheet Files. GitHub Repository. https://github.com/PHPOffice/PhpSpreadsheet
 
 TCPDF. (2025). TCPDF: PHP PDF Library. TCPDF.org. https://tcpdf.org/
 
-Apache Friends. (2025). XAMPP: Apache + MariaDB + PHP + Perl. Apache Friends. 
+Apache Friends. (2025). XAMPP: Apache + MariaDB + PHP + Perl. Apache Friends.
 https://www.apachefriends.org/
 
-W3C. (2018). Web Content Accessibility Guidelines (WCAG) 2.1. World Wide Web 
+W3C. (2018). Web Content Accessibility Guidelines (WCAG) 2.1. World Wide Web
 Consortium. https://www.w3.org/TR/WCAG21/
 
-OWASP. (2021). OWASP Top Ten Web Application Security Risks. Open Web Application 
+OWASP. (2021). OWASP Top Ten Web Application Security Risks. Open Web Application
 Security Project. https://owasp.org/www-project-top-ten/
 EOD;
 $pdf->MultiCell(0, 4, $tech_refs, 0, 'L');
@@ -2769,19 +2769,19 @@ $pdf->Cell(0, 6, '20.3 Government and Policy Documents', 0, 1, 'L');
 $pdf->SetFont('helvetica', '', 9);
 
 $gov_refs = <<<EOD
-Republic of the Philippines. (2012). Data Privacy Act of 2012 (Republic Act No. 10173). 
+Republic of the Philippines. (2012). Data Privacy Act of 2012 (Republic Act No. 10173).
 Official Gazette. https://www.officialgazette.gov.ph/2012/08/15/republic-act-no-10173/
 
-Department of Education. (2023). DepEd Order No. 37, s. 2023: Comprehensive Attendance 
+Department of Education. (2023). DepEd Order No. 37, s. 2023: Comprehensive Attendance
 Reporting Using School Form 2 (SF2). Department of Education, Philippines.
 
-Department of Education. (2024). DepEd Computerization Program 2024-2028. Department 
+Department of Education. (2024). DepEd Computerization Program 2024-2028. Department
 of Education, Philippines.
 
-National Privacy Commission. (2023). Privacy Guidelines for Educational Institutions. 
+National Privacy Commission. (2023). Privacy Guidelines for Educational Institutions.
 National Privacy Commission, Philippines.
 
-Commission on Information and Communications Technology. (2024). National ICT Strategy 
+Commission on Information and Communications Technology. (2024). National ICT Strategy
 for Basic Education. Republic of the Philippines.
 EOD;
 $pdf->MultiCell(0, 4, $gov_refs, 0, 'L');

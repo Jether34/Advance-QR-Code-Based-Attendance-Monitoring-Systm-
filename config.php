@@ -71,22 +71,22 @@ if (!headers_sent()) {
     header("Cache-Control: post-check=0, pre-check=0", false);
     header("Pragma: no-cache");
     header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
-    
+
     // Content Security Policy
     header("Content-Security-Policy: default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:;");
-    
+
     // Prevent clickjacking
     header('X-Frame-Options: SAMEORIGIN');
-    
+
     // Prevent MIME sniffing
     header('X-Content-Type-Options: nosniff');
-    
+
     // XSS Protection
     header('X-XSS-Protection: 1; mode=block');
-    
+
     // Referrer Policy
     header('Referrer-Policy: strict-origin-when-cross-origin');
-    
+
     // Remove server information
     header_remove('X-Powered-By');
 }

@@ -117,7 +117,7 @@ try {
     Write-Host "  Certificate: $certFile" -ForegroundColor Gray
     Write-Host "  Private Key: $keyFile" -ForegroundColor Gray
     Write-Host "  Valid for: 365 days (1 year)" -ForegroundColor Gray
-    
+
 } catch {
     Write-Host "ERROR: Failed to generate certificate" -ForegroundColor Red
     Write-Host $_.Exception.Message -ForegroundColor Red
@@ -152,40 +152,40 @@ Listen 443
     ServerName localhost:443
     ServerAlias 192.168.1.12:443
     ServerAlias 192.168.254.254:443
-    
+
     # SSL Engine
     SSLEngine on
-    
+
     # Certificate files
     SSLCertificateFile "conf/ssl.crt/server.crt"
     SSLCertificateKeyFile "conf/ssl.key/server.key"
-    
+
     # SSL Protocol and Cipher Configuration
     SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1
     SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5:!SEED:!IDEA
     SSLHonorCipherOrder on
-    
+
     # Security Headers
     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
     Header always set X-Frame-Options "SAMEORIGIN"
     Header always set X-Content-Type-Options "nosniff"
     Header always set X-XSS-Protection "1; mode=block"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    
+
     # PHP/CGI Configuration
     <FilesMatch "\.(cgi|shtml|phtml|php)$">
         SSLOptions +StdEnvVars
     </FilesMatch>
-    
+
     <Directory "C:/xampp/htdocs">
         Options Indexes FollowSymLinks MultiViews ExecCGI
         AllowOverride All
         Require all granted
     </Directory>
-    
+
     # Browser Compatibility
     BrowserMatch "MSIE [2-5]" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
-    
+
     # Custom Log Files
     CustomLog "logs/ssl_request.log" "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
     ErrorLog "logs/ssl_error.log"
@@ -252,20 +252,20 @@ try {
     Remove-NetFirewallRule -DisplayName "XAMPP HTTPS - Network A" -ErrorAction SilentlyContinue
     Remove-NetFirewallRule -DisplayName "XAMPP HTTPS - Network B" -ErrorAction SilentlyContinue
     Remove-NetFirewallRule -DisplayName "XAMPP HTTPS - Localhost" -ErrorAction SilentlyContinue
-    
+
     # Add new rules
     New-NetFirewallRule -DisplayName "XAMPP HTTPS - Network A" `
         -Direction Inbound -LocalPort 443 -Protocol TCP -Action Allow `
         -RemoteAddress 192.168.1.0/24 | Out-Null
-    
+
     New-NetFirewallRule -DisplayName "XAMPP HTTPS - Network B" `
         -Direction Inbound -LocalPort 443 -Protocol TCP -Action Allow `
         -RemoteAddress 192.168.254.0/24 | Out-Null
-    
+
     New-NetFirewallRule -DisplayName "XAMPP HTTPS - Localhost" `
         -Direction Inbound -LocalPort 443 -Protocol TCP -Action Allow `
         -RemoteAddress 127.0.0.1 | Out-Null
-    
+
     Write-Host "✓ Firewall rules configured for port 443" -ForegroundColor Green
 } catch {
     Write-Host "⚠ Could not configure firewall (may require admin privileges)" -ForegroundColor Yellow
@@ -292,7 +292,7 @@ Write-Host "
 
 1. RESTART APACHE
    Open XAMPP Control Panel and click 'Stop' then 'Start' for Apache
-   
+
    Or use PowerShell:
    net stop Apache2.4
    net start Apache2.4
@@ -300,9 +300,9 @@ Write-Host "
 2. TRUST THE CERTIFICATE (First time only)
    When you visit https://localhost/puta, your browser will show a warning
    because this is a self-signed certificate.
-   
+
    Click 'Advanced' → 'Proceed to localhost (unsafe)' → 'Accept the Risk'
-   
+
    For mobile devices, you'll need to accept the certificate on each device.
 
 3. TEST HTTPS ACCESS

@@ -352,6 +352,6 @@ Attendance Rate = (Present Days + (Half Days * 0.5)) / Total School Days * 100%
 
 ---
 
-**Last Updated:** December 9, 2025  
-**System Version:** 2025.12  
+**Last Updated:** December 9, 2025
+**System Version:** 2025.12
 **Timezone:** Asia/Manila (UTC+8)

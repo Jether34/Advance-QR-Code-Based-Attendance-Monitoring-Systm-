@@ -2,8 +2,8 @@
 
 ## Your Configuration
 
-✅ **WiFi IP Address:** `192.168.1.12`  
-✅ **Server IP Updated:** `config.php` changed to `192.168.1.12`  
+✅ **WiFi IP Address:** `192.168.1.12`
+✅ **Server IP Updated:** `config.php` changed to `192.168.1.12`
 ✅ **Ollama API Configured:** `api_config.php` created with centralized endpoints
 
 ---
@@ -11,16 +11,16 @@
 ## 🔧 Before You Start
 
 ### 1. **Windows Firewall Configuration**
-   
+
    Apache HTTP Server needs to accept connections from your phone:
-   
+
    ```powershell
    # Run PowerShell as Administrator
    New-NetFirewallRule -DisplayName "Apache HTTP Server" `
      -Direction Inbound -Program "C:\xampp\apache\bin\apache.exe" `
      -Action Allow -Protocol TCP -LocalPort 80
    ```
-   
+
    Or manually:
    - Open **Windows Defender Firewall → Advanced Settings**
    - Click **Inbound Rules → New Rule**
@@ -31,7 +31,7 @@
 ### 2. **Check XAMPP Services**
 
    Make sure Apache and MySQL are running:
-   
+
    ```powershell
    # Check if services are running
    Get-Service | Where-Object {$_.Name -like "*Apache*" -or $_.Name -like "*MySQL*"}
@@ -40,12 +40,12 @@
 ### 3. **Check Ollama Service**
 
    Make sure Ollama is running on your PC:
-   
+
    ```powershell
    # Check if Ollama process is running
    Get-Process | Where-Object {$_.ProcessName -like "*ollama*"}
    ```
-   
+
    If not running, start it:
    ```powershell
    cd "C:\Users\YourUsername\AppData\Local\Programs\Ollama"

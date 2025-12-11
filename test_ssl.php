@@ -161,7 +161,7 @@ if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
         $client_ip = $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
         $port = $_SERVER['SERVER_PORT'] ?? 'Unknown';
         $host = $_SERVER['HTTP_HOST'] ?? 'Unknown';
-        
+
         // Determine network
         $network = 'Unknown';
         if (strpos($server_ip, '192.168.254.') === 0) {
@@ -172,7 +172,7 @@ if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
             $network = 'Localhost (Development)';
         }
         ?>
-        
+
         <div class="icon">
             <?php if ($is_https): ?>
                 🔒
@@ -180,10 +180,10 @@ if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
                 ⚠️
             <?php endif; ?>
         </div>
-        
+
         <h1>SSL/TLS Connection Test</h1>
         <p class="subtitle">QR Attendance System Security Check</p>
-        
+
         <div class="status-box <?php echo $is_https ? 'status-success' : 'status-warning'; ?>">
             <h2 style="margin-bottom: 10px;">
                 <?php if ($is_https): ?>
@@ -203,7 +203,7 @@ if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
                 <?php endif; ?>
             </p>
         </div>
-        
+
         <div class="status-box status-info">
             <h3 style="margin-bottom: 15px;">Connection Details</h3>
             <div class="info-grid">
@@ -233,7 +233,7 @@ if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
                 </div>
             </div>
         </div>
-        
+
         <?php if ($is_https): ?>
         <div class="security-headers">
             <h3 style="margin-bottom: 15px;">Security Features Enabled</h3>
@@ -274,7 +274,7 @@ if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
             </p>
         </div>
         <?php endif; ?>
-        
+
         <div class="actions">
             <?php if ($is_https): ?>
                 <a href="https://<?php echo $host; ?>/puta" class="btn btn-success">
@@ -295,7 +295,7 @@ if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
                 📖 View SSL/TLS Guide
             </a>
         </div>
-        
+
         <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px; text-align: center;">
             <p style="color: #666; margin-bottom: 10px;">
                 <strong>Ollama AI Endpoint:</strong> <?php echo OLLAMA_API_URL; ?>

@@ -38,10 +38,9 @@ calculated efficiently.
 
     // Read resulting file size
     $size = $zip->finish();
-    
+
     // Tell it to the browser
     header('Content-Length: '. $size);
-    
+
     // Execute the Simulation and stream the actual zip to the client
     $zip->executeSimulation();
-

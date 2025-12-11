@@ -1,12 +1,12 @@
 <?php
 /**
  * Test: Browser Back Button Session Cache Prevention
- * 
+ *
  * This test simulates:
  * 1. Login to dashboard
  * 2. Logout
  * 3. Try to access dashboard again (back button)
- * 
+ *
  * Expected: Should be redirected to login, NOT cached dashboard
  */
 
@@ -40,14 +40,14 @@ $dashboards = [
 foreach ($dashboards as $file => $role) {
     echo "  Testing $role Dashboard ($file)...\n";
     $content = file_get_contents(__DIR__ . "/../$file");
-    
+
     $meta_checks = [
         'Cache-Control meta' => strpos($content, 'http-equiv="Cache-Control"') !== false && strpos($content, 'no-store, no-cache') !== false,
         'Pragma meta' => strpos($content, 'http-equiv="Pragma"') !== false,
         'Expires meta' => strpos($content, 'http-equiv="Expires"') !== false,
         'Auth check' => strpos($content, '$_SESSION[') !== false && strpos($content, 'header(') !== false,
     ];
-    
+
     foreach ($meta_checks as $check => $result) {
         echo "    ✓ {$check}: " . ($result ? 'PASS' : 'FAIL') . "\n";
     }

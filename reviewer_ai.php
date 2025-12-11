@@ -28,20 +28,20 @@ try {
     // Detect intent: Is this a reviewer request or a general question?
     $q = strtolower($question);
     $isReviewerRequest = (
-        strpos($q, 'reviewer') !== false || 
-        strpos($q, 'review') !== false || 
+        strpos($q, 'reviewer') !== false ||
+        strpos($q, 'review') !== false ||
         strpos($q, 'summarize') !== false ||
         strpos($q, 'create') !== false ||
         strpos($q, 'make') !== false ||
         strpos($q, 'generate') !== false
     );
-    
+
     // Detect question types
     $isDirectQuestion = (
-        strpos($q, 'what') !== false || 
-        strpos($q, 'how') !== false || 
-        strpos($q, 'why') !== false || 
-        strpos($q, 'when') !== false || 
+        strpos($q, 'what') !== false ||
+        strpos($q, 'how') !== false ||
+        strpos($q, 'why') !== false ||
+        strpos($q, 'when') !== false ||
         strpos($q, 'who') !== false ||
         strpos($q, 'explain') !== false ||
         strpos($q, 'define') !== false ||
@@ -72,35 +72,35 @@ try {
         // Enhanced fuzzy matching
         $searchWords = preg_split('/\s+/', strtolower($question));
         $searchWords = array_filter($searchWords, function($w) { return strlen($w) > 2; }); // Filter short words
-        
+
         foreach ($allLessons as $lesson) {
             $score = 0;
             $topicLower = strtolower($lesson['topic'] ?? '');
             $contentLower = strtolower($lesson['content'] ?? '');
             $subjectLower = strtolower($lesson['subject'] ?? '');
-            
+
             // Score matching
             foreach ($searchWords as $word) {
                 if (strpos($topicLower, $word) !== false) $score += 10;
                 if (strpos($contentLower, $word) !== false) $score += 5;
                 if (strpos($subjectLower, $word) !== false) $score += 7;
             }
-            
+
             // Exact phrase match bonus
             if (strpos($topicLower, strtolower($question)) !== false) $score += 50;
             if (strpos($contentLower, strtolower($question)) !== false) $score += 20;
-            
+
             if ($score > 0) {
                 $lesson['_score'] = $score;
                 $relevantLessons[] = $lesson;
             }
         }
-        
+
         // Sort by relevance score
         usort($relevantLessons, function($a, $b) {
             return ($b['_score'] ?? 0) - ($a['_score'] ?? 0);
         });
-        
+
         // Take top 10 most relevant lessons
         $relevantLessons = array_slice($relevantLessons, 0, 10);
     }
@@ -108,7 +108,7 @@ try {
     // Prepare context for AI based on available data
     $hasRelevantData = !empty($relevantLessons);
     $lessonContext = "";
-    
+
     if ($hasRelevantData) {
         $lessonContext = "\n📖 RELEVANT LESSONS FROM YOUR SCHOOL MODULES:\n";
         foreach ($relevantLessons as $l) {
@@ -170,7 +170,7 @@ RESPONSE GUIDELINES:
         $systemPrompt .= $lessonContext;
         $systemPrompt .= "\n✨ INSTRUCTIONS:\n";
         $systemPrompt .= "The student asked: \"$question\"\n\n";
-        
+
         if ($isReviewerRequest) {
             $systemPrompt .= "They want a REVIEWER. Create a comprehensive study guide using the lessons above.\n";
             $systemPrompt .= "Organize it with clear headings and detailed paragraph explanations.\n";
@@ -200,7 +200,7 @@ RESPONSE GUIDELINES:
         'model' => 'llama3.2',
         'prompt' => $systemPrompt,
         'stream' => false,
-        'options' => [ 
+        'options' => [
             'temperature' => 0.7,     // Balanced creativity
             'top_p' => 0.9,           // Diverse responses
             'num_predict' => 5000,    // Extended for comprehensive answers
@@ -214,35 +214,35 @@ RESPONSE GUIDELINES:
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
     curl_setopt($ch, CURLOPT_TIMEOUT, 90); // Increased timeout for longer responses
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30); // Connection timeout
-    
+
     $response = curl_exec($ch);
     $curlError = curl_error($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
-    
+
     // Check for curl errors first
     if ($curlError) {
         throw new Exception('Ollama connection failed: ' . $curlError . '. Make sure Ollama is running at ' . $ollamaUrl);
     }
-    
+
     if (!$response) {
         throw new Exception('No response from Ollama. Make sure Ollama is running and accessible at ' . $ollamaUrl);
     }
-    
+
     // Ollama returns 200 on success, but also parse the response
     $result = json_decode($response, true);
     if (!$result || !isset($result['response'])) {
         throw new Exception('Invalid response from Ollama. HTTP Code: ' . $httpCode);
     }
-    
+
     $aiText = $result['response'] ?? '';
     if (empty($aiText)) {
         throw new Exception('Ollama returned empty response. Try rephrasing your question.');
     }
-    
+
     // Return response with metadata
     echo json_encode([
-        'success' => true, 
+        'success' => true,
         'response' => $aiText,
         'metadata' => [
             'has_csv_data' => $hasRelevantData,

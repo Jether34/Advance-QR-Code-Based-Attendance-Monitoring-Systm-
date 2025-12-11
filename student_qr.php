@@ -93,9 +93,9 @@ $packed = json_encode($qrData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         .footer-links { margin-top:35px;font-size:.9em; }
         .footer-links a { color:#218c21;text-decoration:none;margin:0 10px; }
         .footer-links a:hover { text-decoration:underline; }
-        @media (max-width:768px){ 
+        @media (max-width:768px){
             body { padding:12px; }
-            .qr-card { padding:28px 20px;border-radius:12px; } 
+            .qr-card { padding:28px 20px;border-radius:12px; }
             h1 { font-size:1.6em; }
             .meta { font-size:0.9em; }
             #qrcode { padding:10px;border-width:2px; }
@@ -117,7 +117,7 @@ $packed = json_encode($qrData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 <div class="qr-card">
     <h1>My Student QR</h1>
     <div class="meta">Choose QR code format and download options</div>
-    
+
     <!-- QR Format Selection -->
     <div style="background: #e7f3ff; padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #007bff;">
         <h3 style="margin: 0 0 12px; color: #007bff; font-size: 1.1em;">📋 QR Code Format</h3>
@@ -135,7 +135,7 @@ $packed = json_encode($qrData, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             Contains all your information: Name, Grade, Section, LRN, etc.
         </div>
     </div>
-    
+
     <div id="qrcode" aria-label="Student QR Code"></div>
     <div id="status" class="status">Generating...</div>
     <div class="actions">
@@ -175,7 +175,7 @@ document.querySelectorAll('input[name="qrFormat"]').forEach(radio => {
     radio.addEventListener('change', (e) => {
         currentFormat = e.target.value;
         const descEl = document.getElementById('formatDescription');
-        
+
         if (currentFormat === 'full') {
             descEl.textContent = 'Contains all your information: Name, Grade, Section, LRN, etc.';
             descEl.style.color = '#555';
@@ -185,7 +185,7 @@ document.querySelectorAll('input[name="qrFormat"]').forEach(radio => {
             descEl.style.color = '#007bff';
             currentQrData = studentIdOnly;
         }
-        
+
         // Regenerate QR with new format
         generateRealQR();
     });
@@ -196,17 +196,17 @@ function generateRealQR(){
     const container = document.getElementById('qrcode');
     container.innerHTML = '';
     if(typeof QRCode !== 'function') throw new Error('QRCode library missing');
-    
+
     // Use currentQrData based on selected format
     const dataToEncode = currentFormat === 'full' ? JSON.stringify(studentData) : studentIdOnly;
-    
+
     new QRCode(container, {
       text: dataToEncode,
       width: 320,
       height: 320,
       correctLevel: QRCode.CorrectLevel.M
     });
-    
+
     const formatLabel = currentFormat === 'full' ? 'Full Info' : 'ID Only';
     setStatus(`✅ QR Ready (${formatLabel} - ${dataToEncode.length} chars)`,'success');
   } catch(e){
@@ -293,7 +293,7 @@ function generatePdf(){
     const formatInfo = currentFormat === 'full' ? 'Full Information' : 'ID Only';
     doc.text('Generated: '+ new Date().toISOString() +'  |  Format: ' + formatInfo, 40, y);
     doc.text('This PDF is valid only when viewed intact with QR.', 40, y+12);
-    
+
     const pdfFilename = `student_qr_<?php echo $student['student_id']; ?>_${currentFormat}_${Date.now()}.pdf`;
     doc.save(pdfFilename);
   });
@@ -340,11 +340,11 @@ function downloadPng() {
     alert('QR code not ready yet. Please wait...');
     return;
   }
-  
+
   try {
     const formatLabel = currentFormat === 'full' ? 'full' : 'id';
     const filename = `student_qr_<?php echo $student['student_id']; ?>_${formatLabel}_${new Date().getTime()}.png`;
-    
+
     // Convert canvas to blob and download
     canvas.toBlob((blob) => {
       const url = URL.createObjectURL(blob);

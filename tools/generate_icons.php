@@ -91,4 +91,3 @@ foreach ($sizes as $size => $filename) {
 imagedestroy($img);
 echo "Icon generation complete.\n";
 ?>
-

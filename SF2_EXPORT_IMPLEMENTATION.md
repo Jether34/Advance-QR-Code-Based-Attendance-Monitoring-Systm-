@@ -14,7 +14,7 @@ The SF2 Excel export system has been fully implemented with all requested featur
 ### 2. ✓ Automatic Adviser Name
 - **What**: Logged-in teacher's name is automatically populated
 - **Source**: From teacher session or parameter passed from dashboard
-- **Where**: 
+- **Where**:
   - Label "Class Adviser:" in cell B9
   - Adviser name in cell E9
 - **Format**: UPPERCASE (e.g., JENNY C. COLO)
@@ -25,12 +25,12 @@ The SF2 Excel export system has been fully implemented with all requested featur
   - Cells E6, H6
   - Format: "Grade 11"
   - Source: From teacher's class info
-  
+
 - **Strand**:
   - Cells E7, H7
   - Example: "TVL - ICT"
   - Source: From teacher's assigned strand
-  
+
 - **Section/Block**:
   - Cells H12, C12
   - Example: "Section A"
@@ -41,11 +41,11 @@ Three-level marking system:
 - **BLANK (no mark)** = Present attendance
   - Status values: `present`, `late`, `excuse`
   - Treated as "present"
-  
+
 - **X (uppercase)** = Absent
   - Status values: `absent`, or no record at all
   - Absence indicator
-  
+
 - **/ (slash)** = Half-day
   - Status values: `morning_half_day`, `afternoon_half_day`
   - Indicates partial day attendance

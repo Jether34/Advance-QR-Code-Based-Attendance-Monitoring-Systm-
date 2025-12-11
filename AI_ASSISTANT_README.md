@@ -68,9 +68,9 @@ try {
         'temperature' => 0.7,
         'max_tokens' => 500,
     ]);
-    
+
     $response = $result->choices[0]->message->content;
-    
+
 } catch (Exception $e) {
     $response = "AI service unavailable. Error: " . $e->getMessage();
 }
@@ -143,10 +143,10 @@ function callLocalLLM($systemPrompt, $question) {
     ]));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-    
+
     $response = curl_exec($ch);
     curl_close($ch);
-    
+
     $result = json_decode($response, true);
     return $result['response'] ?? 'No response from local LLM';
 }

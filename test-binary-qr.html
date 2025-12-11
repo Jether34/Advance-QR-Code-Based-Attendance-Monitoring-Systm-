@@ -11,7 +11,7 @@
             margin: 0;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -20,13 +20,13 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-        
+
         .header {
             text-align: center;
             color: #218c21;
             margin-bottom: 30px;
         }
-        
+
         .test-section {
             background: #f8f9fa;
             padding: 20px;
@@ -34,21 +34,21 @@
             margin-bottom: 20px;
             border-left: 5px solid #218c21;
         }
-        
+
         .qr-display {
             display: flex;
             justify-content: center;
             align-items: center;
             margin: 20px 0;
         }
-        
+
         canvas {
             border: 3px solid #218c21;
             border-radius: 10px;
             background: white;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        
+
         .btn {
             background: #218c21;
             color: white;
@@ -60,20 +60,20 @@
             margin: 5px;
             transition: all 0.3s;
         }
-        
+
         .btn:hover {
             background: #176617;
             transform: translateY(-2px);
         }
-        
+
         .btn-secondary {
             background: #6c757d;
         }
-        
+
         .btn-secondary:hover {
             background: #545b62;
         }
-        
+
         .status {
             padding: 10px;
             border-radius: 5px;
@@ -81,31 +81,31 @@
             text-align: center;
             font-weight: bold;
         }
-        
+
         .success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-        
+
         .error {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
-        
+
         .warning {
             background: #fff3cd;
             color: #856404;
             border: 1px solid #ffeaa7;
         }
-        
+
         .info {
             background: #cce7ff;
             color: #004085;
             border: 1px solid #b8daff;
         }
-        
+
         .data-display {
             background: #f1f3f4;
             padding: 15px;
@@ -116,7 +116,7 @@
             max-height: 150px;
             overflow-y: auto;
         }
-        
+
         .controls {
             text-align: center;
             margin: 20px 0;
@@ -193,7 +193,7 @@
 
     <!-- Binary QR Generator -->
     <script src="js/binary-qr-generator.js"></script>
-    
+
     <script>
         // Test sample student data
         const sampleStudent = {
@@ -211,11 +211,11 @@
         // Test Functions
         function testStudentQR() {
             updateStatus('status1', 'info', '⏳ Generating student QR code...');
-            
+
             try {
                 const generator = new BinaryQRGenerator();
                 const result = generator.generateStudentQR(sampleStudent, 'testCanvas1');
-                
+
                 if (result.success) {
                     updateStatus('status1', 'success', '✅ Student QR generated successfully!');
                     document.getElementById('data1').textContent = result.data;
@@ -235,17 +235,17 @@
 
         function testCustomQR() {
             const customData = document.getElementById('customData').value.trim();
-            
+
             if (!customData) {
                 updateStatus('status2', 'error', '❌ Please enter some data first');
                 return;
             }
-            
+
             updateStatus('status2', 'info', '⏳ Generating custom QR code...');
-            
+
             try {
                 const generator = new BinaryQRGenerator();
-                
+
                 // Create fake student object with custom data
                 const fakeStudent = {
                     id: 999,
@@ -256,16 +256,16 @@
                     strand: "N/A",
                     section_block: "N/A"
                 };
-                
+
                 // Override the formatStudentData method temporarily
                 const originalFormat = generator.formatStudentData;
                 generator.formatStudentData = function() { return customData; };
-                
+
                 const result = generator.generateStudentQR(fakeStudent, 'testCanvas2');
-                
+
                 // Restore original method
                 generator.formatStudentData = originalFormat;
-                
+
                 if (result.success) {
                     updateStatus('status2', 'success', '✅ Custom QR generated successfully!');
                     document.getElementById('data2').textContent = customData;
@@ -285,26 +285,26 @@
 
         function performanceTest() {
             updateStatus('status3', 'info', '⏳ Running performance test...');
-            
+
             const results = [];
             const iterations = 5;
-            
+
             try {
                 for (let i = 0; i < iterations; i++) {
                     const startTime = performance.now();
-                    
+
                     const testStudent = {
                         ...sampleStudent,
                         id: i + 1,
                         full_name: `Test Student ${i + 1}`
                     };
-                    
+
                     const generator = new BinaryQRGenerator();
                     const result = generator.generateStudentQR(testStudent, 'testCanvas3');
-                    
+
                     const endTime = performance.now();
                     const duration = endTime - startTime;
-                    
+
                     results.push({
                         iteration: i + 1,
                         success: result.success,
@@ -312,13 +312,13 @@
                         duration: duration.toFixed(2)
                     });
                 }
-                
+
                 const avgTime = (results.reduce((sum, r) => sum + parseFloat(r.duration), 0) / iterations).toFixed(2);
                 const successCount = results.filter(r => r.success).length;
                 const fallbackCount = results.filter(r => r.fallback).length;
-                
+
                 updateStatus('status3', 'success', `✅ Performance test completed! Avg: ${avgTime}ms`);
-                
+
                 let perfText = `Performance Test Results (${iterations} iterations):\n`;
                 perfText += `Average Time: ${avgTime}ms\n`;
                 perfText += `Successful Generations: ${successCount}/${iterations}\n`;
@@ -327,9 +327,9 @@
                 results.forEach(r => {
                     perfText += `${r.iteration}: ${r.duration}ms - ${r.success ? 'Success' : (r.fallback ? 'Fallback' : 'Failed')}\n`;
                 });
-                
+
                 document.getElementById('perfResults').textContent = perfText;
-                
+
             } catch (error) {
                 updateStatus('status3', 'error', '❌ Performance test failed: ' + error.message);
                 document.getElementById('perfResults').textContent = 'Performance test error: ' + error.message;
@@ -342,10 +342,10 @@
             const ctx = canvas.getContext('2d');
             ctx.fillStyle = '#FFFFFF';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
+
             const statusId = canvasId.replace('testCanvas', 'status');
             updateStatus(statusId, 'info', 'Canvas cleared');
-            
+
             const dataId = canvasId.replace('testCanvas', canvasId === 'testCanvas3' ? 'perfResults' : 'data');
             document.getElementById(dataId).textContent = 'Canvas cleared';
         }
@@ -364,7 +364,7 @@
                 generateStudentQR: typeof window.generateStudentQR,
                 downloadQR: typeof window.downloadQR
             });
-            
+
             // Auto-generate a test QR after a short delay
             setTimeout(testStudentQR, 1000);
         });

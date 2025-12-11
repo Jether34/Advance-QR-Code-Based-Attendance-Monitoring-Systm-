@@ -49,7 +49,7 @@ echo.
 echo Database: attendance_qr_system
 echo Tables created:
 echo   - teachers
-echo   - students  
+echo   - students
 echo   - attendance_records
 echo   - profile_edits
 echo   - posts

@@ -41,7 +41,7 @@
 
 ### 3. **Firewall**
 
-✅ **Apache HTTP Server** 
+✅ **Apache HTTP Server**
 - Already configured in Windows Firewall
 - Both inbound rules enabled
 - Accepts connections from phone
@@ -223,11 +223,11 @@ Visit: http://192.168.1.12/puta/
 
 **Your system is now configured for mobile testing:**
 
-✅ WiFi IP set to `192.168.1.12`  
-✅ API endpoints configured  
-✅ Firewall allows Apache  
-✅ Files updated for network access  
-✅ Testing guide created  
+✅ WiFi IP set to `192.168.1.12`
+✅ API endpoints configured
+✅ Firewall allows Apache
+✅ Files updated for network access
+✅ Testing guide created
 
 **Next Steps:**
 1. Start XAMPP services

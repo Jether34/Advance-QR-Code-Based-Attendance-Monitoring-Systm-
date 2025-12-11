@@ -13,7 +13,7 @@
             background: linear-gradient(135deg, #d6f5d6 0%, #eaffea 100%);
             min-height: 100vh;
         }
-        
+
         .container {
             background: white;
             padding: 30px;
@@ -21,20 +21,20 @@
             box-shadow: 0 10px 40px rgba(33, 140, 33, 0.2);
             margin: 20px 0;
         }
-        
+
         .header {
             text-align: center;
             color: #218c21;
             margin-bottom: 30px;
         }
-        
+
         .qr-test-area {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
             margin: 30px 0;
         }
-        
+
         .qr-section {
             background: #f8fff8;
             padding: 20px;
@@ -42,7 +42,7 @@
             border: 2px solid #d4edda;
             text-align: center;
         }
-        
+
         .qr-container {
             min-height: 320px;
             display: flex;
@@ -54,7 +54,7 @@
             padding: 15px;
             margin: 15px 0;
         }
-        
+
         .test-button {
             background: #218c21;
             color: white;
@@ -67,31 +67,31 @@
             font-weight: bold;
             transition: background-color 0.3s;
         }
-        
+
         .test-button:hover {
             background: #176617;
         }
-        
+
         .test-button.secondary {
             background: #6c757d;
         }
-        
+
         .test-button.secondary:hover {
             background: #545b62;
         }
-        
+
         .success {
             color: #218c21;
             font-weight: bold;
             margin: 10px 0;
         }
-        
+
         .info {
             color: #0c5460;
             font-weight: bold;
             margin: 10px 0;
         }
-        
+
         .student-data {
             background: #e8f5e8;
             padding: 15px;
@@ -102,7 +102,7 @@
             font-size: 12px;
             border-left: 4px solid #218c21;
         }
-        
+
         .instructions {
             background: #fff3cd;
             padding: 20px;
@@ -110,7 +110,7 @@
             border-left: 4px solid #f0ad4e;
             margin: 20px 0;
         }
-        
+
         .feature-badge {
             display: inline-block;
             background: #218c21;
@@ -121,7 +121,7 @@
             margin: 5px;
             font-weight: bold;
         }
-        
+
         @media (max-width: 768px) {
             .qr-test-area {
                 grid-template-columns: 1fr;
@@ -235,17 +235,17 @@ Attendance Monitoring System`;
         function testAdvancedQR() {
             const container = document.getElementById('advanced-qr');
             container.innerHTML = '<p style="color: #666;">Generating advanced QR code...</p>';
-            
+
             try {
                 const canvas = RobustQRGenerator.generateQR(studentData, 280);
                 container.innerHTML = '';
                 container.appendChild(canvas);
-                
+
                 const successMsg = document.createElement('div');
                 successMsg.className = 'success';
                 successMsg.innerHTML = '✅ Advanced QR Generated!<br><small>Full QR specification with data encoding</small>';
                 container.appendChild(successMsg);
-                
+
             } catch (error) {
                 container.innerHTML = '<div class="error">❌ Generation failed: ' + error.message + '</div>';
             }
@@ -254,17 +254,17 @@ Attendance Monitoring System`;
         function testSimpleQR() {
             const container = document.getElementById('simple-qr');
             container.innerHTML = '<p style="color: #666;">Generating simple pattern...</p>';
-            
+
             try {
                 const canvas = SimplePatternGenerator.generate(studentData, 280);
                 container.innerHTML = '';
                 container.appendChild(canvas);
-                
+
                 const successMsg = document.createElement('div');
                 successMsg.className = 'info';
                 successMsg.innerHTML = '✅ Simple Pattern Generated!<br><small>Optimized for scan reliability</small>';
                 container.appendChild(successMsg);
-                
+
             } catch (error) {
                 container.innerHTML = '<div class="error">❌ Generation failed: ' + error.message + '</div>';
             }
@@ -283,7 +283,7 @@ Attendance Monitoring System`;
         function downloadQR(containerId, filename) {
             const container = document.getElementById(containerId);
             const canvas = container.querySelector('canvas');
-            
+
             if (canvas) {
                 const link = document.createElement('a');
                 link.download = filename;
@@ -297,7 +297,7 @@ Attendance Monitoring System`;
         // Auto-generate on page load for demonstration
         window.onload = function() {
             console.log('🎓 Enhanced QR Generator loaded successfully');
-            
+
             // Show loading message
             setTimeout(() => {
                 testBothMethods();

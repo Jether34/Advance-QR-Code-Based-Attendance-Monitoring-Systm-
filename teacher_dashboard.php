@@ -59,7 +59,7 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['action']) && $_POST['act
     $password = trim($_POST['password'] ?? '');
     $gender = trim($_POST['gender'] ?? '');
     $lrn = trim($_POST['lrn'] ?? '');
-    
+
     // Verify student belongs to teacher's class
     $checkStmt = $pdo->prepare('SELECT id FROM students WHERE id = :id AND grade_level = :grade AND strand = :strand AND section_block = :block');
     $checkStmt->execute([':id'=>$sid, ':grade'=>$user['grade_level'], ':strand'=>$user['strand'], ':block'=>$user['section_block']]);
@@ -673,7 +673,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 display: block;
                 padding-top: 0;
             }
-            
+
             .sidebar {
                 width: 100%;
                 position: fixed;
@@ -684,27 +684,27 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 padding: 0;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.25);
             }
-            
+
             .sidebar-header {
                 padding: 14px 20px;
                 margin-bottom: 0;
                 border-bottom: 1px solid rgba(255,255,255,0.15);
             }
-            
+
             .sidebar-brand {
                 gap: 10px;
                 padding: 8px 16px 12px;
             }
-            
+
             .sidebar-logo {
                 width: 40px;
                 height: 40px;
             }
-            
+
             .teacher-profile {
                 display: none;
             }
-            
+
             .sidebar-menu {
                 display: flex;
                 flex-direction: row;
@@ -712,7 +712,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 overflow-x: auto;
                 overflow-y: hidden;
             }
-            
+
             .sidebar a {
                 padding: 12px 20px;
                 font-size: 0.9em;
@@ -721,98 +721,98 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 border-bottom: 1px solid rgba(255,255,255,0.08);
                 white-space: nowrap;
             }
-            
+
             .menu-text {
                 display: none;
             }
-            
+
             .menu-badge {
                 display: none;
             }
-            
+
             .sidebar a:hover {
                 padding-left: 20px;
             }
-            
+
             .sidebar a.logout {
                 margin-top: 0;
                 padding-top: 12px;
             }
-            
+
             .main {
                 margin-left: 0;
                 margin-top: 280px;
                 width: 100%;
                 padding: 16px;
             }
-            
+
             .dashboard-header {
                 margin-bottom: 16px;
             }
-            
+
             .greeting {
                 font-size: 1.4em;
                 margin-bottom: 4px;
             }
-            
+
             .page-header {
                 padding: 20px;
                 margin-bottom: 16px;
                 border-radius: 12px;
             }
-            
+
             .page-header h1 {
                 font-size: 1.4em;
                 margin-bottom: 8px;
             }
-            
+
             .page-header p {
                 font-size: 0.85em;
             }
-            
+
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
                 margin-bottom: 16px;
             }
-            
+
             .stat-card {
                 padding: 12px;
             }
-            
+
             .stat-number {
                 font-size: 1.8em;
                 margin-bottom: 6px;
             }
-            
+
             .stat-progress {
                 height: 4px;
             }
-            
+
             .stat-label {
                 font-size: 0.75em;
             }
-            
+
             .quick-actions {
                 margin-bottom: 20px;
                 padding: 16px;
             }
-            
+
             .quick-actions h3 {
                 font-size: 0.95em;
                 margin-bottom: 12px;
             }
-            
+
             .actions-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 8px;
             }
-            
+
             .action-btn {
                 padding: 12px 8px;
                 font-size: 0.8em;
             }
-            
+
             .action-icon {
                 font-size: 1.5em;
             }
@@ -835,166 +835,166 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 .analytics-grid { grid-template-columns: 1fr; gap: 12px; }
                 .analytics-metric { font-size: 1.2em; }
             }
-            
+
             .content-section {
                 padding: 20px 16px;
                 margin-bottom: 16px;
                 border-radius: 12px;
             }
-            
+
             .content-section h2 {
                 font-size: 1.2em;
                 margin-bottom: 16px;
                 padding-bottom: 10px;
             }
-            
+
             .search-bar input {
                 max-width: 100%;
                 font-size: 16px; /* Prevent iOS zoom */
                 padding: 14px 16px;
             }
-            
+
             table {
                 font-size: 0.85em;
                 border-radius: 8px;
             }
-            
+
             table th {
                 font-size: 0.75em;
                 padding: 10px 8px;
             }
-            
+
             table td {
                 padding: 10px 8px;
                 font-size: 0.85em;
             }
-            
+
             .btn {
                 font-size: 0.85em;
                 padding: 10px 16px;
             }
-            
+
             iframe {
                 height: 400px;
                 border-radius: 8px;
             }
-            
+
             input, select, textarea {
                 font-size: 16px !important; /* Prevent iOS zoom */
             }
         }
-        
+
         @media (max-width: 480px) {
             .sidebar-brand {
                 gap: 8px;
                 padding: 6px 12px 10px;
             }
-            
+
             .sidebar-text h2 {
                 font-size: 0.95em;
             }
-            
+
             .school-name {
                 display: none;
             }
-            
+
             .sidebar-logo {
                 width: 36px;
                 height: 36px;
             }
-            
+
             .sidebar a {
                 font-size: 0.8em;
                 padding: 10px 12px;
             }
-            
+
             .menu-icon {
                 font-size: 1em;
             }
-            
+
             .main {
                 padding: 12px;
                 margin-top: 240px;
             }
-            
+
             .dashboard-header {
                 margin-bottom: 12px;
             }
-            
+
             .greeting {
                 font-size: 1.2em;
                 margin-bottom: 2px;
             }
-            
+
             .greeting-time {
                 font-size: 0.85em;
             }
-            
+
             .page-header {
                 padding: 12px;
             }
-            
+
             .page-header h1 {
                 font-size: 1.1em;
                 margin-bottom: 4px;
             }
-            
+
             .page-header p {
                 font-size: 0.8em;
             }
-            
+
             .stats-grid {
                 grid-template-columns: 1fr;
                 gap: 8px;
                 margin-bottom: 12px;
             }
-            
+
             .stat-card {
                 padding: 10px;
             }
-            
+
             .stat-number {
                 font-size: 1.5em;
                 margin-bottom: 4px;
             }
-            
+
             .stat-header {
                 margin-bottom: 8px;
             }
-            
+
             .stat-label {
                 font-size: 0.7em;
             }
-            
+
             .quick-actions {
                 margin-bottom: 12px;
                 padding: 12px;
             }
-            
+
             .quick-actions h3 {
                 font-size: 0.9em;
                 margin-bottom: 10px;
             }
-            
+
             .actions-grid {
                 grid-template-columns: 1fr;
                 gap: 6px;
             }
-            
+
             .action-btn {
                 padding: 10px;
                 font-size: 0.75em;
             }
-            
+
             .action-icon {
                 font-size: 1.3em;
             }
-            
+
             .content-section {
                 padding: 12px;
                 margin-bottom: 12px;
             }
-            
+
             .content-section h2 {
                 font-size: 1em;
                 margin-bottom: 12px;
@@ -1032,7 +1032,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 <p class="teacher-role"><?php echo htmlspecialchars($user['faculty'] ?? 'Faculty'); ?></p>
             </div>
         </div>
-        
+
         <div class="sidebar-menu">
             <a href="teacher_dashboard.php?section=scanner" class="<?php echo active('scanner', $section); ?>">
                 <span class="menu-icon">📷</span>
@@ -1064,7 +1064,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 <span class="menu-badge">Edit</span>
             </a>
         </div>
-        
+
         <a href="logout.php" class="logout">🚪 Logout</a>
     </div>
     <div class="main">
@@ -1073,7 +1073,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 <h1><?php echo $section === 'scanner' ? '📷 Attendance Scanner' : ($section === 'today' ? '📅 Today\'s Attendance' : ($section === 'student_list' ? '👥 Student List' : ($section === 'analytics' ? '📈 Analytics' : ($section === 'corrections' ? '✏️ Attendance Corrections' : '📊 Dashboard')))); ?></h1>
                 <p class="main-header-stats">
                     📅 <?php echo get_dashboard_display_date(); ?>
-                    <?php 
+                    <?php
                     $reset_info = get_time_until_reset();
                     if ($reset_info['is_next_day_mode']): ?>
                         <span style="background: #ff9800; color: white; padding: 4px 12px; border-radius: 12px; margin-left: 10px; font-size: 0.85em;">
@@ -1110,7 +1110,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 <div id="fullscreenCameraContainer" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000; z-index: 9999;">
                     <div id="cameraView" style="width: 100%; height: 100%; position: relative;">
                         <video id="cameraPreview" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
-                        
+
                         <!-- Sync Status Indicator -->
                         <div style="position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.7); color: white; padding: 10px 16px; border-radius: 8px; font-size: 0.9em; display: flex; align-items: center; gap: 8px;">
                             <span id="syncStatus" style="display: inline-block; width: 8px; height: 8px; background: #27ae60; border-radius: 50%; animation: pulse 2s infinite;"></span>
@@ -1122,7 +1122,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                                 50% { opacity: 0.5; }
                             }
                         </style>
-                        
+
                         <!-- Exit Button -->
                         <button onclick="exitFullscreenCamera()" style="position: absolute; top: 20px; right: 20px; padding: 12px 24px; background: rgba(231,76,60,0.9); color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; z-index: 10000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
                             ✕ Exit
@@ -1182,22 +1182,22 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 async function enableFullscreenCamera() {
                     document.getElementById('scannerModeDialog').style.display = 'none';
                     document.getElementById('fullscreenCameraContainer').style.display = 'block';
-                    
+
                     try {
                         // Get camera stream
-                        const stream = await navigator.mediaDevices.getUserMedia({ 
-                            video: { facingMode: 'environment', width: 1920, height: 1080 } 
+                        const stream = await navigator.mediaDevices.getUserMedia({
+                            video: { facingMode: 'environment', width: 1920, height: 1080 }
                         });
                         cameraStream = stream;
                         document.getElementById('cameraPreview').srcObject = stream;
-                        
+
                         // Initialize QR scanner
                         html5QrCode = new Html5Qrcode("cameraPreview");
-                        
+
                         Html5Qrcode.getCameras().then(cameras => {
                             if (cameras && cameras.length > 0) {
                                 const cameraId = cameras[cameras.length - 1].id; // Prefer back camera
-                                
+
                                 html5QrCode.start(
                                     cameraId,
                                     { fps: 10, qrbox: { width: 300, height: 300 } },
@@ -1212,7 +1212,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                                 );
                             }
                         });
-                        
+
                         document.getElementById('manualStudentId').focus();
                     } catch (err) {
                         alert('Camera access denied: ' + err.message);
@@ -1281,7 +1281,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     const recentScans = JSON.parse(sessionStorage.getItem('recentScans') || '{}');
                     const now = Date.now();
                     const thirtySecondsAgo = now - 30000;
-                    
+
                     if (recentScans[studentId] && recentScans[studentId] > thirtySecondsAgo) {
                         const timeSince = Math.round((now - recentScans[studentId]) / 1000);
                         document.getElementById('scanStatus').textContent = `⚠️ Student already scanned ${timeSince}s ago`;
@@ -1315,7 +1315,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
 
                         if (data.success) {
                             const student = data.student_info;
-                            
+
                             // Record successful scan
                             recentScans[studentId] = now;
                             // Clean up old scans (older than 30 seconds)
@@ -1323,14 +1323,14 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                                 if (recentScans[id] < thirtySecondsAgo) delete recentScans[id];
                             });
                             sessionStorage.setItem('recentScans', JSON.stringify(recentScans));
-                            
+
                             showSuccessPopup(
                                 `Attendance for ${student.full_name}`,
                                 `Grade ${student.grade_level} - ${student.strand} - ${student.section_block}<br>Status: ${data.attendance_info.status}`
                             );
-                            
+
                             document.getElementById('scanStatus').textContent = '';
-                            
+
                             // Clear textbox after 2 seconds (when popup closes)
                             setTimeout(() => {
                                 document.getElementById('manualStudentId').value = '';
@@ -1350,7 +1350,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                         // Network error - add to offline queue
                         offlineQueueCount++;
                         updateSyncStatus();
-                        
+
                         document.getElementById('scanStatus').textContent = '❌ Network error - saved for later';
                         // Clear textbox after 1 second on error
                         setTimeout(() => {
@@ -1373,10 +1373,10 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     document.getElementById('popupTitle').textContent = '✅ ' + title;
                     document.getElementById('popupMessage').innerHTML = message;
                     document.getElementById('successPopup').style.display = 'block';
-                    
+
                     // Play success sound
                     playSuccessSound();
-                    
+
                     // Auto-hide after 2 seconds
                     setTimeout(() => {
                         document.getElementById('successPopup').style.display = 'none';
@@ -1396,7 +1396,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
             $grade = $user['grade_level'];
             $strand = $user['strand'];
             $block = $user['section_block'];
-            
+
             // Time-based greeting
             $hour = date('H');
             if ($hour < 12) {
@@ -1406,12 +1406,12 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
             } else {
                 $greeting = "Good Evening";
             }
-            
+
             // Get reset info for display
             $reset_info = get_time_until_reset();
             $status_msg = get_attendance_status_message();
             ?>
-            
+
             <?php if ($is_next_day): ?>
             <div style="background: linear-gradient(135deg, #ff9800, #f57c00); color: white; padding: 16px 24px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(255,152,0,0.3); display: flex; align-items: center; gap: 15px;">
                 <span style="font-size: 2em;">🌙</span>
@@ -1429,7 +1429,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 </div>
             </div>
             <?php endif; ?>
-            
+
             <div class="dashboard-header">
                 <div class="greeting"><?php echo $greeting; ?>, <?php echo htmlspecialchars($user['full_name']); ?>! 👋</div>
                 <div class="greeting-time">Grade <?php echo htmlspecialchars($grade); ?> - <?php echo htmlspecialchars($strand); ?> - Section <?php echo htmlspecialchars($block); ?></div>
@@ -1455,14 +1455,14 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     case 'afternoon_half_day': $afternoon_half++; break;
                 }
             }
-            
+
             // Calculate percentages
             $marked = $present + $absent + $late + $excuse + $morning_half + $afternoon_half;
             $presentPct = $marked > 0 ? round(($present / $marked) * 100) : 0;
             $latePct = $marked > 0 ? round(($late / $marked) * 100) : 0;
             $absentPct = $marked > 0 ? round(($absent / $marked) * 100) : 0;
             $excusePct = $marked > 0 ? round(($excuse / $marked) * 100) : 0;
-            
+
             // Get yesterday's data for trend comparison
             $yesterday = date('Y-m-d', strtotime($attendance_date . ' -1 day'));
             $yesterdayAttendance = $pdo->prepare('SELECT * FROM attendance_records WHERE attendance_date = :date AND student_id IN ("' . implode('","', $studentIds) . '")');
@@ -1475,7 +1475,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     case 'late': $yesterdayLate++; break;
                 }
             }
-            
+
             // Calculate trend deltas
             $presentDelta = $present - $yesterdayPresent;
             $absentDelta = $absent - $yesterdayAbsent;
@@ -1536,8 +1536,8 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     <div class="stat-label" style="margin-top: 8px; color: #3498db;"><?php echo $excusePct; ?>%</div>
                 </div>
             </div>
-            
-            
+
+
             <div class="content-section">
                 <h2>Student Search</h2>
                 <form method="get" class="search-bar">
@@ -1580,7 +1580,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
         <?php elseif($section === 'today'): ?>
             <div class="content-section" style="text-align:right;padding:16px 32px;margin-bottom:16px;">
                 <button id="printSF2Btn" class="btn btn-primary">🖨️ Print SF2</button>
-                
+
                 <!-- Export Format Modal -->
                 <div id="sf2ExportModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9998; align-items: center; justify-content: center;">
                     <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); max-width: 500px; text-align: center;">
@@ -1711,13 +1711,13 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
             .attendance-actions select:focus {border-color:#2d6a4f;outline:none;box-shadow:0 0 0 3px rgba(45,106,79,0.1);}
             .attendance-actions button {background:linear-gradient(135deg,#2d6a4f 0%,#1e5128 100%);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-weight:700;font-size:0.85em;transition:all 0.3s;}
             .attendance-actions button:hover {transform:translateY(-2px);box-shadow:0 4px 12px rgba(45,106,79,0.4);}
-            
+
             @media (max-width: 1024px){
                 .attendance-table {font-size:0.9em;}
                 .attendance-table thead th {padding:10px 8px;font-size:0.75em;}
                 .attendance-table tbody td {padding:10px 8px;}
             }
-            
+
             @media (max-width: 768px){
                 .attendance-table {display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;font-size:0.85em;}
                 .attendance-table thead th {font-size:0.7em;padding:8px 6px;}
@@ -1725,7 +1725,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 .attendance-actions select {font-size:0.8em;padding:6px 8px;}
                 .attendance-actions button {font-size:0.8em;padding:6px 12px;}
             }
-            
+
             @media (max-width: 600px){
                 .attendance-table thead {display:none;}
                 .attendance-table tbody {display:block;}
@@ -1804,7 +1804,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 </thead>
                 <tbody>
                 <tr class="gender-header"><td colspan="9">Male</td></tr>
-                <?php foreach($males as $s): 
+                <?php foreach($males as $s):
                     $records = $attendanceData[$s['student_id']] ?? [];
                 ?>
                 <tr>
@@ -1833,7 +1833,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 </tr>
                 <?php endforeach; ?>
                 <tr class="gender-header"><td colspan="9">Female</td></tr>
-                <?php foreach($females as $s): 
+                <?php foreach($females as $s):
                     $records = $attendanceData[$s['student_id']] ?? [];
                 ?>
                 <tr>
@@ -1869,7 +1869,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 <p>Manage students in your class</p>
                 <a href="import_students.php" style="margin-left: auto; background: #27ae60; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block;">📥 Batch Import CSV</a>
             </div>
-            
+
             <!-- Filter & Search Section -->
             <div class="content-section" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); margin-bottom: 20px; padding: 20px 24px;">
                 <h3 style="margin-top: 0; color: #2c3e50; font-size: 1.1em;">🔍 Filter Students</h3>
@@ -1880,7 +1880,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                         <input type="text" id="studentSearch" placeholder="Type to search..." style="width: 100%; padding: 10px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 0.95em;">
                         <div id="searchSuggestions" style="position: absolute; background: white; border: 1px solid #ddd; border-top: none; max-height: 200px; overflow-y: auto; width: calc(100% - 4px); display: none; z-index: 100;"></div>
                     </div>
-                    
+
                     <!-- Gender Filter -->
                     <div>
                         <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #2c3e50; font-size: 0.9em;">Gender:</label>
@@ -1891,7 +1891,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                             <option value="Other">Other</option>
                         </select>
                     </div>
-                    
+
                     <!-- Status Filter -->
                     <div>
                         <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #2c3e50; font-size: 0.9em;">Today's Status:</label>
@@ -1903,7 +1903,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                             <option value="unmarked">📋 Not Marked</option>
                         </select>
                     </div>
-                    
+
                     <!-- Reset Filters Button -->
                     <div style="display: flex; align-items: flex-end;">
                         <button onclick="resetFilters()" style="width: 100%; padding: 10px 12px; background: #95a5a6; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.95em;">
@@ -1912,7 +1912,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     </div>
                 </div>
             </div>
-            
+
             <?php if(!empty($errors)): ?>
                 <div style="padding:14px 20px;background:linear-gradient(135deg,#f8d7da 0%,#f5c6cb 100%);border-left:4px solid #dc3545;margin-bottom:18px;border-radius:12px">
                     <?php foreach($errors as $err): ?><p style="margin:3px 0;color:#721c24;font-weight:600"><?= htmlspecialchars($err) ?></p><?php endforeach; ?>
@@ -1930,7 +1930,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
             $students = $pdo->prepare('SELECT * FROM students WHERE grade_level = :grade AND strand = :strand AND section_block = :block ORDER BY full_name ASC');
             $students->execute([':grade'=>$grade, ':strand'=>$strand, ':block'=>$block]);
             $studentList = $students->fetchAll(PDO::FETCH_ASSOC);
-            
+
             // Get today's attendance for status highlighting
             $attendanceCheck = $pdo->prepare('SELECT student_id, status FROM attendance_records WHERE attendance_date = :date');
             $attendanceCheck->execute([':date'=>$attendance_date]);
@@ -1954,7 +1954,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                                                     </tr>
                                             </thead>
                                             <tbody>
-                                                    <?php foreach($studentList as $s): 
+                                                    <?php foreach($studentList as $s):
                                                         $status = $attendanceMap[$s['student_id']] ?? 'unmarked';
                                                         $statusColor = match($status) {
                                                             'present' => '#d4edda',
@@ -1969,9 +1969,9 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                                                             default => '📋 Not Marked'
                                                         };
                                                     ?>
-                                                    <tr data-student-id="<?php echo htmlspecialchars($s['student_id']); ?>" 
-                                                        data-student-name="<?php echo htmlspecialchars($s['full_name']); ?>" 
-                                                        data-gender="<?php echo htmlspecialchars($s['gender'] ?? ''); ?>" 
+                                                    <tr data-student-id="<?php echo htmlspecialchars($s['student_id']); ?>"
+                                                        data-student-name="<?php echo htmlspecialchars($s['full_name']); ?>"
+                                                        data-gender="<?php echo htmlspecialchars($s['gender'] ?? ''); ?>"
                                                         data-status="<?php echo $status; ?>"
                                                         style="background-color: <?php echo $statusColor; ?>; transition: all 0.2s;">
                                                             <td title="<?= htmlspecialchars($s['lrn'] ?? '') ?>">
@@ -2038,7 +2038,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
             }
             </style>
             </div>
-            
+
             <!-- Edit Student Modal -->
             <div id="editModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);z-index:10000;justify-content:center;align-items:center">
                 <div style="background:linear-gradient(135deg,#ffffff 0%,#f8fffe 100%);max-width:550px;width:90%;margin:50px auto;padding:32px 40px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3)">
@@ -2047,16 +2047,16 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                         <input type="hidden" name="action" value="update_student">
                         <input type="hidden" name="student_id" id="edit_student_id">
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token); ?>">
-                        
+
                         <label style="display:block;margin-bottom:6px;color:#1e5128;font-weight:700;font-size:0.8em;text-transform:uppercase;letter-spacing:0.5px">Full Name:</label>
                         <input type="text" name="full_name" id="edit_full_name" required style="width:100%;padding:12px 14px;margin-bottom:14px;border:2px solid #d8f3dc;border-radius:10px;background:#f6fff7;font-size:0.9em;transition:all 0.3s">
-                        
+
                         <label style="display:block;margin-bottom:6px;color:#1e5128;font-weight:700;font-size:0.8em;text-transform:uppercase;letter-spacing:0.5px">LRN:</label>
                         <input type="text" name="lrn" id="edit_lrn" style="width:100%;padding:12px 14px;margin-bottom:14px;border:2px solid #d8f3dc;border-radius:10px;background:#f6fff7;font-size:0.9em;transition:all 0.3s">
-                        
+
                         <label style="display:block;margin-bottom:6px;color:#1e5128;font-weight:700;font-size:0.8em;text-transform:uppercase;letter-spacing:0.5px">Email:</label>
                         <input type="email" name="email" id="edit_email" required style="width:100%;padding:12px 14px;margin-bottom:14px;border:2px solid #d8f3dc;border-radius:10px;background:#f6fff7;font-size:0.9em;transition:all 0.3s">
-                        
+
                         <label style="display:block;margin-bottom:6px;color:#1e5128;font-weight:700;font-size:0.8em;text-transform:uppercase;letter-spacing:0.5px">Gender:</label>
                         <select name="gender" id="edit_gender" style="width:100%;padding:12px 14px;margin-bottom:14px;border:2px solid #d8f3dc;border-radius:10px;background:#f6fff7;font-size:0.9em;transition:all 0.3s">
                             <option value="">Select Gender</option>
@@ -2064,10 +2064,10 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                             <option value="Female">Female</option>
                             <option value="Other">Other</option>
                         </select>
-                        
+
                         <label style="display:block;margin-bottom:6px;color:#1e5128;font-weight:700;font-size:0.8em;text-transform:uppercase;letter-spacing:0.5px">Change Password (leave blank to keep current):</label>
                         <input type="password" name="password" id="edit_password" placeholder="New password" style="width:100%;padding:12px 14px;margin-bottom:18px;border:2px solid #d8f3dc;border-radius:10px;background:#f6fff7;font-size:0.9em;transition:all 0.3s">
-                        
+
                         <div style="display:flex;gap:12px">
                             <button type="submit" class="btn btn-primary" style="flex:1;padding:13px">Update Student</button>
                             <button type="button" onclick="closeEditModal()" style="flex:1;padding:13px;background:linear-gradient(135deg,#95a5a6 0%,#7f8c8d 100%);color:#fff;border:none;border-radius:11px;font-weight:600;cursor:pointer;transition:all 0.3s">Cancel</button>
@@ -2075,7 +2075,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     </form>
                 </div>
             </div>
-            
+
             <script>
             function openEditModal(student) {
                 document.getElementById('edit_student_id').value = student.id;
@@ -2089,48 +2089,48 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
             function closeEditModal() {
                 document.getElementById('editModal').style.display = 'none';
             }
-            
+
             // Student List Filtering & Search
             const studentSearch = document.getElementById('studentSearch');
             const genderFilter = document.getElementById('genderFilter');
             const statusFilter = document.getElementById('statusFilter');
             const studentTable = document.querySelector('table tbody');
             const allRows = studentTable ? Array.from(studentTable.querySelectorAll('tr')) : [];
-            
+
             function applyFilters() {
                 const searchTerm = (studentSearch?.value || '').toLowerCase();
                 const selectedGender = genderFilter?.value || '';
                 const selectedStatus = statusFilter?.value || '';
-                
+
                 allRows.forEach(row => {
                     const name = (row.dataset.studentName || '').toLowerCase();
                     const id = (row.dataset.studentId || '').toLowerCase();
                     const gender = row.dataset.gender || '';
                     const status = row.dataset.status || '';
-                    
+
                     let matches = true;
-                    
+
                     // Search filter
                     if (searchTerm && !name.includes(searchTerm) && !id.includes(searchTerm)) {
                         matches = false;
                     }
-                    
+
                     // Gender filter
                     if (selectedGender && gender !== selectedGender) {
                         matches = false;
                     }
-                    
+
                     // Status filter
                     if (selectedStatus && status !== selectedStatus) {
                         matches = false;
                     }
-                    
+
                     row.style.display = matches ? '' : 'none';
                 });
-                
+
                 updateVisibleCount();
             }
-            
+
             function updateVisibleCount() {
                 const visibleCount = allRows.filter(r => r.style.display !== 'none').length;
                 const totalCount = allRows.length;
@@ -2139,7 +2139,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     badge.textContent = visibleCount;
                 }
             }
-            
+
             function resetFilters() {
                 if (studentSearch) studentSearch.value = '';
                 if (genderFilter) genderFilter.value = '';
@@ -2147,7 +2147,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 allRows.forEach(row => row.style.display = '');
                 updateVisibleCount();
             }
-            
+
             // Add event listeners for filtering
             if (studentSearch) {
                 studentSearch.addEventListener('input', applyFilters);
@@ -2158,7 +2158,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                         document.getElementById('searchSuggestions').style.display = 'none';
                         return;
                     }
-                    
+
                     const matches = allRows
                         .filter(row => {
                             const name = (row.dataset.studentName || '').toLowerCase();
@@ -2167,7 +2167,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                         })
                         .slice(0, 5)
                         .map(row => row.dataset.studentName || '');
-                    
+
                     if (matches.length > 0) {
                         const suggestionsDiv = document.getElementById('searchSuggestions');
                         suggestionsDiv.innerHTML = matches.map(m => `<div style="padding:8px 12px; cursor:pointer; border-bottom:1px solid #eee;" onclick="document.getElementById('studentSearch').value='${m}'; applyFilters(); this.parentElement.style.display='none';">${m}</div>`).join('');
@@ -2175,10 +2175,10 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     }
                 });
             }
-            
+
             if (genderFilter) genderFilter.addEventListener('change', applyFilters);
             if (statusFilter) statusFilter.addEventListener('change', applyFilters);
-            
+
             // Update student count on load
             document.addEventListener('DOMContentLoaded', function() {
                 updateVisibleCount();
@@ -2304,7 +2304,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                                 <option value="month">Last 30 Days</option>
                             </select>
                         </div>
-                        
+
                         <!-- Export Buttons -->
                         <button onclick="exportAnalyticsCSV()" style="padding: 8px 16px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9em;">
                             📊 Export CSV
@@ -2314,7 +2314,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                         </button>
                     </div>
                 </div>
-                
+
                 <?php if($totalStudents === 0): ?>
                     <p style="color:#5a6c7d">No students found for your class. Add students to view analytics.</p>
                 <?php else: ?>
@@ -2410,7 +2410,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                         ['Absent', <?php echo $absentToday; ?>],
                         ['Excused', <?php echo $excuseToday; ?>]
                     ];
-                    
+
                     const csv = data.map(row => row.join(',')).join('\n');
                     const blob = new Blob([csv], { type: 'text/csv' });
                     const url = window.URL.createObjectURL(blob);
@@ -2419,17 +2419,17 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     a.download = 'attendance-analytics-' + new Date().toISOString().slice(0,10) + '.csv';
                     a.click();
                 }
-                
+
                 function exportAnalyticsPDF() {
                     window.print();
                 }
-                
+
                 (function(){
                     // Wait for DOM and Chart.js to be ready
                     setTimeout(function(){
                         const donutElement = document.getElementById('attendanceDonut');
                         const trendElement = document.getElementById('attendanceTrend');
-                        
+
                         if (!donutElement || !trendElement) {
                             console.warn('Canvas elements not found');
                             return;
@@ -2438,7 +2438,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                         try {
                             const donutCtx = donutElement.getContext('2d');
                             const trendCtx = trendElement.getContext('2d');
-                            
+
                             if (!donutCtx || !trendCtx) {
                                 console.error('Failed to get canvas context');
                                 return;
@@ -2469,14 +2469,14 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                                 options: {
                                     responsive: true,
                                     maintainAspectRatio: true,
-                                    plugins: { 
-                                        legend: { 
-                                            position: 'bottom', 
-                                            labels:{ 
+                                    plugins: {
+                                        legend: {
+                                            position: 'bottom',
+                                            labels:{
                                                 boxWidth: 12,
                                                 font: { size: 12 }
-                                            } 
-                                        } 
+                                            }
+                                        }
                                     },
                                     cutout: '55%'
                                 }
@@ -2503,15 +2503,15 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                                 options: {
                                     responsive: true,
                                     maintainAspectRatio: true,
-                                    plugins: { 
-                                        legend: { display: true, position: 'top' } 
+                                    plugins: {
+                                        legend: { display: true, position: 'top' }
                                     },
-                                    scales: { 
-                                        y: { 
+                                    scales: {
+                                        y: {
                                             beginAtZero: true,
-                                            suggestedMin: 0, 
+                                            suggestedMin: 0,
                                             suggestedMax: 100,
-                                            ticks: { 
+                                            ticks: {
                                                 callback: function(v) { return v + '%'; }
                                             }
                                         }
@@ -2534,14 +2534,14 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                 $status = trim($_POST['status'] ?? '');
                 $date = trim($_POST['correction_date'] ?? '');
                 $reason = trim($_POST['correction_reason'] ?? '');
-                
+
                 if ($studentId && in_array($status, ['present', 'late', 'absent', 'excuse', 'morning_half_day', 'afternoon_half_day'])) {
                     try {
                         // Check if record exists
                         $checkStmt = $pdo->prepare('SELECT id FROM attendance_records WHERE student_id = :sid AND attendance_date = :date');
                         $checkStmt->execute([':sid' => $studentId, ':date' => $date]);
                         $existing = $checkStmt->fetch();
-                        
+
                         if ($existing) {
                             // Update existing record
                             $updateStmt = $pdo->prepare('UPDATE attendance_records SET status = :status, correction_reason = :reason, corrected_at = NOW(), corrected_by = :teacher_id WHERE student_id = :sid AND attendance_date = :date');
@@ -2558,7 +2558,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     }
                 }
             }
-            
+
             // Get students and their attendance for correction
             $grade = $user['grade_level'];
             $strand = $user['strand'];
@@ -2582,7 +2582,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                         <?php echo htmlspecialchars($success); ?>
                     </div>
                 <?php endif; ?>
-                
+
                 <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px;">
                     <strong>ℹ️ Info:</strong> Correct attendance records from the last 7 days. All corrections are logged with teacher ID and timestamp.
                 </div>
@@ -2598,9 +2598,9 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                         </tr>
                     </thead>
                     <tbody>
-                        <?php 
+                        <?php
                         $studentsSeen = [];
-                        foreach ($studentRecords as $record): 
+                        foreach ($studentRecords as $record):
                             if (isset($studentsSeen[$record['student_id']])) continue;
                             $studentsSeen[$record['student_id']] = true;
                         ?>
@@ -2609,8 +2609,8 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                                 <td style="font-weight: bold; color: #2d6a4f;"><?php echo htmlspecialchars($record['student_id']); ?></td>
                                 <td><?php echo $record['attendance_date'] ? date('M d, Y', strtotime($record['attendance_date'])) : 'N/A'; ?></td>
                                 <td>
-                                    <span style="display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.9em; 
-                                    <?php 
+                                    <span style="display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.9em;
+                                    <?php
                                     $statusColor = match($record['status'] ?? '') {
                                         'present' => 'background: #d4edda; color: #155724;',
                                         'late' => 'background: #fff3cd; color: #856404;',
@@ -2641,7 +2641,7 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
                     <form method="POST" style="display: flex; flex-direction: column; gap: 12px;">
                         <input type="hidden" name="correct_action" value="1">
                         <input type="hidden" name="student_id" id="modal_student_id">
-                        
+
                         <div>
                             <label style="display: block; margin-bottom: 6px; font-weight: 600; color: #2c3e50;">Student: <span id="modal_student_name"></span></label>
                         </div>
@@ -2705,10 +2705,10 @@ function active($s, $section) { return $s === $section ? 'active' : ''; }
         <?php endif; ?>
         </div>
     </div>
-    
+
     <script>
         // Prevent back button from showing cached page
-        window.history.pushState(null, "", window.location.href);        
+        window.history.pushState(null, "", window.location.href);
         window.onpopstate = function() {
             window.history.pushState(null, "", window.location.href);
         };

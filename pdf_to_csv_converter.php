@@ -57,15 +57,15 @@ function extractPDFText($filePath) {
     try {
         $parser = new Parser();
         $pdf = $parser->parseFile($filePath);
-        
+
         // Get text from all pages
         $text = $pdf->getText();
-        
+
         // Clean up the extracted text
         $text = preg_replace('/\s+/', ' ', $text); // Normalize whitespace
         $text = str_replace(['\n', '\r', '\t'], ["\n", "\n", " "], $text);
         $text = preg_replace('/\n{3,}/', "\n\n", $text); // Limit consecutive newlines
-        
+
         return trim($text);
     } catch (Exception $e) {
         // Log error and return empty
@@ -77,7 +77,7 @@ function extractPDFText($filePath) {
 // Use AI to structure the extracted text into CSV format
 function convertTextToCSV($text, $pdo) {
     $ollamaUrl = OLLAMA_API_URL;
-    
+
     // Sanitize extracted text to reduce prompt-injection risk
     // Remove common instruction-like lines that may try to influence the model
     $text = preg_replace('/^\s*(you are|instruction|prompt|system|assistant|user)[:\-\s].*$/im', '', $text);
@@ -89,7 +89,7 @@ function convertTextToCSV($text, $pdo) {
 
     // Show first 300 chars for debugging (not returned to users)
     $previewText = substr($text, 0, 300);
-    
+
     // Build a strict instruction prompt. The model is explicitly instructed to IGNORE any
     // embedded instructions or prompts inside the uploaded PDF text and to only extract
     // factual lessons present in the text. We also set conservative decoding params.
@@ -99,7 +99,7 @@ function convertTextToCSV($text, $pdo) {
               "For each lesson, provide: topic (exact title), content (4-8 sentences summary), difficulty (Easy/Medium/Hard), subject. " .
               "If you cannot find any lessons, return only the header row.\n\n";
     $prompt .= "EXTRACTED TEXT START:\n" . $text . "\nEXTRACTED TEXT END:\n";
-    
+
     $data = [
         'model' => 'llama3.2',
         'prompt' => $prompt,
@@ -109,7 +109,7 @@ function convertTextToCSV($text, $pdo) {
             'num_predict' => 2000 // limit tokens to bound runtime
         ]
     ];
-    
+
     $ch = curl_init($ollamaUrl);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
@@ -117,16 +117,16 @@ function convertTextToCSV($text, $pdo) {
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
     // Keep a conservative timeout for local LLM calls
     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-    
+
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
-    
+
     if ($httpCode !== 200) {
         error_log('Ollama returned HTTP ' . $httpCode . ': ' . substr($response, 0, 200));
         return null;
     }
-    
+
     $result = json_decode($response, true);
     return isset($result['response']) ? trim($result['response']) : null;
 }
@@ -134,7 +134,7 @@ function convertTextToCSV($text, $pdo) {
 try {
     // Extract text from PDF
     $extractedText = extractPDFText($file['tmp_name']);
-    
+
     if (empty($extractedText) || strlen($extractedText) < 50) {
         echo json_encode([
             'error' => 'Could not extract text from PDF. The file may be scanned/image-based or corrupted.',
@@ -143,10 +143,10 @@ try {
         ]);
         exit;
     }
-    
+
     // Use AI to convert to CSV format
     $csvContent = convertTextToCSV($extractedText, get_db());
-    
+
     if (empty($csvContent)) {
         echo json_encode([
             'error' => 'AI conversion failed. Make sure Ollama is running (http://localhost:11434).',
@@ -154,21 +154,21 @@ try {
         ]);
         exit;
     }
-    
+
     // Clean up AI response (remove markdown code blocks if present)
     $csvContent = preg_replace('/```csv\n/', '', $csvContent);
     $csvContent = preg_replace('/```\n?$/', '', $csvContent);
     $csvContent = trim($csvContent);
-    
+
     // Validate CSV has content
     $lines = explode("\n", $csvContent);
     $lessonCount = count($lines) - 1; // Subtract header row
-    
+
     if ($lessonCount < 1) {
         echo json_encode(['error' => 'No lessons could be extracted from the PDF. The file may be scanned or contain unreadable text.']);
         exit;
     }
-    
+
     // Save to a storage directory that is not web-accessible and use a randomized filename
     $storageDir = __DIR__ . '/storage/data/';
     if (!is_dir($storageDir)) {
@@ -205,10 +205,9 @@ try {
         'warnings' => $validationErrors,
         'message' => "Successfully extracted {$lessonCount} lessons from the module and saved to storage folder!"
     ]);
-    
+
 } catch (Exception $e) {
     echo json_encode([
         'error' => 'Conversion error: ' . $e->getMessage()
     ]);
 }
-

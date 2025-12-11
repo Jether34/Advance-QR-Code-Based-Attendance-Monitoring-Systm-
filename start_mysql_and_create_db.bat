@@ -17,13 +17,13 @@ if %ERRORLEVEL% EQU 0 (
     echo.
     echo Step 3: Creating database...
     c:\xampp\mysql\bin\mysql.exe -u root -e "CREATE DATABASE IF NOT EXISTS attendance_qr_system CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-    
+
     if %ERRORLEVEL% EQU 0 (
         echo ✓ Database 'attendance_qr_system' created!
         echo.
         echo Step 4: Creating tables...
         c:\xampp\mysql\bin\mysql.exe -u root attendance_qr_system < complete_database_setup.sql
-        
+
         if %ERRORLEVEL% EQU 0 (
             echo ✓ All tables created successfully!
             echo.

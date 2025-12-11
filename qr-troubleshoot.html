@@ -165,11 +165,11 @@
     <!-- Load all necessary libraries -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
+
     <script>
         let debugLog = '';
         let testResults = {};
-        
+
         function debug(msg, type = 'info') {
             const timestamp = new Date().toLocaleTimeString();
             const prefix = type === 'error' ? '❌' : type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️';
@@ -178,65 +178,65 @@
             document.getElementById('debugLog').scrollTop = document.getElementById('debugLog').scrollHeight;
             console.log(`${prefix} ${msg}`);
         }
-        
+
         function setStatus(elementId, msg, type = 'info') {
             const el = document.getElementById(elementId);
             el.className = `status ${type}`;
             el.textContent = msg;
         }
-        
+
         function setProgress(elementId, percent) {
             document.getElementById(elementId).style.width = percent + '%';
         }
-        
+
         // Step 1: System Check
         async function runSystemCheck() {
             const btn = document.getElementById('systemBtn');
             btn.disabled = true;
-            
+
             try {
                 debug('=== SYSTEM CHECK STARTED ===');
                 setStatus('systemStatus', 'Running comprehensive system check...', 'info');
-                
+
                 // Browser info
                 debug(`Browser: ${navigator.userAgent}`);
                 debug(`Platform: ${navigator.platform}`);
                 debug(`Language: ${navigator.language}`);
                 debug(`Cookies Enabled: ${navigator.cookieEnabled}`);
                 debug(`Online: ${navigator.onLine}`);
-                
+
                 // Library checks
                 const qrAvailable = typeof QRCode !== 'undefined';
                 const jsPDFAvailable = typeof window.jsPDF !== 'undefined';
-                
+
                 debug(`QRCode.js Library: ${qrAvailable ? 'Available ✅' : 'Missing ❌'}`, qrAvailable ? 'success' : 'error');
                 debug(`jsPDF Library: ${jsPDFAvailable ? 'Available ✅' : 'Missing ❌'}`, jsPDFAvailable ? 'success' : 'error');
-                
+
                 testResults.libraries = { qr: qrAvailable, pdf: jsPDFAvailable };
-                
+
                 // Canvas support
                 const canvas = document.createElement('canvas');
                 const canvasSupported = !!(canvas.getContext && canvas.getContext('2d'));
                 debug(`Canvas Support: ${canvasSupported ? 'Available ✅' : 'Missing ❌'}`, canvasSupported ? 'success' : 'error');
-                
+
                 // Download support
                 const downloadSupported = 'download' in document.createElement('a');
                 debug(`Download Attribute: ${downloadSupported ? 'Supported ✅' : 'Not Supported ❌'}`, downloadSupported ? 'success' : 'error');
-                
+
                 // Blob support
                 const blobSupported = typeof Blob !== 'undefined';
                 debug(`Blob Support: ${blobSupported ? 'Available ✅' : 'Missing ❌'}`, blobSupported ? 'success' : 'error');
-                
+
                 testResults.system = { canvas: canvasSupported, download: downloadSupported, blob: blobSupported };
-                
+
                 if (qrAvailable && jsPDFAvailable && canvasSupported && downloadSupported) {
                     setStatus('systemStatus', '✅ System check passed! All required features are available.', 'success');
                 } else {
                     setStatus('systemStatus', '⚠️ System check found issues. See debug log for details.', 'warning');
                 }
-                
+
                 debug('=== SYSTEM CHECK COMPLETED ===');
-                
+
             } catch (error) {
                 debug(`System check failed: ${error.message}`, 'error');
                 setStatus('systemStatus', '❌ System check failed: ' + error.message, 'error');
@@ -244,25 +244,25 @@
                 btn.disabled = false;
             }
         }
-        
+
         // Step 2: QR Generation
         async function generateTestQR() {
             const btn = document.getElementById('qrBtn');
             btn.disabled = true;
-            
+
             try {
                 debug('=== QR GENERATION TEST ===');
                 setStatus('qrStatus', 'Generating test QR code...', 'info');
-                
+
                 if (typeof QRCode === 'undefined') {
                     throw new Error('QRCode.js library not available');
                 }
-                
+
                 const canvas = document.getElementById('testCanvas');
                 const testData = `Test QR Code - ${new Date().toISOString()}`;
-                
+
                 debug(`Generating QR with data: ${testData}`);
-                
+
                 await new Promise((resolve, reject) => {
                     QRCode.toCanvas(canvas, testData, {
                         width: 200,
@@ -278,10 +278,10 @@
                         }
                     });
                 });
-                
+
                 testResults.qrGeneration = true;
                 setStatus('qrStatus', '✅ Test QR code generated successfully!', 'success');
-                
+
             } catch (error) {
                 debug(`QR generation error: ${error.message}`, 'error');
                 setStatus('qrStatus', '❌ QR generation failed: ' + error.message, 'error');
@@ -290,48 +290,48 @@
                 btn.disabled = false;
             }
         }
-        
+
         // Step 3: PNG Download Tests
         async function testPNGMethods() {
             const btn = document.getElementById('pngBtn');
             btn.disabled = true;
-            
+
             try {
                 debug('=== PNG DOWNLOAD TESTS ===');
                 setStatus('pngStatus', 'Testing PNG download methods...', 'info');
-                
+
                 const canvas = document.getElementById('testCanvas');
                 if (!canvas) throw new Error('Canvas not found');
-                
+
                 // Check canvas content
                 const ctx = canvas.getContext('2d');
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 let hasContent = false;
-                
+
                 for (let i = 0; i < imageData.data.length; i += 4) {
                     if (imageData.data[i] !== 255 || imageData.data[i + 1] !== 255 || imageData.data[i + 2] !== 255) {
                         hasContent = true;
                         break;
                     }
                 }
-                
+
                 if (!hasContent) throw new Error('Canvas is empty - generate QR first');
-                
+
                 const methods = [
                     { name: 'DataURL Method', test: testDataURLDownload },
                     { name: 'Blob Method', test: testBlobDownload },
                     { name: 'Right-click Save', test: testRightClickSave }
                 ];
-                
+
                 testResults.pngMethods = {};
-                
+
                 for (let i = 0; i < methods.length; i++) {
                     const method = methods[i];
                     setProgress('pngProgress', ((i + 1) / methods.length) * 100);
-                    
+
                     debug(`Testing ${method.name}...`);
                     setStatus('pngStatus', `Testing ${method.name}...`, 'info');
-                    
+
                     try {
                         await method.test(canvas);
                         debug(`${method.name}: Success ✅`, 'success');
@@ -340,17 +340,17 @@
                         debug(`${method.name}: Failed - ${error.message}`, 'error');
                         testResults.pngMethods[method.name] = false;
                     }
-                    
+
                     await new Promise(resolve => setTimeout(resolve, 500));
                 }
-                
+
                 const successCount = Object.values(testResults.pngMethods).filter(Boolean).length;
                 if (successCount > 0) {
                     setStatus('pngStatus', `✅ PNG tests completed: ${successCount}/${methods.length} methods working`, 'success');
                 } else {
                     setStatus('pngStatus', '❌ All PNG download methods failed', 'error');
                 }
-                
+
             } catch (error) {
                 debug(`PNG testing error: ${error.message}`, 'error');
                 setStatus('pngStatus', '❌ PNG testing failed: ' + error.message, 'error');
@@ -359,22 +359,22 @@
                 setProgress('pngProgress', 100);
             }
         }
-        
+
         async function testDataURLDownload(canvas) {
             const dataURL = canvas.toDataURL('image/png');
             if (dataURL.length < 100) throw new Error('DataURL too short');
-            
+
             const link = document.createElement('a');
             link.href = dataURL;
             link.download = 'test-dataurl.png';
-            
+
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            
+
             debug('DataURL download triggered');
         }
-        
+
         async function testBlobDownload(canvas) {
             return new Promise((resolve, reject) => {
                 canvas.toBlob(function(blob) {
@@ -382,56 +382,56 @@
                         reject(new Error('Blob creation failed'));
                         return;
                     }
-                    
+
                     const url = URL.createObjectURL(blob);
                     const link = document.createElement('a');
                     link.href = url;
                     link.download = 'test-blob.png';
-                    
+
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-                    
+
                     setTimeout(() => URL.revokeObjectURL(url), 1000);
                     debug('Blob download triggered');
                     resolve();
                 }, 'image/png');
             });
         }
-        
+
         async function testRightClickSave(canvas) {
             debug('Right-click save: User must manually right-click canvas and save');
             // This method requires user interaction
         }
-        
+
         // Step 4: PDF Download Tests
         async function testPDFMethods() {
             const btn = document.getElementById('pdfBtn');
             btn.disabled = true;
-            
+
             try {
                 debug('=== PDF DOWNLOAD TESTS ===');
                 setStatus('pdfStatus', 'Testing PDF download methods...', 'info');
-                
+
                 if (typeof window.jsPDF === 'undefined') {
                     throw new Error('jsPDF library not available');
                 }
-                
+
                 const methods = [
                     { name: 'Basic PDF', test: testBasicPDF },
                     { name: 'PDF with Canvas', test: testPDFWithCanvas },
                     { name: 'Enhanced PDF', test: testEnhancedPDF }
                 ];
-                
+
                 testResults.pdfMethods = {};
-                
+
                 for (let i = 0; i < methods.length; i++) {
                     const method = methods[i];
                     setProgress('pdfProgress', ((i + 1) / methods.length) * 100);
-                    
+
                     debug(`Testing ${method.name}...`);
                     setStatus('pdfStatus', `Testing ${method.name}...`, 'info');
-                    
+
                     try {
                         await method.test();
                         debug(`${method.name}: Success ✅`, 'success');
@@ -440,17 +440,17 @@
                         debug(`${method.name}: Failed - ${error.message}`, 'error');
                         testResults.pdfMethods[method.name] = false;
                     }
-                    
+
                     await new Promise(resolve => setTimeout(resolve, 500));
                 }
-                
+
                 const successCount = Object.values(testResults.pdfMethods).filter(Boolean).length;
                 if (successCount > 0) {
                     setStatus('pdfStatus', `✅ PDF tests completed: ${successCount}/${methods.length} methods working`, 'success');
                 } else {
                     setStatus('pdfStatus', '❌ All PDF download methods failed', 'error');
                 }
-                
+
             } catch (error) {
                 debug(`PDF testing error: ${error.message}`, 'error');
                 setStatus('pdfStatus', '❌ PDF testing failed: ' + error.message, 'error');
@@ -458,29 +458,29 @@
                 btn.disabled = false;
                 setProgress('pdfProgress', 100);
             }
-            
+
             updateRecommendations();
         }
-        
+
         async function testBasicPDF() {
             const { jsPDF } = window.jsPDF;
             const pdf = new jsPDF();
-            
+
             pdf.text('Test PDF Download', 20, 20);
             pdf.text('Generated: ' + new Date().toString(), 20, 30);
-            
+
             const filename = 'test-basic-' + Date.now() + '.pdf';
             pdf.save(filename);
             debug(`Basic PDF saved as: ${filename}`);
         }
-        
+
         async function testPDFWithCanvas() {
             const canvas = document.getElementById('testCanvas');
             const { jsPDF } = window.jsPDF;
             const pdf = new jsPDF();
-            
+
             pdf.text('Test PDF with Canvas', 20, 20);
-            
+
             try {
                 const dataURL = canvas.toDataURL('image/png');
                 pdf.addImage(dataURL, 'PNG', 20, 30, 50, 50);
@@ -488,51 +488,51 @@
             } catch (error) {
                 debug(`Canvas addition failed: ${error.message}`, 'warning');
             }
-            
+
             const filename = 'test-canvas-' + Date.now() + '.pdf';
             pdf.save(filename);
             debug(`PDF with canvas saved as: ${filename}`);
         }
-        
+
         async function testEnhancedPDF() {
             // Test would require the enhanced PDF generator
             debug('Enhanced PDF test requires additional libraries');
             throw new Error('Enhanced PDF generator not available in this test');
         }
-        
+
         function updateRecommendations() {
             const recommendations = document.getElementById('recommendations');
             let html = '<h4>🔧 Troubleshooting Recommendations:</h4><ul>';
-            
+
             if (!testResults.libraries?.qr) {
                 html += '<li><strong>Missing QRCode.js:</strong> Refresh the page to reload libraries</li>';
             }
-            
+
             if (!testResults.libraries?.pdf) {
                 html += '<li><strong>Missing jsPDF:</strong> Check internet connection and refresh page</li>';
             }
-            
+
             if (testResults.pngMethods && Object.values(testResults.pngMethods).every(v => !v)) {
                 html += '<li><strong>PNG Downloads Failing:</strong> Try right-click → Save As on the QR code</li>';
             }
-            
+
             if (testResults.pdfMethods && Object.values(testResults.pdfMethods).every(v => !v)) {
                 html += '<li><strong>PDF Downloads Failing:</strong> Try using Print → Save as PDF</li>';
             }
-            
+
             html += '<li><strong>Browser Issues:</strong> Try Chrome, Firefox, or Edge browsers</li>';
             html += '<li><strong>Security Settings:</strong> Allow downloads in browser settings</li>';
             html += '</ul>';
-            
+
             recommendations.innerHTML = html;
             recommendations.className = 'status info';
         }
-        
+
         function clearDebug() {
             debugLog = '';
             document.getElementById('debugLog').textContent = 'Debug log cleared...\n';
         }
-        
+
         // Auto-start system check on load
         window.addEventListener('load', function() {
             debug('🚀 QR Download Troubleshooter loaded');

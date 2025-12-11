@@ -8,7 +8,7 @@ The interfaces defined in PSR-7 are the following:
 |---|---|
 | [Psr\Http\Message\MessageInterface](http://www.php-fig.org/psr/psr-7/#psrhttpmessagemessageinterface) | Representation of a HTTP message |
 | [Psr\Http\Message\RequestInterface](http://www.php-fig.org/psr/psr-7/#psrhttpmessagerequestinterface) | Representation of an outgoing, client-side request. |
-| [Psr\Http\Message\ServerRequestInterface](http://www.php-fig.org/psr/psr-7/#psrhttpmessageserverrequestinterface) | Representation of an incoming, server-side HTTP request. | 
+| [Psr\Http\Message\ServerRequestInterface](http://www.php-fig.org/psr/psr-7/#psrhttpmessageserverrequestinterface) | Representation of an incoming, server-side HTTP request. |
 | [Psr\Http\Message\ResponseInterface](http://www.php-fig.org/psr/psr-7/#psrhttpmessageresponseinterface) | Representation of an outgoing, server-side response. |
 | [Psr\Http\Message\StreamInterface](http://www.php-fig.org/psr/psr-7/#psrhttpmessagestreaminterface) | Describes a data stream |
 | [Psr\Http\Message\UriInterface](http://www.php-fig.org/psr/psr-7/#psrhttpmessageuriinterface) | Value object representing a URI. |
@@ -53,7 +53,7 @@ Same methods as `Psr\Http\Message\RequestInterface`  + the following methods:
 |------------------------------------| ----------- | ----- |
 | `getServerParams() `               | Retrieve server parameters  | Typically derived from `$_SERVER`  |
 | `getCookieParams()`                | Retrieves cookies sent by the client to the server. | Typically derived from `$_COOKIES` |
-| `withCookieParams(array $cookies)` |  Returns a new request instance with the specified cookies      |   | 
+| `withCookieParams(array $cookies)` |  Returns a new request instance with the specified cookies      |   |
 | `withQueryParams(array $query)` | Returns a new request instance with the specified query string arguments  |  |
 | `getUploadedFiles()` | Retrieve normalized file upload data  |  |
 | `withUploadedFiles(array $uploadedFiles)` | Returns a new request instance with the specified uploaded files  |  |
@@ -127,4 +127,3 @@ Same methods as `Psr\Http\Message\MessageInterface`  + the following methods:
 
 > `RequestInterface`, `ServerRequestInterface`, `ResponseInterface` extend `MessageInterface`  because the `Request` and the `Response` are `HTTP Messages`.
 > When using `ServerRequestInterface`, both `RequestInterface` and `Psr\Http\Message\MessageInterface` methods are considered.
-

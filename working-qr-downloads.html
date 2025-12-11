@@ -11,7 +11,7 @@
             padding: 20px;
             font-family: 'Segoe UI', Arial, sans-serif;
         }
-        
+
         .card-container {
             background: #fff;
             border-radius: 20px;
@@ -21,7 +21,7 @@
             margin: 0 auto;
             text-align: center;
         }
-        
+
         .qr-display {
             border: 3px dashed #218c21;
             border-radius: 15px;
@@ -29,7 +29,7 @@
             margin: 20px 0;
             background: #f8f9fa;
         }
-        
+
         .btn {
             background: #218c21;
             color: white;
@@ -42,31 +42,31 @@
             margin: 8px;
             transition: all 0.3s ease;
         }
-        
+
         .btn:hover {
             background: #1a6b1a;
             transform: translateY(-2px);
         }
-        
+
         .btn:disabled {
             background: #cccccc;
             cursor: not-allowed;
         }
-        
+
         .btn-blue { background: #007bff; }
         .btn-orange { background: #fd7e14; }
-        
+
         .status {
             padding: 15px;
             margin: 15px 0;
             border-radius: 8px;
             font-weight: bold;
         }
-        
+
         .success { background: #d4edda; color: #155724; }
         .error { background: #f8d7da; color: #721c24; }
         .info { background: #d1ecf1; color: #0c5460; }
-        
+
         #qr-container {
             display: inline-block;
             border: 3px solid #218c21;
@@ -80,12 +80,12 @@
     <div class="card-container">
         <h1>🎓 Working QR Downloads</h1>
         <p>Student ID: PNS-2024-TEST | Name: Test Student</p>
-        
+
         <div class="qr-display">
             <div id="qr-container"></div>
             <div id="status" class="status info">Ready to generate QR code</div>
         </div>
-        
+
         <div>
             <button onclick="generateQR()" class="btn" id="genBtn">
                 🔄 Generate QR
@@ -97,7 +97,7 @@
                 📄 Download PDF
             </button>
         </div>
-        
+
         <div>
             <h4>Alternative Methods (if above fails):</h4>
             <button onclick="openQRWindow()" class="btn">
@@ -116,10 +116,10 @@
             qrcode: false,
             jspdf: false
         };
-        
+
         let studentData = {
             id: 'PNS-2024-TEST',
-            name: 'Test Student', 
+            name: 'Test Student',
             lrn: '123456789999',
             email: 'test@pns.edu.ph',
             grade: 'Grade 12',
@@ -129,7 +129,7 @@
         // Load libraries with multiple fallbacks
         function loadLibraries() {
             console.log('Loading libraries...');
-            
+
             // Load QRCode.js
             loadScript('https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js')
                 .then(() => {
@@ -200,10 +200,10 @@
         async function generateQR() {
             const btn = document.getElementById('genBtn');
             btn.disabled = true;
-            
+
             try {
                 updateStatus('Generating QR code...', 'info');
-                
+
                 const qrData = JSON.stringify({
                     id: studentData.id,
                     name: studentData.name,
@@ -241,7 +241,7 @@
             } catch (error) {
                 console.error('QR generation failed:', error);
                 updateStatus(`❌ QR generation failed: ${error.message}`, 'error');
-                
+
                 // Try fallback method
                 generateFallbackQR();
             } finally {
@@ -251,7 +251,7 @@
 
         function generateFallbackQR() {
             console.log('Using fallback QR method');
-            
+
             // Create a simple QR-like pattern using SVG (no canvas issues)
             const svgQR = `
                 <svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
@@ -260,15 +260,15 @@
                     <rect x="20" y="20" width="60" height="60" fill="black"/>
                     <rect x="30" y="30" width="40" height="40" fill="white"/>
                     <rect x="40" y="40" width="20" height="20" fill="black"/>
-                    
+
                     <rect x="220" y="20" width="60" height="60" fill="black"/>
                     <rect x="230" y="30" width="40" height="40" fill="white"/>
                     <rect x="240" y="40" width="20" height="20" fill="black"/>
-                    
+
                     <rect x="20" y="220" width="60" height="60" fill="black"/>
                     <rect x="30" y="230" width="40" height="40" fill="white"/>
                     <rect x="40" y="240" width="20" height="20" fill="black"/>
-                    
+
                     <!-- Data pattern -->
                     <rect x="100" y="100" width="10" height="10" fill="black"/>
                     <rect x="120" y="100" width="10" height="10" fill="black"/>
@@ -285,7 +285,7 @@
             // Convert SVG to DataURL
             const svgBlob = new Blob([svgQR], { type: 'image/svg+xml' });
             const svgUrl = URL.createObjectURL(svgBlob);
-            
+
             // Create image from SVG
             const img = new Image();
             img.onload = function() {
@@ -295,17 +295,17 @@
                 canvas.height = 300;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0);
-                
+
                 qrImageData = canvas.toDataURL('image/png');
-                
+
                 // Display the fallback QR
                 const container = document.getElementById('qr-container');
                 container.innerHTML = `<img src="${qrImageData}" alt="Fallback QR Code" style="max-width: 300px; height: auto;" />`;
-                
+
                 updateStatus('✅ Fallback QR generated!', 'success');
                 document.getElementById('pngBtn').disabled = false;
                 document.getElementById('pdfBtn').disabled = false;
-                
+
                 URL.revokeObjectURL(svgUrl);
             };
             img.src = svgUrl;
@@ -319,16 +319,16 @@
 
             try {
                 console.log('Starting PNG download...');
-                
+
                 const link = document.createElement('a');
                 link.href = qrImageData;
                 link.download = `${studentData.id}-QR-${Date.now()}.png`;
-                
+
                 // Force download
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                
+
                 updateStatus('✅ PNG download completed!', 'success');
                 console.log('PNG download successful');
 
@@ -348,11 +348,11 @@
                 console.log('Creating PDF...');
                 console.log('jsPDF available:', typeof window.jsPDF);
                 console.log('Libraries loaded:', librariesLoaded);
-                
+
                 if (!librariesLoaded.jspdf || typeof window.jsPDF === 'undefined') {
                     // Try to reload jsPDF
                     updateStatus('Loading PDF library...', 'info');
-                    
+
                     return loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js')
                         .then(() => {
                             if (typeof window.jsPDF !== 'undefined') {
@@ -374,7 +374,7 @@
                 // Header
                 pdf.setFillColor(33, 140, 33);
                 pdf.rect(0, 0, 210, 30, 'F');
-                
+
                 pdf.setTextColor(255, 255, 255);
                 pdf.setFontSize(18);
                 pdf.setFont('helvetica', 'bold');
@@ -436,9 +436,9 @@
                 <head>
                     <title>QR Code - ${studentData.id}</title>
                     <style>
-                        body { 
-                            text-align: center; 
-                            padding: 20px; 
+                        body {
+                            text-align: center;
+                            padding: 20px;
                             font-family: Arial, sans-serif;
                             background: #f8f9fa;
                         }
@@ -511,7 +511,7 @@
                             body { margin: 0; }
                             .no-print { display: none; }
                         }
-                        body { 
+                        body {
                             font-family: Arial, sans-serif;
                             padding: 20px;
                             background: white;
@@ -572,9 +572,9 @@
                             <h2>🎓 PALAWAN NATIONAL SCHOOL</h2>
                             <h3>Student QR Code Card</h3>
                         </div>
-                        
+
                         <img src="${qrImageData}" alt="QR Code" class="qr-image" />
-                        
+
                         <div class="info">
                             <div class="info-row">
                                 <span class="label">Student ID:</span>
@@ -601,7 +601,7 @@
                                 <span>${new Date().toLocaleString()}</span>
                             </div>
                         </div>
-                        
+
                         <div class="no-print">
                             <button onclick="window.print()" class="print-btn">
                                 🖨️ Print / Save as PDF
@@ -610,7 +610,7 @@
                                 ❌ Close
                             </button>
                         </div>
-                        
+
                         <div style="font-size: 12px; margin-top: 20px; color: #666;">
                             <p><strong>Instructions:</strong></p>
                             <p>• Show this QR code for attendance scanning</p>
@@ -622,7 +622,7 @@
                 </html>
             `);
             popup.document.close();
-            
+
             // Auto-focus the print dialog after page loads
             setTimeout(() => {
                 popup.focus();
@@ -634,7 +634,7 @@
         window.addEventListener('load', function() {
             console.log('🚀 Working QR Downloads initialized');
             loadLibraries();
-            
+
             // Check library status after 2 seconds
             setTimeout(() => {
                 console.log('Library status:', librariesLoaded);

@@ -55,7 +55,7 @@ if($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['action']) && $_POST['act
     $strand = trim($_POST['strand'] ?? '');
     $section = trim($_POST['section_block'] ?? '');
     $faculty = trim($_POST['faculty'] ?? '');
-    
+
     foreach(['full_name','email'] as $req){ if(empty($$req)) $errors[] = "$req is required"; }
     if($email && !filter_var($email,FILTER_VALIDATE_EMAIL)) $errors[]='Invalid email format';
     if(!$errors){
@@ -212,7 +212,7 @@ if($hasGender){
     <h1>👨‍🏫 Teacher Directory</h1>
     <a class="back-link" href="developer_dashboard.php">← Back to Dashboard</a>
   </div>
-  
+
   <form class="filters" method="get" action="">
     <div>
       <label for="grade">Grade</label>
@@ -252,7 +252,7 @@ if($hasGender){
       <a class="btn" style="background:#6c757d;text-decoration:none;" href="developer_teachers.php">Reset</a>
     </div>
   </form>
-  
+
   <div class="form-panel">
     <h2>➕ Add Teacher</h2>
     <?php if($success): ?><div class="msg success"><?php echo htmlspecialchars($success); ?></div><?php endif; ?>

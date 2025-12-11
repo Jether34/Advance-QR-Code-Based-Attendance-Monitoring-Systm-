@@ -80,7 +80,7 @@ $zip = new ZipStream(
     outputStream: CallbackStreamWrapper::open(function (string $data) use ($outputFile, $backupFile) {
         // Handle ZIP data as it's generated
         fwrite($outputFile, $data);
-        
+
         // Send to multiple destinations efficiently
         echo $data; // Browser
         fwrite($backupFile, $data); // Backup file

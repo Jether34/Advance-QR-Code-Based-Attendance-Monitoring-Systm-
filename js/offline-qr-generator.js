@@ -17,7 +17,7 @@ class OfflineQRGenerator {
         // Determine the best version for the text length
         const version = this.getBestVersion(text);
         this.moduleCount = version * 4 + 17;
-        
+
         // Initialize modules array
         this.modules = [];
         for (let i = 0; i < this.moduleCount; i++) {
@@ -32,10 +32,10 @@ class OfflineQRGenerator {
         this.setupTimingPattern();
         this.setupTypeNumber();
         this.setupTypeInfo();
-        
+
         // Add data
         this.mapData(text);
-        
+
         // Create canvas and draw
         return this.createCanvas(size);
     }
@@ -60,13 +60,13 @@ class OfflineQRGenerator {
 
         positions.forEach(pos => {
             const [row, col] = pos;
-            
+
             // Draw 7x7 pattern
             for (let r = -1; r <= 7; r++) {
                 for (let c = -1; c <= 7; c++) {
                     const moduleRow = row + r;
                     const moduleCol = col + c;
-                    
+
                     if (this.isValidPosition(moduleRow, moduleCol)) {
                         if ((r >= 0 && r <= 6 && (c === 0 || c === 6)) ||
                             (c >= 0 && c <= 6 && (r === 0 || r === 6)) ||
@@ -88,7 +88,7 @@ class OfflineQRGenerator {
                 this.modules[r][6] = (r % 2 === 0);
             }
         }
-        
+
         for (let c = 8; c < this.moduleCount - 8; c++) {
             if (this.modules[6][c] === null) {
                 this.modules[6][c] = (c % 2 === 0);
@@ -100,11 +100,11 @@ class OfflineQRGenerator {
     setupTypeInfo() {
         // Simple format info pattern for medium error correction
         const formatInfo = 0x5412; // Medium error correction, mask pattern 0
-        
+
         // Place format info around top-left finder pattern
         for (let i = 0; i < 15; i++) {
             const bit = (formatInfo >> i) & 1;
-            
+
             if (i < 6) {
                 this.modules[i][8] = bit === 1;
             } else if (i < 8) {
@@ -113,11 +113,11 @@ class OfflineQRGenerator {
                 this.modules[this.moduleCount - 15 + i][8] = bit === 1;
             }
         }
-        
+
         // Place format info around top-right and bottom-left
         for (let i = 0; i < 15; i++) {
             const bit = (formatInfo >> i) & 1;
-            
+
             if (i < 8) {
                 this.modules[8][this.moduleCount - i - 1] = bit === 1;
             } else if (i < 9) {
@@ -132,16 +132,16 @@ class OfflineQRGenerator {
     setupTypeNumber() {
         // For versions 1-6, no version info needed
         if (this.getVersion() < 7) return;
-        
+
         const version = this.getVersion();
         const versionInfo = this.getVersionInfo(version);
-        
+
         // Place version info in two locations
         for (let i = 0; i < 18; i++) {
             const bit = (versionInfo >> i) & 1;
             const a = Math.floor(i / 3);
             const b = i % 3;
-            
+
             this.modules[this.moduleCount - 11 + b][a] = bit === 1;
             this.modules[a][this.moduleCount - 11 + b] = bit === 1;
         }
@@ -164,27 +164,27 @@ class OfflineQRGenerator {
     mapData(text) {
         // Simple data encoding - convert text to binary
         let data = '';
-        
+
         // Mode indicator (0100 for byte mode)
         data += '0100';
-        
+
         // Character count
         const countBits = this.getCountBits();
         data += this.padBinary(text.length.toString(2), countBits);
-        
+
         // Data
         for (let i = 0; i < text.length; i++) {
             data += this.padBinary(text.charCodeAt(i).toString(2), 8);
         }
-        
+
         // Terminator
         data += '0000';
-        
+
         // Pad to byte boundary
         while (data.length % 8 !== 0) {
             data += '0';
         }
-        
+
         // Add padding bytes if needed
         const maxData = this.getMaxDataBits();
         while (data.length < maxData) {
@@ -193,7 +193,7 @@ class OfflineQRGenerator {
                 data += '00010001'; // 17
             }
         }
-        
+
         // Place data in modules
         this.placeData(data);
     }
@@ -221,39 +221,39 @@ class OfflineQRGenerator {
     placeData(data) {
         let index = 0;
         let direction = -1;
-        
+
         for (let col = this.moduleCount - 1; col > 0; col -= 2) {
             if (col === 6) col--; // Skip timing column
-            
+
             while (true) {
                 for (let c = 0; c < 2; c++) {
                     const currentCol = col - c;
-                    
+
                     for (let r = 0; r < this.moduleCount; r++) {
-                        const row = direction === -1 ? 
+                        const row = direction === -1 ?
                             this.moduleCount - 1 - r : r;
-                        
+
                         if (this.modules[row][currentCol] === null) {
                             let dark = false;
-                            
+
                             if (index < data.length) {
                                 dark = data.charAt(index) === '1';
                                 index++;
                             }
-                            
+
                             // Apply mask pattern (simple pattern)
                             const maskPattern = (row + currentCol) % 2 === 0;
                             if (maskPattern) {
                                 dark = !dark;
                             }
-                            
+
                             this.modules[row][currentCol] = dark;
                         }
                     }
                 }
-                
+
                 direction *= -1;
-                
+
                 if (direction === -1) {
                     break;
                 }
@@ -263,7 +263,7 @@ class OfflineQRGenerator {
 
     // Check if position is valid
     isValidPosition(row, col) {
-        return row >= 0 && row < this.moduleCount && 
+        return row >= 0 && row < this.moduleCount &&
                col >= 0 && col < this.moduleCount;
     }
 
@@ -272,13 +272,13 @@ class OfflineQRGenerator {
         const canvas = document.createElement('canvas');
         canvas.width = canvas.height = size;
         const ctx = canvas.getContext('2d');
-        
+
         const cellSize = size / this.moduleCount;
-        
+
         // White background
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(0, 0, size, size);
-        
+
         // Draw black modules
         ctx.fillStyle = '#000000';
         for (let row = 0; row < this.moduleCount; row++) {
@@ -293,7 +293,7 @@ class OfflineQRGenerator {
                 }
             }
         }
-        
+
         return canvas;
     }
 
@@ -318,25 +318,25 @@ class SimpleQRGenerator {
         const canvas = document.createElement('canvas');
         canvas.width = canvas.height = size;
         const ctx = canvas.getContext('2d');
-        
+
         // Create a simple 2D barcode pattern that's scannable
         const gridSize = 25;
         const cellSize = size / gridSize;
-        
+
         // White background
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(0, 0, size, size);
-        
+
         // Create finder patterns
         ctx.fillStyle = '#000000';
-        
+
         // Top-left finder pattern
         this.drawFinderPattern(ctx, 0, 0, cellSize);
-        // Top-right finder pattern  
+        // Top-right finder pattern
         this.drawFinderPattern(ctx, (gridSize - 7) * cellSize, 0, cellSize);
         // Bottom-left finder pattern
         this.drawFinderPattern(ctx, 0, (gridSize - 7) * cellSize, cellSize);
-        
+
         // Timing patterns
         for (let i = 8; i < gridSize - 8; i++) {
             if (i % 2 === 0) {
@@ -344,7 +344,7 @@ class SimpleQRGenerator {
                 ctx.fillRect(6 * cellSize, i * cellSize, cellSize, cellSize);
             }
         }
-        
+
         // Data pattern based on text
         const hash = this.hashString(text);
         for (let row = 0; row < gridSize; row++) {
@@ -357,37 +357,37 @@ class SimpleQRGenerator {
                 }
             }
         }
-        
+
         return canvas;
     }
-    
+
     static drawFinderPattern(ctx, x, y, cellSize) {
         // Draw 7x7 finder pattern
         ctx.fillRect(x, y, 7 * cellSize, cellSize); // Top
         ctx.fillRect(x, y + 6 * cellSize, 7 * cellSize, cellSize); // Bottom
         ctx.fillRect(x, y, cellSize, 7 * cellSize); // Left
         ctx.fillRect(x + 6 * cellSize, y, cellSize, 7 * cellSize); // Right
-        
+
         // Inner 3x3 square
         ctx.fillRect(x + 2 * cellSize, y + 2 * cellSize, 3 * cellSize, 3 * cellSize);
     }
-    
+
     static isReservedArea(row, col, gridSize) {
         // Finder patterns and separators
-        if ((row < 9 && col < 9) || 
+        if ((row < 9 && col < 9) ||
             (row < 9 && col >= gridSize - 8) ||
             (row >= gridSize - 8 && col < 9)) {
             return true;
         }
-        
+
         // Timing patterns
         if (row === 6 || col === 6) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     static hashString(str) {
         let hash = 0;
         for (let i = 0; i < str.length; i++) {
@@ -397,17 +397,17 @@ class SimpleQRGenerator {
         }
         return Math.abs(hash);
     }
-    
+
     static getDataBit(row, col, text, hash) {
         const position = row * 25 + col;
         const textIndex = position % text.length;
         const charCode = text.charCodeAt(textIndex);
         const bitIndex = position % 8;
         const bit = (charCode >> bitIndex) & 1;
-        
+
         // Add some randomness based on hash
         const maskBit = (hash >> (position % 32)) & 1;
-        
+
         return (bit ^ maskBit ^ (row + col)) % 2 === 1;
     }
 }

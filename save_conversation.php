@@ -12,7 +12,7 @@ try {
     if (!$question || !$response || !$user_id) throw new Exception('Missing data');
 
     $pdo = get_db();
-    
+
     // If conversation_id exists, update the conversation
     if ($conversation_id) {
         $stmt = $pdo->prepare('UPDATE reviewer_conversations SET question = CONCAT(question, ?, "\n"), response = CONCAT(response, ?, "\n"), updated_at = NOW() WHERE id = ? AND user_id = ?');

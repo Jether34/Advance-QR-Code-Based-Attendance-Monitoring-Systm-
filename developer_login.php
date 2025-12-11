@@ -20,7 +20,7 @@ if (isset($_SESSION['developer_id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
-    
+
     if (empty($username) || empty($password)) {
         $error = 'Please enter both username and password.';
     } else {
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare('SELECT * FROM admin_users WHERE username = :username');
             $stmt->execute([':username' => $username]);
             $admin = $stmt->fetch(PDO::FETCH_ASSOC);
-            
+
             if ($admin && password_verify($password, $admin['password'])) {
                 // Successful login
                 $_SESSION['developer_id'] = $admin['id'];
@@ -175,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .footer-link a:hover {
             color: #2d6a4f;
         }
-        
+
         /* Mobile Responsive Styles */
         @media screen and (max-width: 768px) {
             body {
@@ -203,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 font-size: 0.85em;
             }
         }
-        
+
         @media screen and (max-width: 480px) {
             .dev-login-container {
                 padding: 25px 15px;
@@ -227,25 +227,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1>🔧 Developer Dashboard</h1>
             <p>Restricted Access - Authorized Personnel Only</p>
         </div>
-        
+
         <?php if ($error): ?>
             <div class="error-message"><?php echo htmlspecialchars($error); ?></div>
         <?php endif; ?>
-        
+
         <form method="POST" action="">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required autocomplete="username" autofocus>
             </div>
-            
+
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required autocomplete="current-password">
             </div>
-            
+
             <button type="submit" class="btn-login">Sign In</button>
         </form>
-        
+
         <div class="footer-link">
             <a href="index.php">← Back to Home</a>
         </div>

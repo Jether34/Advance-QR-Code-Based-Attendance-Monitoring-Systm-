@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS admin_users (
 -- Insert default developer account
 -- Username: pns
 -- Password: P@sEco123 (hashed using PASSWORD_DEFAULT)
-INSERT INTO admin_users (username, password, role) VALUES 
+INSERT INTO admin_users (username, password, role) VALUES
 ('pns', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'developer');
 -- Note: The hash above is a placeholder. The actual hash will be generated when you run the PHP insert script.
 

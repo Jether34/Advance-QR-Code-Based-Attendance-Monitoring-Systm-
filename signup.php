@@ -285,7 +285,7 @@
                 </select>
             </div>
             <div id="dynamicFields"></div>
-            
+
             <!-- Terms and Conditions Checkbox -->
             <div class="terms-checkbox-group">
                 <label class="checkbox-label">
@@ -293,7 +293,7 @@
                     <span>By signing up, I agree to the <a href="#" onclick="openTermsModal(); return false;" style="color: #218c21; font-weight: 600; text-decoration: underline;">Terms and Conditions</a> and <a href="#" onclick="openPrivacyModal(); return false;" style="color: #218c21; font-weight: 600; text-decoration: underline;">Privacy Policy</a></span>
                 </label>
             </div>
-            
+
             <button type="submit" class="btn-signup">Create Account</button>
         </form>
         <div class="form-footer">
@@ -312,7 +312,7 @@
             <div class="modal-body">
                 <h3>1. Acceptance of Terms</h3>
                 <p>By accessing and using the Palawan National School Hybrid QR Code Based Attendance Monitoring System, you accept and agree to be bound by the terms and provision of this agreement.</p>
-                
+
                 <h3>2. Use License</h3>
                 <p>Permission is granted to temporarily download one copy of the materials (information or software) on the Attendance System for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
                 <ul>
@@ -450,7 +450,7 @@
         window.onclick = function(event) {
             var termsModal = document.getElementById('termsModal');
             var privacyModal = document.getElementById('privacyModal');
-            
+
             if (event.target === termsModal) {
                 termsModal.style.display = 'none';
             }

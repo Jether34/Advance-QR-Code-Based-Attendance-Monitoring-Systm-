@@ -2,10 +2,10 @@
 
 ## System Information
 
-**Creator:** Jether Garque  
-**Position:** Grade 12 ICT Programming Student  
-**School:** Palawan National School  
-**Purpose:** Created exclusively for Palawan National School  
+**Creator:** Jether Garque
+**Position:** Grade 12 ICT Programming Student
+**School:** Palawan National School
+**Purpose:** Created exclusively for Palawan National School
 **Technology Stack:** PHP, MySQL, HTML5, CSS3, JavaScript
 
 ---
@@ -327,22 +327,22 @@ puta/
 
 ## Deployment Information
 
-**Primary School:** Palawan National School  
-**Environment:** XAMPP (localhost development)  
-**Database:** MySQL via phpMyAdmin  
-**Web Server:** Apache  
-**PHP Version:** 7.4+  
+**Primary School:** Palawan National School
+**Environment:** XAMPP (localhost development)
+**Database:** MySQL via phpMyAdmin
+**Web Server:** Apache
+**PHP Version:** 7.4+
 **AI Model:** Ollama with Llama 3.2 (local, offline)
 
 ---
 
 ## Creator Information
 
-**Name:** Jether Garque  
-**Grade Level:** Grade 12  
-**Track:** ICT Programming  
-**Institution:** Palawan National School  
-**GitHub:** Jether34  
+**Name:** Jether Garque
+**Grade Level:** Grade 12
+**Track:** ICT Programming
+**Institution:** Palawan National School
+**GitHub:** Jether34
 **Repository:** Advance-QR-Code-Based-Attendance-Monitoring-Systm-
 
 ---
@@ -361,4 +361,3 @@ This QR-Based Attendance Monitoring System was developed exclusively for **Palaw
 ---
 
 *This knowledge base is maintained by Jether Garque and integrated into the Jether AI Assistant for comprehensive system support.*
- 

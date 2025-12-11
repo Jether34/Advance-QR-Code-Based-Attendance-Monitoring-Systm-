@@ -63,23 +63,23 @@ if ($export_csv) {
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename="traffic_log_' . date('Y-m-d_His') . '.csv"');
     $output = fopen('php://output', 'w');
-    
+
     // CSV Headers
     fputcsv($output, ['Time', 'Event Type', 'User Role', 'User ID', 'Email', 'IP Address', 'Device/Platform', 'Method', 'Path', 'Status Code', 'Object Type', 'Object ID', 'Context JSON', 'Result', 'Latency (ms)', 'Message']);
-    
+
     foreach ($events as $e) {
         // Parse device/platform
         $ua = $e['user_agent'] ?? '';
         $device = 'Unknown';
         $platform = '';
-        
+
         if ($ua) {
             if (stripos($ua, 'Windows') !== false) $platform = 'Windows';
             elseif (stripos($ua, 'Mac OS') !== false || stripos($ua, 'Macintosh') !== false) $platform = 'macOS';
             elseif (stripos($ua, 'Linux') !== false) $platform = 'Linux';
             elseif (stripos($ua, 'Android') !== false) $platform = 'Android';
             elseif (stripos($ua, 'iOS') !== false || stripos($ua, 'iPhone') !== false || stripos($ua, 'iPad') !== false) $platform = 'iOS';
-            
+
             if (stripos($ua, 'Mobile') !== false || stripos($ua, 'Android') !== false || stripos($ua, 'iPhone') !== false) {
                 $device = 'Mobile';
             } elseif (stripos($ua, 'Tablet') !== false || stripos($ua, 'iPad') !== false) {
@@ -87,12 +87,12 @@ if ($export_csv) {
             } else {
                 $device = 'Desktop';
             }
-            
+
             $device_info = $device . ($platform ? ' / ' . $platform : '');
         } else {
             $device_info = 'Unknown';
         }
-        
+
         fputcsv($output, [
             $e['created_at'],
             $e['event_type'],
@@ -112,7 +112,7 @@ if ($export_csv) {
             $e['message'] ?? '',
         ]);
     }
-    
+
     fclose($output);
     exit;
 }
@@ -237,7 +237,7 @@ if ($export_csv) {
               $ua = $e['user_agent'] ?? '';
               $device = 'Unknown';
               $platform = '';
-              
+
               if ($ua) {
                 // Detect platform
                 if (stripos($ua, 'Windows') !== false) $platform = 'Windows';
@@ -245,7 +245,7 @@ if ($export_csv) {
                 elseif (stripos($ua, 'Linux') !== false) $platform = 'Linux';
                 elseif (stripos($ua, 'Android') !== false) $platform = 'Android';
                 elseif (stripos($ua, 'iOS') !== false || stripos($ua, 'iPhone') !== false || stripos($ua, 'iPad') !== false) $platform = 'iOS';
-                
+
                 // Detect device type
                 if (stripos($ua, 'Mobile') !== false || stripos($ua, 'Android') !== false || stripos($ua, 'iPhone') !== false) {
                   $device = 'Mobile';
@@ -254,7 +254,7 @@ if ($export_csv) {
                 } else {
                   $device = 'Desktop';
                 }
-                
+
                 $device_info = $device . ($platform ? ' / ' . $platform : '');
               } else {
                 $device_info = 'Unknown';

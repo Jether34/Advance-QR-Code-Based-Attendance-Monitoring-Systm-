@@ -31,39 +31,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
         $messages[] = ['error' => '❌ Invalid CSRF token.'];
     } else {
         $file = $_FILES['csv_file'];
-        
+
         if ($file['error'] === 0 && in_array(pathinfo($file['name'], PATHINFO_EXTENSION), ['csv', 'txt'])) {
             $handle = fopen($file['tmp_name'], 'r');
-            
+
             // Skip header row
             $header = fgetcsv($handle);
             $expectedHeaders = ['student_id', 'full_name', 'grade_level', 'strand', 'section_block'];
-            
+
             if ($header !== $expectedHeaders) {
                 $messages[] = ['error' => '❌ CSV format invalid. Expected columns: ' . implode(', ', $expectedHeaders)];
             } else {
                 $pdo->beginTransaction();
-                
+
                 while (($row = fgetcsv($handle)) !== false) {
                     if (count($row) < 5 || empty($row[0])) continue;
-                    
+
                     $studentId = trim($row[0]);
                     $fullName = trim($row[1]);
                     $gradeLevel = trim($row[2]);
                     $strand = trim($row[3]);
                     $sectionBlock = trim($row[4]);
-                    
+
                     // Validate data
                     if (!$studentId || !$fullName) {
                         $error_count++;
                         continue;
                     }
-                    
+
                     try {
                         // Check if exists
                         $checkStmt = $pdo->prepare('SELECT id FROM students WHERE student_id = :sid');
                         $checkStmt->execute([':sid' => $studentId]);
-                        
+
                         if ($checkStmt->fetch()) {
                             // Update existing
                             $updateStmt = $pdo->prepare('UPDATE students SET full_name = :name, grade_level = :grade, strand = :strand, section_block = :block WHERE student_id = :sid');
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
                         $error_count++;
                     }
                 }
-                
+
                 $pdo->commit();
                 fclose($handle);
                 $messages[] = ['success' => "✅ Imported {$uploaded_count} students. Errors: {$error_count}"];
@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
 if (isset($_GET['download_template'])) {
     header('Content-Type: text/csv');
     header('Content-Disposition: attachment; filename="student_template.csv"');
-    
+
     $output = fopen('php://output', 'w');
     fputcsv($output, ['student_id', 'full_name', 'grade_level', 'strand', 'section_block']);
     fputcsv($output, ['12345', 'Juan Dela Cruz', '11', 'ICT-CSS', '1']);
@@ -318,7 +318,7 @@ if (isset($_GET['download_template'])) {
             e.preventDefault();
             uploadBox.style.background = '#f9f9f9';
             uploadBox.style.borderColor = '#2d6a4f';
-            
+
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 fileInput.files = files;

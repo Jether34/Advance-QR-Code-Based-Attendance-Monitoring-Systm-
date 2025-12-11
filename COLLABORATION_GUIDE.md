@@ -6,7 +6,7 @@
 git add .
 git commit -m "feat: add complete team collaboration setup"
 
-# 2. Update remote with your GitHub username  
+# 2. Update remote with your GitHub username
 git remote set-url origin https://github.com/Jether34/Palawan-National-School-QR-Code-Attendance-Monitoring-System.git
 
 # 3. Push to GitHub
@@ -52,14 +52,14 @@ git push origin feature/new-feature
 ```
 
 ## Mobile Testing:
-- **Host Local**: http://localhost/smart-attendance-system  
+- **Host Local**: http://localhost/smart-attendance-system
 - **Network Access**: http://YOUR_IP/smart-attendance-system
 - **QR Scanning**: Use network IP for mobile devices
 - **Live Share**: Team members can access your localhost
 
 ## Key Benefits:
 ✅ Real-time collaborative coding
-✅ Shared localhost for testing  
+✅ Shared localhost for testing
 ✅ Automatic environment setup
 ✅ Professional Git workflow
 ✅ Mobile QR testing together

@@ -40,7 +40,7 @@ INSERT IGNORE INTO attendance_records (student_id, attendance_date, morning_in, 
 
 -- Create views for commonly used queries
 CREATE OR REPLACE VIEW daily_attendance_summary AS
-SELECT 
+SELECT
     ar.attendance_date,
     s.grade_level,
     s.strand,
@@ -56,7 +56,7 @@ GROUP BY ar.attendance_date, s.grade_level, s.strand, s.section_block
 ORDER BY ar.attendance_date DESC, s.grade_level, s.strand, s.section_block;
 
 CREATE OR REPLACE VIEW student_attendance_overview AS
-SELECT 
+SELECT
     s.student_id,
     s.full_name,
     s.grade_level,

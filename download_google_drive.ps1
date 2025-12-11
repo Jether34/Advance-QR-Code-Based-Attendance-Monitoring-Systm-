@@ -16,7 +16,7 @@ if (!(Test-Path $dataDir)) {
 
 function Get-GoogleDriveFileId {
     param([string]$url)
-    
+
     if ($url -match '/d/([a-zA-Z0-9_-]+)') {
         return $matches[1]
     }
@@ -31,15 +31,15 @@ function Download-GoogleDriveFile {
         [string]$fileId,
         [string]$outputPath
     )
-    
+
     $directUrl = "https://drive.google.com/uc?export=download&id=$fileId"
-    
+
     Write-Host "Downloading Google Drive file: $fileId" -ForegroundColor Cyan
-    
+
     try {
         # First attempt - small files work directly
         $response = Invoke-WebRequest -Uri $directUrl -SessionVariable session -UseBasicParsing
-        
+
         # Check if we got a confirmation page (for large files)
         if ($response.Content -match 'download_warning.*?href="(.*?)"') {
             $confirmUrl = "https://drive.google.com" + ($matches[1] -replace '&amp;', '&')
@@ -50,7 +50,7 @@ function Download-GoogleDriveFile {
             # Direct download worked
             $response.Content | Set-Content -Path $outputPath -Encoding Byte
         }
-        
+
         if (Test-Path $outputPath) {
             $sizeKB = [math]::Round((Get-Item $outputPath).Length / 1KB, 2)
             Write-Host "  ✓ Downloaded successfully ($sizeKB KB)" -ForegroundColor Green
@@ -59,13 +59,13 @@ function Download-GoogleDriveFile {
     }
     catch {
         Write-Host "  ✗ Download failed: $($_.Exception.Message)" -ForegroundColor Red
-        
+
         Write-Host ""
         Write-Host "ALTERNATIVE METHOD:" -ForegroundColor Yellow
         Write-Host "1. Open this link in browser: https://drive.google.com/file/d/$fileId/view" -ForegroundColor White
         Write-Host "2. Click 'Download' button" -ForegroundColor White
         Write-Host "3. Save to: $dataDir" -ForegroundColor White
-        
+
         return $false
     }
 }
@@ -73,17 +73,17 @@ function Download-GoogleDriveFile {
 # Example usage
 if ($driveUrl) {
     $fileId = Get-GoogleDriveFileId -url $driveUrl
-    
+
     if (!$fileId) {
         Write-Host "ERROR: Could not extract file ID from URL" -ForegroundColor Red
         Write-Host "URL format should be: https://drive.google.com/file/d/FILE_ID/view" -ForegroundColor Yellow
         exit
     }
-    
+
     if (!$outputName) {
         $outputName = "google_drive_file_$fileId.pdf"
     }
-    
+
     $outputPath = Join-Path $dataDir $outputName
     Download-GoogleDriveFile -fileId $fileId -outputPath $outputPath
 }
@@ -98,7 +98,7 @@ else {
     Write-Host ""
     Write-Host "Trying your example now..." -ForegroundColor Cyan
     Write-Host ""
-    
+
     # Try the example URL
     $exampleId = "1Av5a__ExEhklNe-YNbM9UxfBltpBbYO-"
     $exampleOutput = Join-Path $dataDir "downloaded_module.pdf"

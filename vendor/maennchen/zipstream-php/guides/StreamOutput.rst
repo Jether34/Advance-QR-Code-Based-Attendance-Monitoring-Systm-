@@ -53,15 +53,15 @@ progress tracking, or data transformation.
     // Example 1: Stream to multiple destinations with proper file handling
     $backupFile = fopen('backup.zip', 'wb');
     $logFile = fopen('transfer.log', 'ab');
-    
+
     $zip = new ZipStream(
         outputStream: CallbackStreamWrapper::open(function (string $data) use ($backupFile, $logFile) {
             // Send to browser
             echo $data;
-            
+
             // Save to file efficiently
             fwrite($backupFile, $data);
-            
+
             // Log transfer progress
             fwrite($logFile, "Transferred " . strlen($data) . " bytes\n");
         }),
@@ -70,7 +70,7 @@ progress tracking, or data transformation.
 
     $zip->addFile('hello.txt', 'Hello World!');
     $zip->finish();
-    
+
     // Clean up resources
     fclose($backupFile);
     fclose($logFile);
@@ -83,7 +83,7 @@ progress tracking, or data transformation.
         outputStream: CallbackStreamWrapper::open(function (string $data) use (&$totalBytes) {
             $totalBytes += strlen($data);
             reportProgress($totalBytes); // Report progress to your tracking system
-            
+
             // Your actual output handling
             echo $data;
         }),
@@ -99,7 +99,7 @@ progress tracking, or data transformation.
     // For data transformations, prefer PHP's built-in stream filters
     $outputStream = fopen('php://output', 'w');
     stream_filter_append($outputStream, 'convert.base64-encode');
-    
+
     $zip = new ZipStream(
         outputStream: $outputStream,
         sendHttpHeaders: false,

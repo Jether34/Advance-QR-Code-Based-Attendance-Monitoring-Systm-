@@ -241,7 +241,7 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
             body {
                 padding: 0;
             }
-            
+
             .navbar {
                 position: fixed;
                 top: 0;
@@ -251,20 +251,20 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
                 align-items: stretch;
                 z-index: 1000;
             }
-            
+
             .navbar-brand {
                 padding: 16px 20px;
                 font-size: 1.1em;
                 text-align: center;
                 border-bottom: 1px solid rgba(255,255,255,0.2);
             }
-            
+
             .navbar-links {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
                 width: 100%;
             }
-            
+
             .navbar a {
                 padding: 14px 12px;
                 font-size: 0.85em;
@@ -273,16 +273,16 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
                 border-bottom: 2px solid transparent;
                 border-right: 1px solid rgba(255,255,255,0.1);
             }
-            
+
             .navbar a:nth-child(2n) {
                 border-right: none;
             }
-            
+
             .container {
                 margin-top: 160px;
                 padding: 0 12px;
             }
-            
+
             .page-header {
                 flex-direction: column;
                 gap: 16px;
@@ -291,63 +291,63 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
                 border-radius: 12px;
                 margin-bottom: 20px;
             }
-            
+
             .welcome-text {
                 font-size: 1.5em;
             }
-            
+
             .welcome-subtitle {
                 font-size: 0.9em;
             }
-            
+
             .clock {
                 font-size: 0.95em;
                 padding: 10px 16px;
             }
-            
+
             .stats-grid {
                 grid-template-columns: 1fr;
                 gap: 12px;
                 margin-bottom: 20px;
             }
-            
+
             .stat-card {
                 padding: 20px;
             }
-            
+
             .stat-value {
                 font-size: 2em;
             }
-            
+
             .content-section {
                 padding: 24px 20px;
                 border-radius: 12px;
                 margin-bottom: 20px;
             }
-            
+
             .content-section h2 {
                 font-size: 1.3em;
                 margin-bottom: 20px;
             }
-            
+
             .info-grid {
                 grid-template-columns: 1fr;
                 gap: 12px;
             }
-            
+
             .info-item {
                 padding: 12px 16px;
             }
-            
+
             .student-list {
                 grid-template-columns: 1fr;
                 gap: 12px;
             }
-            
+
             .student-list li {
                 padding: 12px 16px;
             }
-            
+
             /* Make tables scrollable */
             table {
                 display: block;
@@ -355,7 +355,7 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
                 -webkit-overflow-scrolling: touch;
                 white-space: nowrap;
             }
-            
+
             table thead,
             table tbody,
             table tr {
@@ -364,35 +364,35 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
                 table-layout: fixed;
             }
         }
-        
+
         /* Small mobile devices */
         @media (max-width: 480px) {
             .navbar-brand {
                 font-size: 1em;
                 padding: 14px 16px;
             }
-            
+
             .navbar a {
                 font-size: 0.8em;
                 padding: 12px 8px;
             }
-            
+
             .container {
                 margin-top: 150px;
             }
-            
+
             .welcome-text {
                 font-size: 1.3em;
             }
-            
+
             .welcome-subtitle {
                 font-size: 0.85em;
             }
-            
+
             .stat-value {
                 font-size: 1.8em;
             }
-            
+
             .content-section h2 {
                 font-size: 1.2em;
             }
@@ -426,14 +426,14 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
         }
         setInterval(updateClock, 1000);
         updateClock();
-        
+
         // Prevent back button from showing cached page
-        window.history.pushState(null, "", window.location.href);        
+        window.history.pushState(null, "", window.location.href);
         window.onpopstate = function() {
             window.history.pushState(null, "", window.location.href);
         };
         </script>
-        
+
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-label">Total Classmates</div>
@@ -502,7 +502,7 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
             <p style="color:#7f8c8d;padding:20px 0">No adviser assigned yet.</p>
         <?php endif; ?>
         </div>
-        
+
         <div class="content-section">
             <h2>👥 My Classmates (<?php echo $count; ?>)</h2>
             <ul class="student-list">
@@ -521,7 +521,7 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
         // Use the student's public student_id for attendance_records
         $sid = $user['student_id'];
         // Aggregate counts per month for each status
-        $stmt = $pdo->prepare("SELECT 
+        $stmt = $pdo->prepare("SELECT
                     DATE_FORMAT(attendance_date, '%Y-%m') AS ym,
                     SUM(status='present') AS present_cnt,
                     SUM(status='absent') AS absent_cnt,
@@ -549,7 +549,7 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
                 <th>Morning Half-day</th>
                 <th>Afternoon Half-day</th>
             </tr>
-            <?php foreach ($monthly as $m): 
+            <?php foreach ($monthly as $m):
                 // Nicely format month name
                 $monthLabel = date('F Y', strtotime($m['ym'].'-01'));
             ?>

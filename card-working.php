@@ -24,7 +24,7 @@ $code = $user['student_id'];
             padding: 20px;
             font-family: 'Segoe UI', Arial, sans-serif;
         }
-        
+
         .card-container {
             background: #fff;
             border-radius: 20px;
@@ -34,20 +34,20 @@ $code = $user['student_id'];
             margin: 0 auto;
             text-align: center;
         }
-        
+
         .student-header {
             border-bottom: 3px solid #218c21;
             padding-bottom: 20px;
             margin-bottom: 30px;
         }
-        
+
         .student-header h1 {
             color: #218c21;
             font-size: 2.2em;
             margin: 0 0 10px 0;
             font-weight: 700;
         }
-        
+
         .student-info {
             background: linear-gradient(135deg, #f0fff0 0%, #e8ffe8 100%);
             border-radius: 12px;
@@ -55,24 +55,24 @@ $code = $user['student_id'];
             margin: 20px 0;
             border-left: 5px solid #218c21;
         }
-        
+
         .student-info p {
             margin: 8px 0;
             color: #176617;
             font-weight: 600;
             font-size: 1.1em;
         }
-        
+
         .qr-section {
             margin: 30px 0;
         }
-        
+
         .qr-section h3 {
             color: #218c21;
             font-size: 1.5em;
             margin-bottom: 20px;
         }
-        
+
         .qr-display {
             border: 3px dashed #218c21;
             border-radius: 15px;
@@ -80,7 +80,7 @@ $code = $user['student_id'];
             margin: 20px 0;
             background: #f8f9fa;
         }
-        
+
         #qr-container {
             display: inline-block;
             border: 3px solid #218c21;
@@ -89,7 +89,7 @@ $code = $user['student_id'];
             background: white;
             margin: 10px 0;
         }
-        
+
         .action-buttons {
             display: flex;
             gap: 15px;
@@ -97,7 +97,7 @@ $code = $user['student_id'];
             flex-wrap: wrap;
             margin: 30px 0;
         }
-        
+
         .btn {
             padding: 15px 25px;
             border: none;
@@ -109,54 +109,54 @@ $code = $user['student_id'];
             text-decoration: none;
             display: inline-block;
         }
-        
+
         .btn-primary {
             background: #218c21;
             color: white;
         }
-        
+
         .btn-primary:hover {
             background: #1a6b1a;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(33, 140, 33, 0.3);
         }
-        
+
         .btn-blue {
             background: #007bff;
             color: white;
         }
-        
+
         .btn-blue:hover {
             background: #0056b3;
         }
-        
+
         .btn-orange {
             background: #fd7e14;
             color: white;
         }
-        
+
         .btn-orange:hover {
             background: #e8681a;
         }
-        
+
         .btn:disabled {
             background: #cccccc;
             cursor: not-allowed;
             transform: none;
         }
-        
+
         .status {
             padding: 15px;
             margin: 15px 0;
             border-radius: 8px;
             font-weight: bold;
         }
-        
+
         .success { background: #d4edda; color: #155724; }
         .error { background: #f8d7da; color: #721c24; }
         .info { background: #d1ecf1; color: #0c5460; }
         .warning { background: #fff3cd; color: #856404; }
-        
+
         .method-indicator {
             display: inline-block;
             padding: 4px 8px;
@@ -165,12 +165,12 @@ $code = $user['student_id'];
             font-weight: bold;
             margin-left: 10px;
         }
-        
+
         .method-binary {
             background: #28a745;
             color: white;
         }
-        
+
         .instructions {
             background: #f8f9fa;
             padding: 20px;
@@ -179,18 +179,18 @@ $code = $user['student_id'];
             text-align: left;
             border-left: 5px solid #218c21;
         }
-        
+
         .instructions h4 {
             color: #218c21;
             margin-top: 0;
         }
-        
+
         .footer-links {
             margin: 20px 0;
             padding: 20px 0;
             border-top: 2px solid #e9ecef;
         }
-        
+
         .footer-links a {
             color: #218c21;
             text-decoration: none;
@@ -199,22 +199,22 @@ $code = $user['student_id'];
             border-radius: 5px;
             transition: background 0.3s;
         }
-        
+
         .footer-links a:hover {
             background: #e8f5e8;
         }
-        
+
         @media (max-width: 600px) {
             .card-container {
                 margin: 10px;
                 padding: 20px;
             }
-            
+
             .action-buttons {
                 flex-direction: column;
                 align-items: center;
             }
-            
+
             .btn {
                 width: 100%;
                 max-width: 250px;
@@ -230,34 +230,34 @@ $code = $user['student_id'];
             <h1><?php echo htmlspecialchars($user['full_name']); ?></h1>
             <p style="color: #666; font-size: 1.1em; margin: 0;">Student QR Code Card</p>
         </div>
-        
+
         <div class="student-info">
             <h4 style="color: #218c21; margin-top: 0;">📊 Student Information</h4>
-            
+
             <!-- Essential Student Data -->
             <p><strong>🆔 Student ID:</strong> <?php echo htmlspecialchars($user['student_id']); ?></p>
             <p><strong>📚 LRN:</strong> <?php echo htmlspecialchars($user['lrn'] ?? 'N/A'); ?></p>
             <p><strong>� Full Name:</strong> <?php echo htmlspecialchars($user['full_name']); ?></p>
-            
+
             <!-- Contact Information -->
             <p><strong>�📧 Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
 
-            
 
-            
+
+
             <p><strong>👤 Full Name:</strong> <?php echo htmlspecialchars($user['full_name']); ?></p>
             <p><strong>🎓 Grade Level:</strong> <?php echo htmlspecialchars($user['grade_level']); ?></p>
             <p><strong>🎯 Strand:</strong> <?php echo htmlspecialchars($user['strand']); ?></p>
             <p><strong>📋 Section/Block:</strong> <?php echo htmlspecialchars($user['section_block']); ?></p>
             <p><strong>⚧️ Gender:</strong> <?php echo htmlspecialchars($user['gender']); ?></p>
-            
 
-            
+
+
             <div style="background: #d1ecf1; padding: 10px; border-radius: 5px; margin-top: 15px; font-size: 0.9em;">
                 <strong>🔒 QR Security:</strong> Essential student information encoded in binary QR code for secure attendance tracking.
             </div>
         </div>
-        
+
         <div class="qr-section">
             <h3>⚡ Student QR Code <span class="method-indicator method-binary" id="qrModeTag">Standard</span></h3>
             <div class="qr-display">
@@ -270,7 +270,7 @@ $code = $user['student_id'];
                 <div id="status" class="status info">Ready to generate QR code...</div>
             </div>
         </div>
-        
+
         <div class="action-buttons">
             <button onclick="generateQR()" class="btn btn-primary" id="genBtn">
                 ⚡ Generate QR
@@ -283,7 +283,7 @@ $code = $user['student_id'];
                 📄 Download PDF Card
             </button>
         </div>
-        
+
         <div style="margin: 20px 0; text-align: center;">
             <h4>Alternative Methods (if above fails):</h4>
             <button onclick="openQRWindow()" class="btn" style="background: #6c757d; margin: 5px;">
@@ -293,7 +293,7 @@ $code = $user['student_id'];
                 🖼️ Show as Image
             </button>
         </div>
-        
+
         <div class="instructions">
             <h4>⚡ Pure Binary QR Features</h4>
             <ul>
@@ -304,13 +304,13 @@ $code = $user['student_id'];
                 <li><strong>🚫 Not Public-Scannable:</strong> Requires custom decoder (non-standard)</li>
                 <li><strong>⚠️ Recommendation:</strong> Keep a standard QR for interoperability</li>
             </ul>
-            
+
             <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                <strong>� Binary Technology:</strong> This QR code uses advanced binary matrix generation with hash-based encoding. 
+                <strong>� Binary Technology:</strong> This QR code uses advanced binary matrix generation with hash-based encoding.
                 Contains: Student ID, LRN, Full Name, Grade Level, Strand, Section/Block, Gender, and Email Address.
             </div>
         </div>
-        
+
         <div class="footer-links">
             <a href="student_dashboard.php">← Back to Dashboard</a>
             <a href="scan.php">📷 Open Scanner</a>
@@ -326,9 +326,9 @@ $code = $user['student_id'];
         };
         let qrCodeLoadAttempted = false;
         let qrCodeLoadPromise = null;
-        
+
         let qrGenerationMethod = 'binary'; // Always use binary generation
-        
+
         // COMPLETE student data (all available database fields) for Pure Binary QR
         const studentData = {
             // Primary identifiers
@@ -362,7 +362,7 @@ $code = $user['student_id'];
         // Load libraries with multiple fallbacks
         function loadLibraries() {
             console.log('Loading libraries...');
-            
+
             // Load QRCode.js
             loadScript('https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js')
                 .then(() => {
@@ -726,7 +726,7 @@ $code = $user['student_id'];
             console.log('✅ Pure binary matrix generated');
             console.log({ matrixSize, bytes: bytes.length, bits: bitCount });
         }
-        
+
         // Hash string to number for binary encoding
         function hashString(str) {
             let hash = 0;
@@ -740,9 +740,9 @@ $code = $user['student_id'];
 
             function generateFallbackQR(data = null) {
             console.log('Using fallback QR method');
-            
+
             const qrData = data || JSON.stringify(studentData);
-            
+
             // Create a simple QR-like pattern using SVG
             const svgQR = `
                 <svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
@@ -751,15 +751,15 @@ $code = $user['student_id'];
                     <rect x="20" y="20" width="60" height="60" fill="black"/>
                     <rect x="30" y="30" width="40" height="40" fill="white"/>
                     <rect x="40" y="40" width="20" height="20" fill="black"/>
-                    
+
                     <rect x="220" y="20" width="60" height="60" fill="black"/>
                     <rect x="230" y="30" width="40" height="40" fill="white"/>
                     <rect x="240" y="40" width="20" height="20" fill="black"/>
-                    
+
                     <rect x="20" y="220" width="60" height="60" fill="black"/>
                     <rect x="30" y="230" width="40" height="40" fill="white"/>
                     <rect x="40" y="240" width="20" height="20" fill="black"/>
-                    
+
                     <!-- Decorative pattern only (NOT SCANNABLE) -->
                     <rect x="100" y="100" width="10" height="10" fill="black"/>
                     <rect x="120" y="100" width="10" height="10" fill="black"/>
@@ -776,7 +776,7 @@ $code = $user['student_id'];
             // Convert SVG to DataURL
             const svgBlob = new Blob([svgQR], { type: 'image/svg+xml' });
             const svgUrl = URL.createObjectURL(svgBlob);
-            
+
             const img = new Image();
             img.onload = function() {
                 const canvas = document.createElement('canvas');
@@ -784,16 +784,16 @@ $code = $user['student_id'];
                 canvas.height = 300;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0);
-                
+
                 qrImageData = canvas.toDataURL('image/png');
-                
+
                 const container = document.getElementById('qr-container');
                 container.innerHTML = `<img src="${qrImageData}" alt="Fallback QR Code" style="max-width: 300px; height: auto;" />`;
-                
+
                 updateStatus('✅ Fallback QR generated!', 'success');
                 document.getElementById('pngBtn').disabled = false;
                 document.getElementById('pdfBtn').disabled = false;
-                
+
                 URL.revokeObjectURL(svgUrl);
             };
             img.src = svgUrl;
@@ -807,15 +807,15 @@ $code = $user['student_id'];
 
             try {
                 console.log('Starting PNG download...');
-                
+
                 const link = document.createElement('a');
                 link.href = qrImageData;
                 link.download = `${studentData.id}-QR-${Date.now()}.png`;
-                
+
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                
+
                 updateStatus('✅ PNG download completed!', 'success');
                 console.log('PNG download successful');
 
@@ -833,10 +833,10 @@ $code = $user['student_id'];
 
             try {
                 console.log('Creating PDF...');
-                
+
                 if (!librariesLoaded.jspdf || typeof window.jsPDF === 'undefined') {
                     updateStatus('Loading PDF library...', 'info');
-                    
+
                     return loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js')
                         .then(() => {
                             if (typeof window.jsPDF !== 'undefined') {
@@ -858,7 +858,7 @@ $code = $user['student_id'];
                 // Header
                 pdf.setFillColor(33, 140, 33);
                 pdf.rect(0, 0, 210, 30, 'F');
-                
+
                 pdf.setTextColor(255, 255, 255);
                 pdf.setFontSize(18);
                 pdf.setFont('helvetica', 'bold');
@@ -870,7 +870,7 @@ $code = $user['student_id'];
                 pdf.text('Complete Student Database Record', 105, 45, { align: 'center' });
 
                 let y = 65;
-                
+
                 // Complete database information
                 const completeInfo = [
                     // Primary Information
@@ -878,7 +878,7 @@ $code = $user['student_id'];
                     ['Full Name:', studentData.full_name],
                     ['LRN:', studentData.lrn],
                     ['Database ID:', studentData.database_id],
-                    
+
                     // Personal Details
                     ['Email:', studentData.email],
                     ['Gender:', studentData.gender],
@@ -887,14 +887,14 @@ $code = $user['student_id'];
                     ['Birth Date:', studentData.birth_date || 'N/A'],
                     ['Parent/Guardian:', studentData.parent_guardian || 'N/A'],
                     ['Emergency Contact:', studentData.emergency_contact || 'N/A'],
-                    
+
                     // Academic Information
                     ['Grade Level:', studentData.grade_level],
                     ['Strand:', studentData.strand],
                     ['Section:', studentData.section_block],
                     ['Enrollment Status:', studentData.enrollment_status],
                     ['School Year:', studentData.school_year],
-                    
+
                     // System Information
                     ['Created:', studentData.created_at],
                     ['Last Updated:', studentData.updated_at],
@@ -908,11 +908,11 @@ $code = $user['student_id'];
                         pdf.addPage();
                         y = 20;
                     }
-                    
+
                     pdf.setFont('helvetica', 'bold');
                     pdf.text(label, 20, y);
                     pdf.setFont('helvetica', 'normal');
-                    
+
                     // Wrap long text
                     const valueStr = String(value || 'N/A');
                     if (valueStr.length > 40) {
@@ -959,9 +959,9 @@ $code = $user['student_id'];
                 <head>
                     <title>QR Code - ${studentData.id}</title>
                     <style>
-                        body { 
-                            text-align: center; 
-                            padding: 20px; 
+                        body {
+                            text-align: center;
+                            padding: 20px;
                             font-family: Arial, sans-serif;
                             background: #f8f9fa;
                         }
@@ -1033,7 +1033,7 @@ $code = $user['student_id'];
                             body { margin: 0; }
                             .no-print { display: none; }
                         }
-                        body { 
+                        body {
                             font-family: Arial, sans-serif;
                             padding: 20px;
                             background: white;
@@ -1083,9 +1083,9 @@ $code = $user['student_id'];
                             <h2>🎓 PALAWAN NATIONAL SCHOOL</h2>
                             <h3>Student QR Code Card</h3>
                         </div>
-                        
+
                         <img src="${qrImageData}" alt="QR Code" class="qr-image" />
-                        
+
                         <div class="info">
                             <p><strong>Student ID:</strong> ${studentData.id}</p>
                             <p><strong>Name:</strong> ${studentData.name}</p>
@@ -1096,7 +1096,7 @@ $code = $user['student_id'];
                             <p><strong>Section:</strong> ${studentData.section}</p>
                             <p><strong>Generated:</strong> ${new Date().toLocaleString()}</p>
                         </div>
-                        
+
                         <div class="no-print">
                             <button onclick="window.print()" class="print-btn">
                                 🖨️ Print / Save as PDF
@@ -1110,7 +1110,7 @@ $code = $user['student_id'];
                 </html>
             `);
             popup.document.close();
-            
+
             setTimeout(() => {
                 popup.focus();
                 popup.print();
@@ -1122,15 +1122,15 @@ $code = $user['student_id'];
             console.log('🚀 Student QR Card System initialized');
             console.log('Student Data:', studentData);
             loadLibraries();
-            
+
             // Initialize binary mode
             initializeBinaryMode();
-            
+
             // Auto-generate binary QR after page loads
             setTimeout(() => {
                 updateStatus('⚡ Standard mode ready. Click "Generate QR" or switch to Binary.', 'info');
             }, 1000);
-            
+
             // Auto-generate QR code once library likely loaded (poll up to 5s)
             (async function autoGen(){
                 await ensureQRCodeLibrary();

@@ -20,7 +20,7 @@ $moduleUrls = @(
     # Grade 11 modules - ADD ACTUAL URLs HERE
     # "https://depedpuertoprincesa.ph/path/to/grade11_module1.pdf",
     # "https://depedpuertoprincesa.ph/path/to/grade11_module2.pdf",
-    
+
     # Grade 12 modules - ADD ACTUAL URLs HERE
     # "https://depedpuertoprincesa.ph/path/to/grade12_module1.pdf",
     # "https://depedpuertoprincesa.ph/path/to/grade12_module2.pdf"
@@ -48,10 +48,10 @@ foreach ($url in $moduleUrls) {
     try {
         $fileName = [System.IO.Path]::GetFileName($url)
         $filePath = Join-Path $dataDir $fileName
-        
+
         Write-Host "Downloading: $fileName" -ForegroundColor Cyan
         Invoke-WebRequest -Uri $url -OutFile $filePath -TimeoutSec 60
-        
+
         if (Test-Path $filePath) {
             $sizeKB = [math]::Round((Get-Item $filePath).Length / 1KB, 2)
             Write-Host "  ✓ Saved: $filePath ($sizeKB KB)" -ForegroundColor Green

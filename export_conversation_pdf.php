@@ -65,28 +65,28 @@ $fileName = preg_replace('/\s+/', '_', $topic) . '_' . date('Y-m-d') . '.pdf';
         <h1>🎓 Jether AI Review Session</h1>
         <div style="font-size: 18px; color: #2d6a4f; font-weight: 600;"><?php echo htmlspecialchars($topic); ?></div>
     </div>
-    
+
     <div class="meta">
         <strong>📅 Created:</strong> <?php echo date('F d, Y h:i A', strtotime($convo['created_at'])); ?><br>
         <strong>🔄 Last Updated:</strong> <?php echo date('F d, Y h:i A', strtotime($convo['updated_at'])); ?><br>
         <strong>👤 Student:</strong> <?php echo htmlspecialchars($_SESSION['full_name'] ?? 'Student'); ?>
     </div>
-    
+
     <div class="section">
         <div class="label">📝 Your Questions:</div>
         <div class="content"><?php echo nl2br(htmlspecialchars($convo['question'])); ?></div>
     </div>
-    
+
     <div class="section">
         <div class="label">🤖 Jether AI's Response:</div>
         <div class="content"><?php echo nl2br(htmlspecialchars($convo['response'])); ?></div>
     </div>
-    
+
     <div class="footer no-print">
         <p>💚 Powered by Jether AI - Palawan National School Review Center</p>
         <p style="font-size: 11px;">Created by Jether Garque for PNS Students</p>
     </div>
-    
+
     <div class="button-container no-print">
         <button onclick="window.print()" class="btn">
             🖨️ Print / Save as PDF
@@ -98,7 +98,7 @@ $fileName = preg_replace('/\s+/', '_', $topic) . '_' . date('Y-m-d') . '.pdf';
             📋 Back to Conversations
         </a>
     </div>
-    
+
     <script>
         // Show instructions for saving as PDF
         window.addEventListener('load', function() {

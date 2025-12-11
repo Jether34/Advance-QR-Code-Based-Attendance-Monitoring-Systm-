@@ -19,15 +19,15 @@ echo [2/4] Initializing Git repository...
 if not exist ".git" (
     git init >nul 2>&1
     echo ✓ Git repository initialized
-    
+
     git add . >nul 2>&1
     git commit -m "Initial commit: Smart Attendance System with team collaboration" >nul 2>&1
     echo ✓ Initial commit created
-    
+
     git checkout -b develop >nul 2>&1
     git checkout master >nul 2>&1
     echo ✓ Created develop branch
-    
+
     git remote add origin https://github.com/Jether34/Palawan-National-School-QR-Code-Attendance-Monitoring-System.git >nul 2>&1
     echo ✓ Added GitHub remote
 ) else (
@@ -65,7 +65,7 @@ echo.
 echo FILES CREATED:
 echo   ✓ .gitignore (PHP exclusions)
 echo   ✓ README.md (Team documentation)
-echo   ✓ CONTRIBUTING.md (Workflow guidelines)  
+echo   ✓ CONTRIBUTING.md (Workflow guidelines)
 echo   ✓ .env.example (Environment template)
 echo   ✓ .vscode/ (Team VS Code settings)
 echo   ✓ database/migrations/ (Schema scripts)

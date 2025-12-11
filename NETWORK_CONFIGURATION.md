@@ -35,8 +35,8 @@ Based on the current network and server configurations, The system automatically
 ```php
 // In api_config.php
 if (strpos($server_ip, '192.168.254.') === 0) {
-    // Network B: 192.168.254.x 
-    // School Globe system network branch 
+    // Network B: 192.168.254.x
+    // School Globe system network branch
     define('OLLAMA_API_URL', 'http://192.168.254.254:11434/api/generate');
 } elseif (strpos($server_ip, '192.168.1.') === 0) {
     // Network A: 192.168.1.x
@@ -64,7 +64,7 @@ if (strpos($server_ip, '192.168.254.') === 0) {
    ```powershell
    # Start XAMPP
    C:\xampp\xampp-control.exe
-   
+
    # Start Ollama
    ollama serve
    ```
@@ -89,7 +89,7 @@ if (strpos($server_ip, '192.168.254.') === 0) {
    ```powershell
    # Open Network Settings
    ncpa.cpl
-   
+
    # Or use PowerShell to set static IP
    New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.254.254 -PrefixLength 24 -DefaultGateway 192.168.254.1
    Set-DnsClientServerAddress -InterfaceAlias "Ethernet" -ServerAddresses ("8.8.8.8","8.8.4.4")
@@ -99,7 +99,7 @@ if (strpos($server_ip, '192.168.254.') === 0) {
    ```powershell
    # Start XAMPP
    C:\xampp\xampp-control.exe
-   
+
    # Start Ollama (will bind to 192.168.254.254)
    ollama serve
    ```
@@ -341,6 +341,6 @@ For network configuration issues, check:
 
 ---
 
-**Last Updated:** December 9, 2025  
-**System Version:** 2025.12  
+**Last Updated:** December 9, 2025
+**System Version:** 2025.12
 **Documentation:** Network Configuration Guide
