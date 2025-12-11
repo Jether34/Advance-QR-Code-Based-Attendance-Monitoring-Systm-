@@ -11,25 +11,33 @@ require_once __DIR__ . '/db.php';
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #1a1a1a;
+            font-family: 'Manrope', 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 14% 16%, rgba(34, 211, 238, 0.12), transparent 38%),
+                radial-gradient(circle at 82% -10%, rgba(34, 197, 94, 0.1), transparent 44%),
+                linear-gradient(140deg, #0c1426 0%, #102035 50%, #0c2841 100%);
             min-height: 100vh;
+            color: #0f172a;
         }
 
         /* Desktop layout */
         body.desktop {
-            background: linear-gradient(135deg, #f8fff8 0%, #eaffea 100%);
+            background:
+                radial-gradient(circle at 14% 16%, rgba(34, 211, 238, 0.12), transparent 38%),
+                radial-gradient(circle at 82% -10%, rgba(34, 197, 94, 0.1), transparent 44%),
+                linear-gradient(135deg, #0c1426 0%, #102035 55%, #0c2841 100%);
         }
 
         body.desktop h1 {
-            max-width: 900px;
+            max-width: 920px;
             margin: 20px auto;
             padding: 20px;
-            color: #218c21;
+            color: #0ea5e9;
+            letter-spacing: 0.01em;
         }
 
         body.desktop .scanner-container {
-            max-width: 900px;
+            max-width: 920px;
             margin: 0 auto;
             display: flex;
             gap: 20px;
@@ -38,12 +46,10 @@ require_once __DIR__ . '/db.php';
 
         /* Mobile layout */
         body.mobile {
-            background: #000;
+            background: #0b1221;
         }
 
-        body.mobile h1 {
-            display: none;
-        }
+        body.mobile h1 { display: none; }
 
         body.mobile #reader {
             position: fixed !important;
@@ -56,13 +62,14 @@ require_once __DIR__ . '/db.php';
 
         h1 {
             text-align: center;
-            color: #218c21;
+            color: #0ea5e9;
             margin-bottom: 20px;
         }
 
         h3 {
-            color: #176617;
+            color: #0f172a;
             margin-bottom: 15px;
+            font-weight: 800;
         }
 
         .scanner-container {
@@ -73,32 +80,37 @@ require_once __DIR__ . '/db.php';
 
         .scanner-section {
             flex: 1;
-            background: white;
+            background: #ffffff;
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(33, 140, 33, 0.1);
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 18px 40px rgba(8, 47, 73, 0.12);
         }
 
         #barcodeInput {
             width: 100%;
             padding: 12px;
             font-size: 16px;
-            border: 2px solid #d4edda;
-            border-radius: 8px;
-            transition: border-color 0.3s;
+            border: 1px solid #d7e0eb;
+            border-radius: 10px;
+            transition: border-color 0.25s, box-shadow 0.25s;
+            background: #f7f9fc;
         }
 
         #barcodeInput:focus {
-            border-color: #218c21;
+            border-color: #0ea5e9;
             outline: none;
-            box-shadow: 0 0 5px rgba(33, 140, 33, 0.3);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.16);
+            background: #fff;
         }
 
         #last {
             margin-top: 15px;
             padding: 15px;
-            border-radius: 10px;
-            font-weight: 500;
+            border-radius: 12px;
+            font-weight: 600;
+            background: #0b1221;
+            color: #e0f2fe;
         }
 
         /* Mobile controls */
@@ -112,30 +124,26 @@ require_once __DIR__ . '/db.php';
             z-index: 11;
         }
 
-        body.mobile .mobile-controls {
-            display: flex;
-        }
+        body.mobile .mobile-controls { display: flex; }
 
         .control-btn {
             flex: 1;
             padding: 16px;
-            background: rgba(33, 140, 33, 0.9);
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
             color: white;
             border: none;
             border-radius: 12px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+            box-shadow: 0 10px 22px rgba(8, 47, 73, 0.3);
         }
 
-        .control-btn:active {
-            transform: scale(0.95);
-        }
+        .control-btn:active { transform: scale(0.97); }
 
         .control-btn.secondary {
-            background: rgba(100, 100, 100, 0.9);
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
         }
 
         /* Mobile result display */
@@ -150,19 +158,15 @@ require_once __DIR__ . '/db.php';
             max-height: 100vh;
             margin: 0;
             padding: 20px;
-            background: rgba(0,0,0,0.95);
+            background: rgba(11, 18, 33, 0.94);
             z-index: 100;
             overflow-y: auto;
+            border: 1px solid rgba(14,165,233,0.16);
         }
 
         @media (max-width: 768px) {
-            .scanner-container {
-                flex-direction: column;
-            }
-
-            #reader {
-                width: 100% !important;
-            }
+            .scanner-container { flex-direction: column; }
+            #reader { width: 100% !important; }
         }
     </style>
 </head>

@@ -72,126 +72,131 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-            background: linear-gradient(135deg, #1e5128 0%, #2d6a4f 100%);
+            font-family: 'Manrope', 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(34, 211, 238, 0.12), transparent 38%),
+                radial-gradient(circle at 78% -8%, rgba(34, 197, 94, 0.1), transparent 42%),
+                linear-gradient(140deg, #0c1426 0%, #102035 50%, #0c2841 100%);
             min-height: 100vh;
-            color: #2c3e50;
+            color: #0f172a;
         }
         .navbar {
-            background: linear-gradient(135deg, #1e5128 0%, #2d6a4f 100%);
+            background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 45%, #22c55e 100%);
             padding: 0;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            box-shadow: 0 14px 36px rgba(6, 182, 212, 0.28);
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: sticky;
             top: 0;
             z-index: 100;
+            border-radius: 0 0 16px 16px;
         }
         .navbar-brand {
             padding: 18px 32px;
             font-size: 1.3em;
-            font-weight: 700;
+            font-weight: 800;
             color: #fff;
+            letter-spacing: 0.02em;
         }
-        .navbar-links {
-            display: flex;
-        }
+        .navbar-links { display: flex; }
         .navbar a {
             color: #fff;
-            padding: 20px 28px;
+            padding: 18px 26px;
             text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
+            font-weight: 700;
+            transition: all 0.25s ease;
             border-bottom: 3px solid transparent;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .navbar a:hover {
-            background: rgba(255,255,255,0.15);
-            border-bottom-color: #d8f3dc;
+            background: rgba(255,255,255,0.12);
+            border-bottom-color: #e0f2fe;
         }
         .container {
-            max-width: 1300px;
+            max-width: 1320px;
             margin: 32px auto;
             padding: 0 24px;
         }
         .page-header {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
-            border-radius: 20px;
+            background: #ffffff;
+            border-radius: 22px;
             padding: 32px 40px;
             margin-bottom: 28px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            box-shadow: 0 24px 70px rgba(8, 47, 73, 0.18);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid rgba(255,255,255,0.8);
+            border: 1px solid #e2e8f0;
         }
         .welcome-text {
             font-size: 2em;
-            font-weight: 700;
-            color: #1e5128;
+            font-weight: 800;
+            color: #0f172a;
         }
         .welcome-subtitle {
             font-size: 1em;
-            color: #5a6c7d;
+            color: #475569;
             margin-top: 6px;
         }
         .clock {
-            font-size: 1.1em;
-            color: #2d6a4f;
-            font-weight: 600;
-            background: #d8f3dc;
-            padding: 12px 20px;
+            font-size: 1.05em;
+            color: #0284c7;
+            font-weight: 700;
+            background: #e0f2fe;
+            padding: 12px 18px;
             border-radius: 12px;
+            border: 1px solid #bae6fd;
         }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
+            gap: 18px;
             margin-bottom: 28px;
         }
         .stat-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+            background: #ffffff;
             border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            border-left: 4px solid #2d6a4f;
-            transition: all 0.3s;
+            padding: 22px;
+            box-shadow: 0 14px 34px rgba(15, 23, 42, 0.12);
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #0ea5e9;
+            transition: all 0.25s ease;
         }
         .stat-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+            box-shadow: 0 20px 46px rgba(8, 47, 73, 0.16);
         }
         .stat-label {
-            color: #5a6c7d;
-            font-size: 0.85em;
-            font-weight: 600;
+            color: #475569;
+            font-size: 0.86em;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
             margin-bottom: 8px;
         }
         .stat-value {
             font-size: 2.2em;
             font-weight: 800;
-            color: #1e5128;
+            color: #0f172a;
         }
         .content-section {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+            background: #ffffff;
             border-radius: 20px;
-            padding: 32px 40px;
+            padding: 32px 36px;
             margin-bottom: 28px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            border: 1px solid rgba(45,106,79,0.08);
+            box-shadow: 0 20px 60px rgba(8, 47, 73, 0.14);
+            border: 1px solid #e2e8f0;
         }
         .content-section h2 {
-            color: #1e5128;
-            font-size: 1.5em;
-            font-weight: 700;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 3px solid #d8f3dc;
+            color: #0f172a;
+            font-size: 1.45em;
+            font-weight: 800;
+            margin-bottom: 22px;
+            padding-bottom: 14px;
+            border-bottom: 3px solid #e0f2fe;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -203,12 +208,13 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
         }
         .info-item {
             padding: 14px 18px;
-            background: #f6fff7;
-            border-radius: 10px;
-            border-left: 3px solid #2d6a4f;
+            background: #f7fbff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
         }
         .info-item strong {
-            color: #1e5128;
+            color: #0f172a;
             display: block;
             margin-bottom: 4px;
             font-size: 0.85em;
@@ -216,8 +222,8 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
             letter-spacing: 0.5px;
         }
         .info-item span {
-            color: #2c3e50;
-            font-size: 1.05em;
+            color: #0f172a;
+            font-size: 1.04em;
         }
         .student-list {
             list-style: none;
@@ -226,21 +232,20 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
             gap: 14px;
         }
         .student-list li {
-            background: linear-gradient(135deg, #f6fff7 0%, #fff 100%);
+            background: linear-gradient(145deg, #ffffff 0%, #f7fbff 100%);
             padding: 14px 18px;
             border-radius: 12px;
-            border-left: 4px solid #2d6a4f;
-            transition: all 0.3s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #0ea5e9;
+            transition: all 0.25s ease;
+            box-shadow: 0 10px 24px rgba(8, 47, 73, 0.12);
         }
         .student-list li:hover {
             transform: translateX(4px);
-            box-shadow: 0 4px 16px rgba(45,106,79,0.15);
+            box-shadow: 0 16px 30px rgba(8, 47, 73, 0.16);
         }
         @media (max-width: 768px) {
-            body {
-                padding: 0;
-            }
+            body { padding: 0; }
 
             .navbar {
                 position: fixed;
@@ -250,6 +255,7 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
                 flex-direction: column;
                 align-items: stretch;
                 z-index: 1000;
+                border-radius: 0;
             }
 
             .navbar-brand {
@@ -267,43 +273,29 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
 
             .navbar a {
                 padding: 14px 12px;
-                font-size: 0.85em;
+                font-size: 0.86em;
                 justify-content: center;
                 text-align: center;
                 border-bottom: 2px solid transparent;
                 border-right: 1px solid rgba(255,255,255,0.1);
             }
 
-            .navbar a:nth-child(2n) {
-                border-right: none;
-            }
+            .navbar a:nth-child(2n) { border-right: none; }
 
-            .container {
-                margin-top: 160px;
-                padding: 0 12px;
-            }
+            .container { margin-top: 160px; padding: 0 12px; }
 
             .page-header {
                 flex-direction: column;
                 gap: 16px;
                 text-align: center;
                 padding: 24px 20px;
-                border-radius: 12px;
+                border-radius: 14px;
                 margin-bottom: 20px;
             }
 
-            .welcome-text {
-                font-size: 1.5em;
-            }
-
-            .welcome-subtitle {
-                font-size: 0.9em;
-            }
-
-            .clock {
-                font-size: 0.95em;
-                padding: 10px 16px;
-            }
+            .welcome-text { font-size: 1.5em; }
+            .welcome-subtitle { font-size: 0.9em; }
+            .clock { font-size: 0.95em; padding: 10px 16px; }
 
             .stats-grid {
                 grid-template-columns: 1fr;
@@ -311,44 +303,21 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
                 margin-bottom: 20px;
             }
 
-            .stat-card {
-                padding: 20px;
-            }
-
-            .stat-value {
-                font-size: 2em;
-            }
+            .stat-card { padding: 20px; }
+            .stat-value { font-size: 2em; }
 
             .content-section {
                 padding: 24px 20px;
-                border-radius: 12px;
+                border-radius: 14px;
                 margin-bottom: 20px;
             }
 
-            .content-section h2 {
-                font-size: 1.3em;
-                margin-bottom: 20px;
-            }
+            .content-section h2 { font-size: 1.25em; margin-bottom: 18px; }
+            .info-grid { grid-template-columns: 1fr; gap: 12px; }
+            .info-item { padding: 12px 16px; }
+            .student-list { grid-template-columns: 1fr; gap: 12px; }
+            .student-list li { padding: 12px 16px; }
 
-            .info-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .info-item {
-                padding: 12px 16px;
-            }
-
-            .student-list {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .student-list li {
-                padding: 12px 16px;
-            }
-
-            /* Make tables scrollable */
             table {
                 display: block;
                 overflow-x: auto;
@@ -365,37 +334,14 @@ if(isset($_POST['edit_student']) && isset($_POST['edit_id'])) {
             }
         }
 
-        /* Small mobile devices */
         @media (max-width: 480px) {
-            .navbar-brand {
-                font-size: 1em;
-                padding: 14px 16px;
-            }
-
-            .navbar a {
-                font-size: 0.8em;
-                padding: 12px 8px;
-            }
-
-            .container {
-                margin-top: 150px;
-            }
-
-            .welcome-text {
-                font-size: 1.3em;
-            }
-
-            .welcome-subtitle {
-                font-size: 0.85em;
-            }
-
-            .stat-value {
-                font-size: 1.8em;
-            }
-
-            .content-section h2 {
-                font-size: 1.2em;
-            }
+            .navbar-brand { font-size: 1em; padding: 14px 16px; }
+            .navbar a { font-size: 0.8em; padding: 12px 8px; }
+            .container { margin-top: 150px; }
+            .welcome-text { font-size: 1.28em; }
+            .welcome-subtitle { font-size: 0.85em; }
+            .stat-value { font-size: 1.82em; }
+            .content-section h2 { font-size: 1.16em; }
         }
     </style>
 </head>

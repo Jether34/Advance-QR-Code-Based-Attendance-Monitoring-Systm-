@@ -8,16 +8,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Signup - Palawan National School</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #d6f5d6 0%, #eaffea 100%);
+            font-family: 'Manrope', 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 18% 20%, rgba(34, 211, 238, 0.12), transparent 34%),
+                radial-gradient(circle at 82% -10%, rgba(34, 197, 94, 0.1), transparent 38%),
+                linear-gradient(140deg, #0c1426 0%, #102035 50%, #0c2841 100%);
             min-height: 100vh;
             padding: 40px 20px;
         }
         .signup-container {
             background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(33, 140, 33, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 28px 80px rgba(8, 47, 73, 0.22);
+            border: 1px solid #e2e8f0;
             padding: 40px 32px;
             max-width: 600px;
             margin: 0 auto;
@@ -26,7 +32,7 @@
             text-align: center;
             margin-bottom: 24px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #b2e2b2;
+            border-bottom: 2px solid #e2e8f0;
         }
         .logo-header img {
             max-width: 90px;
@@ -34,22 +40,24 @@
             margin-bottom: 12px;
         }
         .logo-header .school-name {
-            color: #196619;
+            color: #0ea5e9;
             font-size: 1.2em;
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: 4px;
+            letter-spacing: 0.02em;
         }
         .signup-header {
             text-align: center;
             margin-bottom: 32px;
         }
         .signup-header h1 {
-            color: #196619;
+            color: #0ea5e9;
             font-size: 2em;
             margin-bottom: 8px;
+            font-weight: 800;
         }
         .signup-header p {
-            color: #176617;
+            color: #475569;
             font-size: 0.95em;
         }
         .form-group {
@@ -58,21 +66,26 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #196619;
-            font-weight: 600;
+            color: #0f172a;
+            font-weight: 700;
+            letter-spacing: 0.01em;
         }
         .form-group input, .form-group select {
             width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #b2e2b2;
-            border-radius: 8px;
+            padding: 12px 14px;
+            border: 1px solid #d7e0eb;
+            border-radius: 10px;
             font-size: 1em;
-            transition: all 0.3s;
+            font-family: inherit;
+            transition: all 0.2s ease;
             box-sizing: border-box;
+            background: #f7f9fc;
         }
         .form-group input:focus, .form-group select:focus {
-            border-color: #196619;
-            box-shadow: 0 0 0 3px rgba(25, 102, 25, 0.08);
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.16);
+            background: #ffffff;
+            outline: none;
         }
         .row {
             display: flex;
@@ -84,30 +97,30 @@
         .btn-signup {
             width: 100%;
             padding: 14px;
-            background: #196619;
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0ea5e9 100%);
             color: #fff;
             border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: 600;
+            border-radius: 12px;
+            font-size: 1.05em;
+            font-weight: 700;
+            font-family: inherit;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s ease;
             margin-top: 10px;
         }
         .btn-signup:hover {
-            background: #155a15;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(33, 140, 33, 0.3);
+            box-shadow: 0 16px 32px rgba(14, 165, 233, 0.28);
         }
         .form-footer {
             text-align: center;
             margin-top: 24px;
             padding-top: 24px;
-            border-top: 1px solid #b2e2b2;
+            border-top: 1px solid #e2e8f0;
         }
         .form-footer a {
-            color: #218c21;
-            font-weight: 600;
+            color: #0ea5e9;
+            font-weight: 700;
             text-decoration: none;
         }
         .form-footer a:hover {
@@ -116,16 +129,16 @@
         .terms-checkbox-group {
             margin: 24px 0;
             padding: 16px;
-            background: #f0f7f0;
-            border-radius: 8px;
-            border-left: 4px solid #196619;
+            background: #e0f2fe;
+            border-radius: 12px;
+            border-left: 4px solid #0ea5e9;
         }
         .checkbox-label {
             display: flex;
             align-items: flex-start;
             gap: 12px;
             cursor: pointer;
-            color: #176617;
+            color: #0f172a;
             font-size: 0.95em;
             line-height: 1.4;
         }
@@ -134,7 +147,7 @@
             height: 20px;
             margin-top: 2px;
             cursor: pointer;
-            accent-color: #196619;
+            accent-color: #0ea5e9;
             flex-shrink: 0;
         }
         .terms-links {
@@ -145,14 +158,14 @@
             flex-wrap: wrap;
         }
         .terms-links a {
-            color: #196619;
+            color: #0ea5e9;
             text-decoration: none;
-            font-weight: 600;
-            border-bottom: 2px solid #b2e2b2;
+            font-weight: 700;
+            border-bottom: 2px solid #bae6fd;
             padding-bottom: 2px;
         }
         .terms-links a:hover {
-            border-bottom-color: #218c21;
+            border-bottom-color: #0ea5e9;
         }
         /* Modal Styles */
         .modal {
@@ -187,17 +200,18 @@
             align-items: center;
             margin-bottom: 24px;
             padding-bottom: 16px;
-            border-bottom: 2px solid #b2e2b2;
+            border-bottom: 2px solid #e2e8f0;
         }
         .modal-header h2 {
-            color: #196619;
+            color: #0ea5e9;
             font-size: 1.6em;
+            font-weight: 800;
             margin: 0;
         }
         .modal-close {
             font-size: 1.8em;
             font-weight: bold;
-            color: #176617;
+            color: #475569;
             cursor: pointer;
             background: none;
             border: none;

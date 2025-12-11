@@ -10,12 +10,17 @@
     <?php $cssFile = file_exists(__DIR__ . '/style.min.css') ? 'style.min.css' : 'style.css'; ?>
     <link rel="stylesheet" href="<?php echo $cssFile; ?>">
     <link rel="manifest" href="/puta/manifest.json">
-    <meta name="theme-color" content="#196619">
+    <meta name="theme-color" content="#0ea5e9">
     <link rel="apple-touch-icon" href="/puta/webapp/icons/apple-touch-180.webp" type="image/webp">
     <link rel="icon" type="image/webp" sizes="192x192" href="/puta/webapp/icons/icon-192.webp">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #d6f5d6 0%, #eaffea 100%);
+            font-family: 'Manrope', 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 18% 20%, rgba(34, 211, 238, 0.12), transparent 34%),
+                radial-gradient(circle at 82% -10%, rgba(34, 197, 94, 0.1), transparent 38%),
+                linear-gradient(140deg, #0c1426 0%, #102035 50%, #0c2841 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -24,8 +29,9 @@
         }
         .home-container {
             background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(33, 140, 33, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 28px 80px rgba(8, 47, 73, 0.22);
+            border: 1px solid #e2e8f0;
             padding: 60px 40px;
             max-width: 600px;
             width: 100%;
@@ -40,19 +46,21 @@
             margin-bottom: 16px;
         }
         .home-container h1 {
-            color: #196619;
+            color: #0ea5e9;
             font-size: 2.5em;
             margin-bottom: 8px;
             line-height: 1.3;
+            font-weight: 800;
+            letter-spacing: 0.01em;
         }
         .subtitle {
-            color: #176617;
+            color: #475569;
             font-size: 1.1em;
             margin-bottom: 24px;
             font-weight: 500;
         }
         .home-container p {
-            color: #176617;
+            color: #475569;
             font-size: 1.1em;
             margin-bottom: 40px;
         }
@@ -64,39 +72,41 @@
         }
         .btn-home {
             padding: 16px 32px;
-            background: #196619;
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0ea5e9 100%);
             color: #fff;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 1.1em;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.25s ease;
             text-decoration: none;
             display: inline-block;
+            font-family: inherit;
         }
         .btn-home:hover {
-            background: #155a15;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(33, 140, 33, 0.3);
+            box-shadow: 0 16px 32px rgba(14, 165, 233, 0.28);
         }
         .btn-secondary {
             background: #fff;
-            color: #196619;
-            border: 2px solid #196619;
+            color: #0ea5e9;
+            border: 2px solid #0ea5e9;
         }
         .btn-secondary:hover {
-            background: #eaffea;
+            background: #e0f2fe;
+            transform: translateY(-2px);
         }
         .home-footer {
             margin-top: 40px;
             padding-top: 24px;
-            border-top: 1px solid #b2e2b2;
+            border-top: 1px solid #e2e8f0;
         }
         .home-footer a {
-            color: #176617;
+            color: #0ea5e9;
             font-size: 0.9em;
             text-decoration: none;
+            font-weight: 700;
         }
         .home-footer a:hover {
             text-decoration: underline;

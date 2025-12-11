@@ -14,20 +14,26 @@ $code = $user['student_id'];
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student QR Card - <?php echo htmlspecialchars($user['full_name']); ?></title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #d6f5d6 0%, #eaffea 100%);
+            font-family: 'Manrope', 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 18% 20%, rgba(34, 211, 238, 0.12), transparent 34%),
+                radial-gradient(circle at 82% -10%, rgba(34, 197, 94, 0.1), transparent 38%),
+                linear-gradient(140deg, #0c1426 0%, #102035 50%, #0c2841 100%);
             min-height: 100vh;
             padding: 20px;
-            font-family: 'Segoe UI', Arial, sans-serif;
         }
 
         .card-container {
             background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(33, 140, 33, 0.2);
+            border-radius: 22px;
+            box-shadow: 0 28px 80px rgba(8, 47, 73, 0.22);
+            border: 1px solid #e2e8f0;
             padding: 40px;
             max-width: 600px;
             margin: 0 auto;
@@ -35,31 +41,33 @@ $code = $user['student_id'];
         }
 
         .student-header {
-            border-bottom: 3px solid #218c21;
+            border-bottom: 3px solid #0ea5e9;
             padding-bottom: 20px;
             margin-bottom: 30px;
         }
 
         .student-header h1 {
-            color: #218c21;
+            color: #0ea5e9;
             font-size: 2.2em;
             margin: 0 0 10px 0;
-            font-weight: 700;
+            font-weight: 800;
+            letter-spacing: 0.01em;
         }
 
         .student-info {
-            background: linear-gradient(135deg, #f0fff0 0%, #e8ffe8 100%);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 5px solid #218c21;
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+            border-radius: 14px;
+            padding: 24px;
+            margin: 24px 0;
+            border-left: 5px solid #0ea5e9;
+            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.1);
         }
 
         .student-info p {
-            margin: 8px 0;
-            color: #176617;
+            margin: 10px 0;
+            color: #0f172a;
             font-weight: 600;
-            font-size: 1.1em;
+            font-size: 1.05em;
         }
 
         .qr-section {
@@ -67,9 +75,11 @@ $code = $user['student_id'];
         }
 
         .qr-section h3 {
-            color: #218c21;
+            color: #0ea5e9;
             font-size: 1.5em;
+            font-weight: 800;
             margin-bottom: 20px;
+            letter-spacing: 0.01em;
         }
 
         .action-buttons {
@@ -83,52 +93,53 @@ $code = $user['student_id'];
         .btn {
             padding: 12px 25px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 1em;
-            font-weight: 600;
+            font-weight: 700;
+            font-family: inherit;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.25s ease;
             text-decoration: none;
             display: inline-block;
         }
 
         .btn-primary {
-            background: #218c21;
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0ea5e9 100%);
             color: white;
         }
 
         .btn-primary:hover {
-            background: #176617;
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(33, 140, 33, 0.3);
+            box-shadow: 0 16px 32px rgba(14, 165, 233, 0.28);
         }
 
         .btn-secondary {
             background: #fff;
-            color: #218c21;
-            border: 2px solid #218c21;
+            color: #0ea5e9;
+            border: 2px solid #0ea5e9;
         }
 
         .btn-secondary:hover {
-            background: #f0fff0;
+            background: #e0f2fe;
             transform: translateY(-2px);
         }
 
         .instructions {
-            background: #e7f3ff;
-            border: 1px solid #b8daff;
-            border-radius: 8px;
+            background: #e0f2fe;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
             padding: 20px;
             margin: 20px 0;
             text-align: left;
             font-size: 0.9em;
-            color: #004085;
+            color: #0c4a6e;
         }
 
         .instructions h4 {
             margin: 0 0 15px 0;
-            color: #218c21;
+            color: #0ea5e9;
             font-size: 1.1em;
+            font-weight: 800;
         }
 
         .instructions ul {
@@ -139,14 +150,14 @@ $code = $user['student_id'];
         .footer-links {
             margin-top: 30px;
             padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid #e2e8f0;
         }
 
         .footer-links a {
-            color: #218c21;
+            color: #0ea5e9;
             text-decoration: none;
             margin: 0 10px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .footer-links a:hover {
@@ -190,13 +201,13 @@ $code = $user['student_id'];
 
         <div class="qr-section">
             <h3>🔳 Your QR Code (Binary Generated)</h3>
-            <canvas id="studentQRCanvas" width="300" height="300" style="border: 3px solid #218c21; border-radius: 12px; background: white; box-shadow: 0 5px 20px rgba(33, 140, 33, 0.15); margin: 20px 0;"></canvas>
+            <canvas id="studentQRCanvas" width="300" height="300" style="border: 3px solid #0ea5e9; border-radius: 14px; background: white; box-shadow: 0 14px 34px rgba(14, 165, 233, 0.18); margin: 20px 0;"></canvas>
             <div id="qrStatus" style="text-align: center; margin: 10px 0; padding: 10px; border-radius: 8px; font-weight: 600;"></div>
         </div>
 
         <div class="qr-section">
             <h3>🧾 1D Barcode (Code 128)</h3>
-            <svg id="studentBarcode" style="background:#fff;border:3px solid #218c21;border-radius:12px;padding:10px;box-shadow:0 5px 20px rgba(33,140,33,0.15);"></svg>
+            <svg id="studentBarcode" style="background:#fff;border:3px solid #0ea5e9;border-radius:14px;padding:10px;box-shadow:0 14px 34px rgba(14,165,233,0.18);"></svg>
             <div style="margin-top:10px">
                 <button onclick="downloadBarcodePNG()" class="btn btn-secondary">🖼️ Download Barcode PNG</button>
             </div>

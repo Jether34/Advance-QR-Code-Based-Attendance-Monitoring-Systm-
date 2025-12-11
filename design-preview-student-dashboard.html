@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Design Preview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Manrope', 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(34, 211, 238, 0.12), transparent 38%),
+                radial-gradient(circle at 78% -8%, rgba(34, 197, 94, 0.1), transparent 42%),
+                linear-gradient(140deg, #0c1426 0%, #102035 50%, #0c2841 100%);
+            min-height: 100vh;
+            color: #0f172a;
+        }
+
+        .navbar {
+            background: linear-gradient(120deg, #0ea5e9 0%, #0d95d7 42%, #0fb38f 100%);
+            padding: 0;
+            box-shadow: 0 14px 36px rgba(6, 182, 212, 0.28);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: 0 0 16px 16px;
+        }
+
+        .navbar-brand {
+            padding: 18px 32px;
+            font-size: 1.3em;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 0.02em;
+        }
+
+        .navbar-links { display: flex; }
+
+        .navbar a {
+            color: #fff;
+            padding: 18px 26px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.25s ease;
+            border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .navbar a:hover {
+            background: rgba(255,255,255,0.12);
+            border-bottom-color: #e0f2fe;
+        }
+
+        .container {
+            max-width: 1320px;
+            margin: 32px auto;
+            padding: 0 24px;
+        }
+
+        .page-header {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 32px 40px;
+            margin-bottom: 28px;
+            box-shadow: 0 24px 70px rgba(8, 47, 73, 0.18);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .welcome-text {
+            font-size: 2em;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .welcome-subtitle {
+            font-size: 1em;
+            color: #475569;
+            margin-top: 6px;
+        }
+
+        .clock {
+            font-size: 1.05em;
+            color: #0284c7;
+            font-weight: 700;
+            background: #e0f2fe;
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: 1px solid #bae6fd;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 14px 34px rgba(15, 23, 42, 0.12);
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #0ea5e9;
+            transition: all 0.25s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 46px rgba(8, 47, 73, 0.16);
+        }
+
+        .stat-label {
+            color: #475569;
+            font-size: 0.86em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 2.2em;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .content-section {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 32px 36px;
+            margin-bottom: 28px;
+            box-shadow: 0 20px 60px rgba(8, 47, 73, 0.14);
+            border: 1px solid #e2e8f0;
+        }
+
+        .content-section h2 {
+            color: #0f172a;
+            font-size: 1.45em;
+            font-weight: 800;
+            margin-bottom: 22px;
+            padding-bottom: 14px;
+            border-bottom: 3px solid #e0f2fe;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .info-item {
+            padding: 14px 18px;
+            background: #f7fbff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+        }
+
+        .info-item strong {
+            color: #0f172a;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-item span {
+            color: #0f172a;
+            font-size: 1.04em;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-brand">📚 Student Portal</div>
+        <div class="navbar-links">
+            <a href="#">📊 Dashboard</a>
+            <a href="#">👥 Classmates</a>
+            <a href="#">📋 Attendance</a>
+            <a href="#">🚪 Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <div class="welcome-text">Welcome, Juan Dela Cruz!</div>
+                <div class="welcome-subtitle">Grade 12 - STEM | Section A</div>
+            </div>
+            <div class="clock">🕐 2:45 PM - December 11, 2025</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Students</div>
+                <div class="stat-value">42</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Male Students</div>
+                <div class="stat-value">24</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Female Students</div>
+                <div class="stat-value">18</div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>📝 Your Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>Student ID</strong>
+                    <span>2024-12345</span>
+                </div>
+                <div class="info-item">
+                    <strong>LRN</strong>
+                    <span>123456789012</span>
+                </div>
+                <div class="info-item">
+                    <strong>Email</strong>
+                    <span>juan.delacruz@pns.edu</span>
+                </div>
+                <div class="info-item">
+                    <strong>Gender</strong>
+                    <span>Male</span>
+                </div>
+                <div class="info-item">
+                    <strong>Adviser</strong>
+                    <span>Prof. Maria Santos</span>
+                </div>
+                <div class="info-item">
+                    <strong>Section</strong>
+                    <span>Section A</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

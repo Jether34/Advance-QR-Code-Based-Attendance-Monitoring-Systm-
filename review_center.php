@@ -29,29 +29,36 @@ if ($currentConvoId) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Review Center - PNS</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#1e5128 0%,#2d6a4f 100%);min-height:100vh;color:#2c3e50;margin:0}
-    .navbar{background:linear-gradient(135deg,#1e5128 0%,#2d6a4f 100%);padding:0;box-shadow:0 4px 16px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-    .navbar-brand{padding:18px 32px;font-size:1.3em;font-weight:700;color:#fff}
-    .navbar a{color:#fff;padding:20px 28px;text-decoration:none;font-weight:600;transition:all .3s;border-bottom:3px solid transparent;display:flex;align-items:center;gap:8px}
-    .navbar a:hover{background:rgba(255,255,255,.15);border-bottom-color:#d8f3dc}
+    body{font-family:'Manrope','Inter','Segoe UI',system-ui,-apple-system,sans-serif;background:radial-gradient(circle at 18% 18%,rgba(34,211,238,0.12),transparent 38%),radial-gradient(circle at 78% -8%,rgba(34,197,94,0.1),transparent 42%),linear-gradient(140deg,#0c1426 0%,#102035 50%,#0c2841 100%);min-height:100vh;color:#0f172a;margin:0}
+    .navbar{background:linear-gradient(120deg,#0ea5e9 0%,#0d95d7 42%,#0fb38f 100%);padding:0;box-shadow:0 14px 36px rgba(6,182,212,0.28);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;border-radius:0 0 16px 16px}
+    .navbar-brand{padding:18px 32px;font-size:1.3em;font-weight:800;color:#fff;letter-spacing:0.02em}
+    .navbar a{color:#fff;padding:18px 26px;text-decoration:none;font-weight:700;transition:all .25s ease;border-bottom:3px solid transparent;display:flex;align-items:center;gap:10px}
+    .navbar a:hover{background:rgba(255,255,255,.12);border-bottom-color:#e0f2fe}
     .container{max-width:1100px;margin:28px auto;padding:0 24px}
-    .panel{background:linear-gradient(135deg,#fff 0%,#f8fffe 100%);border-radius:16px;box-shadow:0 10px 32px rgba(0,0,0,.12);padding:24px 28px;margin-bottom:20px;border:1px solid rgba(45,106,79,.08)}
-    h1{color:#1e5128;margin:0 0 6px 0}
-    .sub{color:#5a6c7d;margin-bottom:16px}
-    textarea{width:100%;min-height:160px;padding:14px;border:2px solid #d8f3dc;border-radius:12px;font-size:14px;resize:vertical}
-    .btn{padding:10px 16px;border:none;border-radius:8px;font-weight:700;cursor:pointer}
-    .btn-primary{background:#218c21;color:#fff}
-    .btn-secondary{background:#fff;color:#218c21;border:2px solid #218c21}
+    .panel{background:#ffffff;border-radius:20px;box-shadow:0 24px 70px rgba(8,47,73,0.18);padding:32px 36px;margin-bottom:28px;border:1px solid #e2e8f0}
+    h1{color:#0f172a;margin:0 0 8px 0;font-size:2em;font-weight:800}
+    h2{color:#0f172a;font-weight:800;font-size:1.45em}
+    .sub{color:#475569;margin-bottom:16px;font-size:0.98em}
+    textarea{width:100%;min-height:160px;padding:14px;border:1px solid #d7e0eb;border-radius:12px;font-size:14px;resize:vertical;font-family:inherit;background:#f7f9fc;transition:all .2s ease;box-sizing:border-box}
+    textarea:focus{border-color:#0ea5e9;box-shadow:0 0 0 3px rgba(14,165,233,0.16);background:#fff;outline:none}
+    .btn{padding:12px 18px;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s ease}
+    .btn-primary{background:linear-gradient(135deg,#0ea5e9 0%,#0284c7 50%,#0ea5e9 100%);color:#fff}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 32px rgba(14,165,233,0.28)}
+    .btn-secondary{background:#fff;color:#0ea5e9;border:2px solid #0ea5e9}
+    .btn-secondary:hover{background:#e0f2fe;transform:translateY(-2px)}
     .row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     .list{list-style:decimal;padding-left:20px}
-    .badge{display:inline-block;background:#d8f3dc;color:#1e5128;border-radius:999px;padding:4px 10px;font-weight:700;font-size:12px}
+    .badge{display:inline-block;background:#e0f2fe;color:#0c4a6e;border-radius:999px;padding:5px 12px;font-weight:700;font-size:12px;border:1px solid #bae6fd}
     #aiOutput{line-height:1.6}
     #aiOutput p{margin:12px 0}
-    #aiOutput strong{color:#1e5128}
+    #aiOutput strong{color:#0ea5e9}
     #aiOutput ul,#aiOutput ol{margin:8px 0;padding-left:24px}
     #aiOutput li{margin:6px 0}
-    .ai-loading{text-align:center;padding:24px;color:#2d6a4f;font-style:italic}
+    .ai-loading{text-align:center;padding:24px;color:#0ea5e9;font-style:italic}
+    #reviewerOutput{background:#f7fbff;border:2px solid #e0f2fe;border-radius:14px;padding:18px}
+    #uploadStatus{background:#f7fbff;border:2px solid #e0f2fe;border-radius:14px}
     @media(max-width:900px){.row{grid-template-columns:1fr}}
     @media(max-width:768px){
       body{margin:0;padding:0}
@@ -70,7 +77,7 @@ if ($currentConvoId) {
       .btn-secondary{width:100%}
       #reviewerOutput{margin-top:20px;min-height:80px}
       input[type="file"]{font-size:14px;width:100%}
-      #uploadStatus{margin-top:16px;padding:12px;background:#f8fffe;border-radius:8px;border:2px solid #d8f3dc}
+      #uploadStatus{margin-top:16px;padding:12px}
       .badge{font-size:11px;padding:3px 8px}
       label{display:block;margin-bottom:8px}
     }
@@ -103,10 +110,10 @@ if ($currentConvoId) {
     </div>
 
     <div class="panel">
-      <h2 style="color:#1e5128">💬 Ask for Reviewer (by Topic)</h2>
+      <h2 style="color:#0ea5e9">💬 Ask for Reviewer (by Topic)</h2>
       <p class="sub">Type a topic or question (e.g., "Create a reviewer for Photosynthesis" or "Give me a summary about World War II")</p>
       <?php if ($previousConvo): ?>
-        <div style="background:#d8f3dc;padding:12px;border-radius:8px;margin-bottom:12px">
+        <div style="background:#e0f2fe;padding:12px;border-radius:8px;margin-bottom:12px">
           <strong>Continuing conversation:</strong><br>
           <em><?php echo htmlspecialchars(substr($previousConvo['question'], 0, 100)) . (strlen($previousConvo['question']) > 100 ? '...' : ''); ?></em>
         </div>
@@ -116,38 +123,38 @@ if ($currentConvoId) {
         <button class="btn btn-primary" onclick="askReviewer()" style="flex:1;min-width:140px"> Send </button>
         <button class="btn btn-secondary" onclick="clearReviewer()" style="flex:1;min-width:100px"> Clear</button>
       </div>
-      <div id="reviewerOutput" style="margin-top:18px;background:#f8fffe;border:2px solid #d8f3dc;border-radius:12px;padding:16px;min-height:60px">
+      <div id="reviewerOutput" style="margin-top:18px;background:#f7fbff;border:2px solid #e0f2fe;border-radius:12px;padding:16px;min-height:60px">
         <?php if ($previousConvo): ?>
-          <div style="color:#1e5128;font-weight:600;margin-bottom:12px">Previous conversation:</div>
+          <div style="color:#0ea5e9;font-weight:600;margin-bottom:12px">Previous conversation:</div>
           <div style="white-space:pre-wrap"><?php echo htmlspecialchars($previousConvo['response']); ?></div>
         <?php endif; ?>
       </div>
     </div>
 
     <div class="panel">
-      <h2 style="color:#1e5128">📄 Upload School Module (PDF)</h2>
+      <h2 style="color:#0ea5e9">📄 Upload School Module (PDF)</h2>
       <p class="sub">Upload your school module PDF - AI will extract ALL lessons automatically</p>
       <div style="margin-bottom:12px">
-        <label style="font-weight:600;color:#2d6a4f;display:block;margin-bottom:12px">PDF Module:</label>
+        <label style="font-weight:600;color:#0f172a;display:block;margin-bottom:12px">PDF Module:</label>
         <div style="position:relative;overflow:hidden;display:inline-block;width:100%">
           <input type="file" id="pdfFile" accept=".pdf" style="position:absolute;left:-9999px">
-          <label for="pdfFile" style="display:block;padding:14px 16px;background:#f8fffe;border:2px solid #d8f3dc;border-radius:8px;cursor:pointer;font-weight:600;color:#2d6a4f;text-align:center;transition:.25s">
+          <label for="pdfFile" style="display:block;padding:14px 16px;background:#f7fbff;border:2px solid #e0f2fe;border-radius:8px;cursor:pointer;font-weight:600;color:#0f172a;text-align:center;transition:.25s">
             📁 Choose PDF File
           </label>
           <span id="fileName" style="display:block;margin-top:8px;color:#666;font-size:0.9em">No file selected</span>
         </div>
         <button class="btn btn-primary" onclick="uploadPDF()" style="font-size:16px;padding:12px 24px;margin-top:12px;width:100%;box-sizing:border-box">🤖 Convert PDF to Lessons</button>
       </div>
-      <div id="uploadStatus" style="margin-top:16px;padding:12px;background:#f8fffe;border-radius:8px;border:2px solid #d8f3dc"></div>
+      <div id="uploadStatus" style="margin-top:16px;padding:12px;background:#f7fbff;border-radius:8px;border:2px solid #e0f2fe"></div>
     </div>
 
 
     <div class="panel">
-      <h2 style="color:#1e5128">ℹ️ AI Study Assistant Features</h2>
+      <h2 style="color:#0ea5e9">ℹ️ AI Study Assistant Features</h2>
       <p class="sub">Powered by Jether AI (Llama 3.2) - Your personal tutor created by Jether Garque for Palawan National School</p>
       <div class="row">
         <div>
-          <h3 style="color:#2d6a4f">📚 What Jether Can Do:</h3>
+          <h3 style="color:#0ea5e9">📚 What Jether Can Do:</h3>
           <ul>
             <li><strong>Convert PDF to CSV</strong> - AI extracts and organizes lessons from PDF files</li>
             <li><strong>Generate Practice Questions</strong> - Multiple choice, short answer, essay, and application problems</li>
@@ -157,7 +164,7 @@ if ($currentConvoId) {
           </ul>
         </div>
         <div>
-          <h3 style="color:#2d6a4f">📄 How PDF Conversion Works:</h3>
+          <h3 style="color:#0ea5e9">📄 How PDF Conversion Works:</h3>
           <ul>
             <li><strong>Complete Text Extraction</strong> - AI reads ALL text from your PDF module</li>
             <li><strong>Automatic Lesson Detection</strong> - Identifies chapters, topics, and units</li>
@@ -166,7 +173,7 @@ if ($currentConvoId) {
             <li><strong>Works with:</strong> Modules, textbooks, lecture notes, study guides</li>
           </ul>
           <p style="margin-top:12px"><strong>CSV Format Created:</strong></p>
-          <code style="background:#d8f3dc;padding:8px;display:block;border-radius:4px">topic, content, difficulty, subject</code>
+          <code style="background:#e0f2fe;padding:8px;display:block;border-radius:4px">topic, content, difficulty, subject</code>
         </div>
       </div>
     </div>

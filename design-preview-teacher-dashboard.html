@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Design Preview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Manrope', 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(34, 211, 238, 0.12), transparent 40%),
+                radial-gradient(circle at 78% -8%, rgba(34, 197, 94, 0.1), transparent 44%),
+                linear-gradient(140deg, #0c1426 0%, #102035 50%, #0c2841 100%);
+            min-height: 100vh;
+            display: flex;
+            color: #0f172a;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #0ea5e9 0%, #0b243d 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 0;
+            box-shadow: 10px 0 30px rgba(8, 47, 73, 0.22);
+            position: fixed;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.18);
+            background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 20px;
+        }
+
+        .sidebar-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.15);
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+        }
+
+        .sidebar-text h2 {
+            font-size: 1.1em;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .school-name {
+            font-size: 0.7em;
+            color: #bae6fd;
+            margin: 2px 0 0;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .teacher-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            background: rgba(255,255,255,0.1);
+            margin: 12px 12px 0 12px;
+            border-radius: 12px;
+        }
+
+        .teacher-avatar {
+            font-size: 2em;
+            flex-shrink: 0;
+        }
+
+        .teacher-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .teacher-name {
+            font-size: 0.92em;
+            font-weight: 800;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .teacher-role {
+            font-size: 0.75em;
+            color: #bae6fd;
+            margin: 2px 0 0;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 12px 0;
+            overflow-y: auto;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-weight: 600;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255,255,255,0.12);
+            border-left-color: #e0f2fe;
+            padding-left: 24px;
+        }
+
+        .sidebar a.active {
+            background: linear-gradient(90deg, rgba(224,242,254,0.25) 0%, rgba(14,165,233,0.16) 100%);
+            border-left-color: #e0f2fe;
+            box-shadow: inset 2px 0 10px rgba(0,0,0,0.2);
+        }
+
+        .main {
+            margin-left: 280px;
+            flex: 1;
+            padding: 0;
+            width: calc(100% - 280px);
+            background: #f6f8fb;
+        }
+
+        .main-header {
+            background: #ffffff;
+            padding: 20px 32px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 22px rgba(15,23,42,0.08);
+        }
+
+        .main-header h1 {
+            font-size: 1.5em;
+            color: #0f172a;
+            margin: 0 0 4px 0;
+            font-weight: 800;
+        }
+
+        .main-header p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #475569;
+        }
+
+        .main-content {
+            padding: 24px 32px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid #e8e8e8;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .stat-card.present { border-left-color: #22c55e; }
+        .stat-card.late { border-left-color: #f59e0b; }
+        .stat-card.absent { border-left-color: #ef4444; }
+        .stat-card.excuse { border-left-color: #0ea5e9; }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .stat-card.present .stat-value { color: #22c55e; }
+        .stat-card.late .stat-value { color: #f59e0b; }
+        .stat-card.absent .stat-value { color: #ef4444; }
+        .stat-card.excuse .stat-value { color: #0ea5e9; }
+
+        .stat-label {
+            color: #475569;
+            font-size: 0.85em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.55px;
+        }
+
+        .content-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 14px 40px rgba(8,47,73,0.12);
+            border: 1px solid #e2e8f0;
+        }
+
+        .content-section h2 {
+            color: #0f172a;
+            font-size: 1.25em;
+            font-weight: 800;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e0f2fe;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <div class="sidebar-logo">📚</div>
+                <div class="sidebar-text">
+                    <h2>QR Attendance</h2>
+                    <div class="school-name">Palawan National School</div>
+                </div>
+            </div>
+            <div class="teacher-profile">
+                <div class="teacher-avatar">👨‍🏫</div>
+                <div class="teacher-info">
+                    <div class="teacher-name">Prof. Maria Santos</div>
+                    <div class="teacher-role">Teacher • Grade 12 STEM</div>
+                </div>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="#" class="active">📊 Dashboard</a>
+            <a href="#">👥 Students</a>
+            <a href="#">📋 Attendance</a>
+            <a href="#">📷 Scanner</a>
+            <a href="#">📈 Reports</a>
+            <a href="#">⚙️ Settings</a>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="main-header">
+            <div>
+                <h1>Teacher Dashboard</h1>
+                <p>December 11, 2025 • Grade 12 - STEM Section A</p>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="stats-grid">
+                <div class="stat-card present">
+                    <div class="stat-value">32</div>
+                    <div class="stat-label">Present</div>
+                </div>
+                <div class="stat-card late">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Late</div>
+                </div>
+                <div class="stat-card absent">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Absent</div>
+                </div>
+                <div class="stat-card excuse">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">Excused</div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>📊 Today's Attendance Summary</h2>
+                <p style="color: #475569;">Total Students: 42 | Attendance Rate: 88.1%</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
