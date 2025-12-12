@@ -3,6 +3,8 @@
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/security_utils.php';
+require_once __DIR__ . '/includes/developer_access.php';
+enforce_developer_access();
 
 $csrf_token = generate_csrf_token();
 

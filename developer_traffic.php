@@ -2,6 +2,8 @@
 // developer_traffic.php - Audit/traffic monitor for logins, signups, and key events
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/includes/developer_access.php';
+enforce_developer_access();
 
 if (!isset($_SESSION['developer_id'])) {
     header('Location: developer_login.php');

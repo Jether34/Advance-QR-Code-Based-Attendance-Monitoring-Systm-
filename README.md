@@ -1,3 +1,110 @@
+## Production Deploy (Safe Artifact)
+
+Use the deploy filter script to package a production zip that excludes sensitive files (env, SQL dumps, scripts, docs, source maps) and internal folders:
+
+### Quick Start
+
+```
+chmod +x tools/deploy_filter.sh
+./tools/deploy_filter.sh production.zip
+```
+
+This generates `production.zip` in the repo root. Extract to your webroot.
+
+### Excluded by default
+
+- .env files, SQL dumps, shell/powershell scripts
+- Source maps (`*.map`), Markdown docs (`*.md`)
+- Internal `tools/`, `storage/` contents (keeps empty folder)
+- CI/Dev folders: `.github`, `.devcontainer`, tests
+
+Adjust exclusions in `tools/deploy_filter.sh` as needed.
+
+## Server Config Hardening (Reference)
+
+### Apache (VirtualHost)
+
+Add these inside your site `<VirtualHost>` to block sensitive files and disable directory listing at the server level:
+
+```
+<Directory "/var/www/html">
+	Options -Indexes
+	AllowOverride All
+</Directory>
+
+# Deny sensitive files globally
+<FilesMatch "^\.|\.env|\.sql|\.ps1|\.sh$">
+	Require all denied
+</FilesMatch>
+
+# Security headers
+<IfModule mod_headers.c>
+	Header always set X-Frame-Options "SAMEORIGIN"
+	Header always set X-Content-Type-Options "nosniff"
+	Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+```
+
+### Nginx (PHP-FPM)
+
+Use these `server` blocks to deny sensitive files and disable directory listing:
+
+```
+server {
+	listen 80;
+	server_name example.com;
+	root /var/www/html;
+
+	autoindex off;
+
+	location ~ ^/(\.|.*\.env|.*\.sql|.*\.ps1|.*\.sh)$ {
+		deny all;
+	}
+
+	location / {
+		try_files $uri $uri/ /index.php?$query_string;
+	}
+
+	location ~ \.php$ {
+		include snippets/fastcgi-php.conf;
+		fastcgi_pass unix:/run/php/php8.2-fpm.sock; # adjust version/socket
+	}
+}
+```
+
+## Final Checklist
+
+- APP env: Ensure `APP_ENV=production` and `APP_DEBUG=false` in `.env`.
+- Secrets: Keep `.env` outside webroot if possible; otherwise rely on `.htaccess` denies.
+- Artifacts: Build with `tools/deploy_filter.sh` to exclude sensitive files.
+- CSP: Confirm `Content-Security-Policy` is present in responses (DevTools → Network → Headers).
+- Directory listing: Visiting a folder path without index must not show file lists.
+
+## Developer Access Whitelist
+
+To avoid locking yourself out while keeping developer pages private, use the developer guard:
+
+1. Configure in `.env` (not publicly accessible):
+
+	- `DEVELOPER_WHITELIST=192.168.1.10,203.0.113.5` (comma-separated IPs)
+	- `DEV_ACCESS_TOKEN=your-long-random-token` (emergency token)
+
+2. In developer-only pages, add:
+
+```
+<?php
+require_once __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/includes/developer_access.php';
+enforce_developer_access();
+?>
+```
+
+3. Emergency access:
+	- Append `?dev_token=YOUR_TOKEN` to the URL (or send header `X-Dev-Access: YOUR_TOKEN`).
+	- Works when IP changes or you need temporary access.
+
+
+
 # 🎓 Palawan National School - QR Code Attendance Monitoring System
 
 A modern, QR code-based attendance tracking system built with PHP, MySQL, and JavaScript specifically for Palawan National School. This system provides contactless attendance recording with embedded student information and real-time validation.

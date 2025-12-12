@@ -40,3 +40,38 @@
 
 # Small fallback: remove ETag to improve caching behavior in some environments
 FileETag None
+
+# ===== Security Hardening =====
+# Disable directory listing to prevent source browsing
+Options -Indexes
+
+# Block access to sensitive files (environment, scripts, SQL dumps, docs)
+<FilesMatch "^(\.env|composer\.json|composer\.lock|.*\.sql|.*\.ps1|.*\.sh|database_commands\.txt|README\.md|ATTENDANCE_TIME_RULES\.md|CONTRIBUTING\.md|SECURITY_GUIDE\.md|SYSTEM_KNOWLEDGE_BASE\.md)$">
+  Require all denied
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# Block hidden files (dotfiles)
+<FilesMatch "^\.">
+  Require all denied
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# Prevent serving source maps or TypeScript
+<FilesMatch "\.(map|ts)$">
+  Require all denied
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# Security headers (fallback; PHP sets these too)
+<IfModule mod_headers.c>
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always unset X-Powered-By
+  # Fallback CSP (app also sets via PHP)
+  Header set Content-Security-Policy "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:;"
+</IfModule>

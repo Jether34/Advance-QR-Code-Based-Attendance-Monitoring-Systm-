@@ -2,6 +2,8 @@
 // developer_teachers.php - Developer-only teacher directory + add teacher form
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/includes/developer_access.php';
+enforce_developer_access();
 require_once __DIR__ . '/security_utils.php';
 
 $csrf_token = generate_csrf_token();

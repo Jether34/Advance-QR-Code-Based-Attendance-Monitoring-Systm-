@@ -6,6 +6,12 @@ require_once __DIR__ . '/logging.php';
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Rate limit based on IP+email
+    $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $rlKey = 'login:' . $ip . ':' . strtolower(trim($_POST['email'] ?? ''));
+    rate_limit_check($rlKey, 5, 300);
+    // CSRF validation
+    verify_csrf();
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
     if ($email && $password) {
@@ -204,6 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <?php if($error): ?><div class="error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
         <form method="post" id="loginForm">
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8'); ?>" />
             <div class="form-group">
                 <label>Email Address</label>
                 <input name="email" type="email" placeholder="Enter your email" required />

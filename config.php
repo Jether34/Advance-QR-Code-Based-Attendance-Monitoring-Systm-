@@ -72,8 +72,8 @@ if (!headers_sent()) {
     header("Pragma: no-cache");
     header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 
-    // Content Security Policy
-    header("Content-Security-Policy: default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:;");
+    // Content Security Policy (tightened): remove 'unsafe-eval', restrict CDNs
+    header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'self';");
 
     // Prevent clickjacking
     header('X-Frame-Options: SAMEORIGIN');
@@ -86,6 +86,10 @@ if (!headers_sent()) {
 
     // Referrer Policy
     header('Referrer-Policy: strict-origin-when-cross-origin');
+    // Disable server banners
+    header_remove('Server');
+    // Disable PHP exposure
+    ini_set('expose_php', '0');
 
     // Remove server information
     header_remove('X-Powered-By');

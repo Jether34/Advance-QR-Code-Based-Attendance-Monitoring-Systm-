@@ -1,4 +1,4 @@
-# Deny direct web access to storage files
+# Deny all access to internal tools
 Require all denied
 Order allow,deny
 Deny from all

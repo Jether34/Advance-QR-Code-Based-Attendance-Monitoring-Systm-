@@ -2,6 +2,8 @@
 // developer_ai_assistant.php - AI Assistant for system analytics and insights
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/includes/developer_access.php';
+enforce_developer_access();
 
 if (!isset($_SESSION['developer_id'])) {
     http_response_code(401);
